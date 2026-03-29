@@ -1,5 +1,10 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8 relative">
+    <!-- 语言切换器 - 右上角 -->
+    <div class="absolute top-4 right-4">
+      <LanguageSwitcher />
+    </div>
+
     <div class="max-w-md w-full space-y-8">
       <!-- 标题区域 -->
       <div class="text-center">
@@ -9,10 +14,10 @@
           </svg>
         </div>
         <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-          系统登录
+          {{ t('login.title') }}
         </h2>
         <p class="mt-2 text-sm text-gray-600">
-          请输入您的账号和密码
+          {{ t('login.subtitle') }}
         </p>
       </div>
 
@@ -22,7 +27,7 @@
           <!-- 用户名输入框 -->
           <div>
             <label for="username" class="block text-sm font-medium text-gray-700">
-              用户名
+              {{ t('common.username') }}
             </label>
             <div class="mt-1 relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -37,7 +42,7 @@
                 type="text"
                 required
                 class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
-                placeholder="请输入用户名"
+                :placeholder="t('login.usernamePlaceholder')"
                 @focus="userStore.clearError"
               />
             </div>
@@ -46,7 +51,7 @@
           <!-- 密码输入框 -->
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">
-              密码
+              {{ t('common.password') }}
             </label>
             <div class="mt-1 relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -61,7 +66,7 @@
                 :type="showPassword ? 'text' : 'password'"
                 required
                 class="appearance-none block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
-                placeholder="请输入密码"
+                :placeholder="t('login.passwordPlaceholder')"
                 @focus="userStore.clearError"
               />
               <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" @click="showPassword = !showPassword">
@@ -110,7 +115,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                 </svg>
               </span>
-              {{ userStore.loading ? '登录中...' : '登录' }}
+              {{ userStore.loading ? t('login.loggingIn') : t('common.login') }}
             </button>
           </div>
         </form>
@@ -118,7 +123,7 @@
 
       <!-- 底部信息 -->
       <p class="text-center text-xs text-gray-500">
-        © 2025 Zuti Storage System. All rights reserved.
+        {{ t('footer.copyright') }}
       </p>
     </div>
   </div>
@@ -127,10 +132,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
+const { t } = useI18n()
 
 const showPassword = ref(false)
 

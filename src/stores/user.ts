@@ -2,6 +2,10 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
 import type { LoginRequest, User } from '@/types/user'
+import i18n from '@/i18n'
+
+// 获取 i18n t 函数
+const t = i18n.global.t
 
 export const useUserStore = defineStore(
   'user',
@@ -35,7 +39,22 @@ export const useUserStore = defineStore(
           return { success: false, message: response.message }
         }
       } catch (err: any) {
-        const message = err.response?.data?.message || '登录失败，请稍后重试'
+        // 根据错误类型返回不同的错误信息
+        let message: string
+        if (!err.response) {
+          // 网络错误
+          message = t('error.networkError')
+        } else if (err.response.status === 401) {
+          message = err.response.data?.message || t('error.unauthorized')
+        } else if (err.response.status === 403) {
+          message = t('error.forbidden')
+        } else if (err.response.status === 404) {
+          message = t('error.notFound')
+        } else if (err.response.status >= 500) {
+          message = t('error.serverError')
+        } else {
+          message = err.response.data?.message || t('error.unknown')
+        }
         error.value = message
         return { success: false, message }
       } finally {
