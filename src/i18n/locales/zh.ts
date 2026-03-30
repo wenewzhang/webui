@@ -57,7 +57,7 @@ export default {
   },
   // 底部信息
   footer: {
-    copyright: '© 2025 Zuti Storage System. All rights reserved.',
+    copyright: '© 2025 Zuti Storage System. 保留所有权利。',
   },
   // 错误信息
   error: {
