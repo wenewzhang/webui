@@ -41,7 +41,7 @@
           :to="item.path"
           :class="[
             'group flex items-center rounded-md transition-colors',
-            isCollapsed ? 'justify-start py-3 pl-2.5' : 'px-3 py-2.5',
+            isCollapsed ? 'justify-start py-3 px-1.5' : 'px-3 py-2.5',
             isActive(item.path)
               ? 'bg-indigo-50 text-indigo-700'
               : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
