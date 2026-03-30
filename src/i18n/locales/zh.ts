@@ -55,6 +55,13 @@ export default {
     zh: '简体中文',
     en: 'English',
   },
+  // 导航菜单
+  nav: {
+    users: '用户',
+    disks: '磁盘',
+    samba: 'Samba',
+    apps: '应用',
+  },
   // 底部信息
   footer: {
     copyright: '© 2025 Zuti Storage System. 保留所有权利。',

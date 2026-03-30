@@ -12,15 +12,35 @@ const router = createRouter({
     },
     {
       path: '/',
-      name: 'Home',
-      component: () => import('@/views/HomeView.vue'),
+      component: () => import('@/components/SidebarLayout.vue'),
       meta: { requiresAuth: true },
-    },
-    {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/DashboardView.vue'),
-      meta: { requiresAuth: true },
+      redirect: '/disks',
+      children: [
+        {
+          path: 'users',
+          name: 'Users',
+          component: () => import('@/views/UsersView.vue'),
+          meta: { title: 'Users' },
+        },
+        {
+          path: 'disks',
+          name: 'Disks',
+          component: () => import('@/views/DisksView.vue'),
+          meta: { title: 'Disks' },
+        },
+        {
+          path: 'samba',
+          name: 'Samba',
+          component: () => import('@/views/SambaView.vue'),
+          meta: { title: 'Samba' },
+        },
+        {
+          path: 'apps',
+          name: 'Apps',
+          component: () => import('@/views/AppsView.vue'),
+          meta: { title: 'Apps' },
+        },
+      ],
     },
   ],
 })

@@ -55,6 +55,13 @@ export default {
     zh: '简体中文',
     en: 'English',
   },
+  // Navigation
+  nav: {
+    users: 'Users',
+    disks: 'Disks',
+    samba: 'Samba',
+    apps: 'Apps',
+  },
   // Footer
   footer: {
     copyright: '© 2025 Zuti Storage System. All rights reserved.',
