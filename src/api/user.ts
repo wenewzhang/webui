@@ -11,4 +11,9 @@ export const userApi = {
   logout(): Promise<{ success: boolean; message: string }> {
     return apiClient.post('/logout').then((res) => res.data)
   },
+
+  // 检查是否有管理员
+  hasAdmin(): Promise<{ has_admin: boolean }> {
+    return apiClient.get('/has_admin').then((res) => res.data)
+  },
 }

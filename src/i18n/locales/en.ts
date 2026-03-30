@@ -48,6 +48,15 @@ export default {
     logoutSuccess: 'Logout successful',
     sessionExpired: 'Session expired, please login again',
   },
+  // Create Admin Page
+  createAdmin: {
+    title: 'Create Admin Account',
+    subtitle: 'No admin account exists. Please create the first admin account.',
+    confirmPassword: 'Confirm Password',
+    passwordMismatch: 'Passwords do not match',
+    creating: 'Creating...',
+    createFailed: 'Failed to create admin account',
+  },
   // Language Switch
   language: {
     name: 'English',

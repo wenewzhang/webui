@@ -11,6 +11,12 @@ const router = createRouter({
       meta: { public: true },
     },
     {
+      path: '/create-admin',
+      name: 'CreateAdmin',
+      component: () => import('@/views/CreateAdminView.vue'),
+      meta: { public: true },
+    },
+    {
       path: '/',
       component: () => import('@/components/SidebarLayout.vue'),
       meta: { requiresAuth: true },

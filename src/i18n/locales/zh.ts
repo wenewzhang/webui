@@ -48,6 +48,15 @@ export default {
     logoutSuccess: '登出成功',
     sessionExpired: '会话已过期，请重新登录',
   },
+  // 创建管理员页面
+  createAdmin: {
+    title: '创建管理员账户',
+    subtitle: '系统中没有管理员账户，请创建第一个管理员账户。',
+    confirmPassword: '确认密码',
+    passwordMismatch: '两次输入的密码不一致',
+    creating: '创建中...',
+    createFailed: '创建管理员账户失败',
+  },
   // 语言切换
   language: {
     name: '中文',
