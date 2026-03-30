@@ -149,6 +149,7 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
+import { userApi } from '@/api/user'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const router = useRouter()
@@ -175,18 +176,30 @@ const handleCreate = async () => {
   error.value = null
 
   try {
-    const result = await userStore.login({
-      username: form.username,
+    const result = await userApi.createAdmin({
+      name: form.username,
+      type_: 'admin',
       password: form.password,
     })
 
-    if (result.success) {
-      router.push('/')
+    if (result.system_user_created) {
+      router.push({ path: '/login', query: { message: result.message } })
+    } else if (result.success) {
+      const loginResult = await userStore.login({
+        username: form.username,
+        password: form.password,
+      })
+
+      if (loginResult.success) {
+        router.push('/')
+      } else {
+        error.value = t('createAdmin.createFailed')
+      }
     } else {
       error.value = result.message || t('createAdmin.createFailed')
     }
   } catch (err: any) {
-    error.value = err.message || t('createAdmin.createFailed')
+    error.value = err.response?.data?.message || t('createAdmin.createFailed')
   } finally {
     loading.value = false
   }

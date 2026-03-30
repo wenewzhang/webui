@@ -81,6 +81,22 @@
             </div>
           </div>
 
+          <!-- 成功提示 -->
+          <div v-if="successMessage" class="rounded-lg bg-green-50 p-4 border border-green-200">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <svg class="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm font-medium text-green-800">
+                  {{ successMessage }}
+                </p>
+              </div>
+            </div>
+          </div>
+
           <!-- 错误提示 -->
           <div v-if="userStore.error" class="rounded-lg bg-red-50 p-4 border border-red-200">
             <div class="flex">
@@ -130,21 +146,34 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, reactive, ref } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
 const { t } = useI18n()
 
 const showPassword = ref(false)
+const successMessage = ref<string | null>(null)
 
 const form = reactive({
   username: '',
   password: '',
+})
+
+onMounted(() => {
+  const message = route.query.message
+  if (message) {
+    if (message === 'User created successfully') {
+      successMessage.value = t('createAdmin.userCreatedSuccess')
+    } else {
+      userStore.error = message as string
+    }
+  }
 })
 
 const handleLogin = async () => {

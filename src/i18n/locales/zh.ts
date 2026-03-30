@@ -56,6 +56,7 @@ export default {
     passwordMismatch: '两次输入的密码不一致',
     creating: '创建中...',
     createFailed: '创建管理员账户失败',
+    userCreatedSuccess: '用户创建成功',
   },
   // 语言切换
   language: {

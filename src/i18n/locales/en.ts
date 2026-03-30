@@ -56,6 +56,7 @@ export default {
     passwordMismatch: 'Passwords do not match',
     creating: 'Creating...',
     createFailed: 'Failed to create admin account',
+    userCreatedSuccess: 'User created successfully',
   },
   // Language Switch
   language: {
