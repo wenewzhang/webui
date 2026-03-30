@@ -72,6 +72,12 @@ export default {
     samba: 'Samba',
     apps: '应用',
   },
+  // 用户页面
+  users: {
+    noUsers: '没有找到用户',
+    name: '名称',
+    type: '类型',
+  },
   // 底部信息
   footer: {
     copyright: '© 2025 Zuti Storage System. 保留所有权利。',

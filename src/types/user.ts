@@ -13,3 +13,14 @@ export interface User {
   username: string
   token: string
 }
+
+export interface UserInfo {
+  name: string
+  type_: string
+}
+
+export interface ListUsersResponse {
+  success: boolean
+  message: string
+  users: UserInfo[]
+}

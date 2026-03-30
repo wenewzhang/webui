@@ -1,5 +1,5 @@
 import apiClient from './axios'
-import type { LoginRequest, LoginResponse } from '@/types/user'
+import type { LoginRequest, LoginResponse, ListUsersResponse } from '@/types/user'
 
 export const userApi = {
   // 登录
@@ -20,5 +20,10 @@ export const userApi = {
   // 创建管理员
   createAdmin(data: { name: string; type_: string; password: string }): Promise<{ success: boolean; message: string; system_user_created?: boolean }> {
     return apiClient.post('/admin_user', data).then((res) => res.data)
+  },
+
+  // 获取用户列表
+  listUsers(): Promise<ListUsersResponse> {
+    return apiClient.get('/list_users').then((res) => res.data)
   },
 }

@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { userApi } from '@/api/user'
-import type { LoginRequest, User } from '@/types/user'
+import type { LoginRequest, User, UserInfo } from '@/types/user'
 import i18n from '@/i18n'
 
 // 获取 i18n t 函数
@@ -14,6 +14,9 @@ export const useUserStore = defineStore(
     const user = ref<User | null>(null)
     const loading = ref(false)
     const error = ref<string | null>(null)
+    const users = ref<UserInfo[]>([])
+    const usersLoading = ref(false)
+    const usersError = ref<string | null>(null)
 
     // Getters
     const isLoggedIn = computed(() => !!user.value?.token)
@@ -73,6 +76,30 @@ export const useUserStore = defineStore(
       }
     }
 
+    async function listUsers() {
+      usersLoading.value = true
+      usersError.value = null
+
+      try {
+        const response = await userApi.listUsers()
+        if (response.success) {
+          users.value = response.users
+        } else {
+          usersError.value = response.message
+        }
+      } catch (err: any) {
+        let message: string
+        if (!err.response) {
+          message = t('error.networkError')
+        } else {
+          message = err.response.data?.message || t('error.unknown')
+        }
+        usersError.value = message
+      } finally {
+        usersLoading.value = false
+      }
+    }
+
     function clearError() {
       error.value = null
     }
@@ -81,11 +108,15 @@ export const useUserStore = defineStore(
       user,
       loading,
       error,
+      users,
+      usersLoading,
+      usersError,
       isLoggedIn,
       username,
       token,
       login,
       logout,
+      listUsers,
       clearError,
     }
   },

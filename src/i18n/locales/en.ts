@@ -72,6 +72,12 @@ export default {
     samba: 'Samba',
     apps: 'Apps',
   },
+  // Users Page
+  users: {
+    noUsers: 'No users found',
+    name: 'Name',
+    type: 'Type',
+  },
   // Footer
   footer: {
     copyright: '© 2025 Zuti Storage System. All rights reserved.',
