@@ -118,11 +118,11 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              {{ $t('users.changePasswordTitle') }}
+              {{ currentUser?.type_ === 'samba' ? $t('users.changeSambaPasswordTitle') : $t('users.changePasswordTitle') }}
             </h3>
             <div class="mt-4 space-y-4">
-              <!-- Old Password -->
-              <div>
+              <!-- Old Password (admin only) -->
+              <div v-if="currentUser?.type_ === 'admin'">
                 <label for="old-password" class="block text-sm font-medium text-gray-700">
                   {{ $t('users.oldPassword') }}
                 </label>
@@ -212,6 +212,7 @@ const showAdminPasswordModal = ref(false)
 const changingPassword = ref(false)
 const passwordError = ref('')
 const passwordSuccess = ref('')
+const currentUser = ref<UserInfo | null>(null)
 
 // Password form
 const passwordForm = reactive({
@@ -225,30 +226,27 @@ const handleRefresh = () => {
 }
 
 const handleChangePassword = (user: UserInfo) => {
-  if (user.type_ === 'admin') {
-    // Show admin password change modal
-    showAdminPasswordModal.value = true
-    // Reset form
-    passwordForm.oldPassword = ''
-    passwordForm.newPassword = ''
-    passwordForm.confirmPassword = ''
-    passwordError.value = ''
-    passwordSuccess.value = ''
-  } else {
-    // Handle regular user password change (not implemented yet)
-    alert(t('users.regularUserNotImplemented'))
-  }
+  currentUser.value = user
+  // Show password change modal
+  showAdminPasswordModal.value = true
+  // Reset form
+  passwordForm.oldPassword = ''
+  passwordForm.newPassword = ''
+  passwordForm.confirmPassword = ''
+  passwordError.value = ''
+  passwordSuccess.value = ''
 }
 
 const closeModal = () => {
   showAdminPasswordModal.value = false
   passwordError.value = ''
   passwordSuccess.value = ''
+  currentUser.value = null
 }
 
 const submitChangePassword = async () => {
   // Validation
-  if (!passwordForm.oldPassword) {
+  if (currentUser.value?.type_ === 'admin' && !passwordForm.oldPassword) {
     passwordError.value = t('users.enterOldPassword')
     return
   }
@@ -270,10 +268,22 @@ const submitChangePassword = async () => {
   passwordSuccess.value = ''
 
   try {
-    const response = await userApi.changeAdminPassword({
-      old_password: passwordForm.oldPassword,
-      new_password: passwordForm.newPassword,
-    })
+    let response
+    if (currentUser.value?.type_ === 'admin') {
+      response = await userApi.changeAdminPassword({
+        old_password: passwordForm.oldPassword,
+        new_password: passwordForm.newPassword,
+      })
+    } else if (currentUser.value?.type_ === 'samba') {
+      response = await userApi.changeSambaPassword({
+        username: currentUser.value.name,
+        new_password: passwordForm.newPassword,
+      })
+    } else {
+      passwordError.value = t('users.changeFailed')
+      changingPassword.value = false
+      return
+    }
 
     if (response.success) {
       passwordSuccess.value = response.message || t('users.changeSuccess')
@@ -286,7 +296,7 @@ const submitChangePassword = async () => {
     }
   } catch (err: any) {
     const msg = err.response?.data?.message
-    if (msg === 'Invalid old password') {
+    if (currentUser.value?.type_ === 'admin' && msg === 'Invalid old password') {
       passwordError.value = t('users.invalidOldPassword')
     } else {
       passwordError.value = msg || t('users.changeFailed')

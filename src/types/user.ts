@@ -34,3 +34,13 @@ export interface ChangeAdminPasswordResponse {
   success: boolean
   message: string
 }
+
+export interface ChangeSambaPasswordRequest {
+  username: string
+  new_password: string
+}
+
+export interface ChangeSambaPasswordResponse {
+  success: boolean
+  message: string
+}

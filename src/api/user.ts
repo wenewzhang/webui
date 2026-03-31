@@ -1,5 +1,5 @@
 import apiClient from './axios'
-import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse } from '@/types/user'
+import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse } from '@/types/user'
 
 export const userApi = {
   // 登录
@@ -30,5 +30,10 @@ export const userApi = {
   // 修改管理员密码
   changeAdminPassword(data: ChangeAdminPasswordRequest): Promise<ChangeAdminPasswordResponse> {
     return apiClient.post('/change_admin_passwd', data).then((res) => res.data)
+  },
+
+  // 修改Samba用户密码
+  changeSambaPassword(data: ChangeSambaPasswordRequest): Promise<ChangeSambaPasswordResponse> {
+    return apiClient.post('/smb/change_passwd', data).then((res) => res.data)
   },
 }

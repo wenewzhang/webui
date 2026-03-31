@@ -83,6 +83,7 @@ export default {
     deleteAccount: 'Delete Account',
     // Change Password Modal
     changePasswordTitle: 'Change Admin Password',
+    changeSambaPasswordTitle: 'Change Samba Password',
     oldPassword: 'Old Password',
     newPassword: 'New Password',
     confirmPassword: 'Confirm Password',

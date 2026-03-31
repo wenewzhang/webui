@@ -83,6 +83,7 @@ export default {
     deleteAccount: '删除账号',
     // 修改密码弹窗
     changePasswordTitle: '修改管理员密码',
+    changeSambaPasswordTitle: '修改 Samba 密码',
     oldPassword: '旧密码',
     newPassword: '新密码',
     confirmPassword: '确认密码',
