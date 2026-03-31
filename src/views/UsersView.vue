@@ -239,7 +239,7 @@
                 >
                   <option value="">{{ $t('users.pleaseSelectUserType') || 'Please select user type' }}</option>
                   <option value="share">share</option>
-                  <option value="view">read</option>
+                  <option value="read">read</option>
                   <option value="samba">samba</option>
                 </select>
               </div>
