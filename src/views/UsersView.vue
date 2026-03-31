@@ -419,16 +419,25 @@ const submitAddUser = async () => {
     }
 
     if (response.success) {
-      addUserSuccess.value = response.message || t('users.addUserSuccess')
+      if (response.message && response.message.includes('successfully')) {
+        addUserSuccess.value = t('users.addUserSuccessWithUsername', { username: addUserForm.username.trim() })
+      } else {
+        addUserSuccess.value = response.message || t('users.addUserSuccess')
+      }
       setTimeout(() => {
         closeAddUserModal()
         userStore.listUsers()
       }, 3500)
     } else {
-      addUserError.value = response.message || t('users.addUserFailed')
+      addUserError.value = response.message === 'Password too short' ? t('users.sambaPasswordTooShort') : (response.message || t('users.addUserFailed'))
     }
   } catch (err: any) {
-    addUserError.value = err.response?.data?.message || t('users.addUserFailed')
+    const msg = err.response?.data?.message
+    if (msg === 'Password too short') {
+      addUserError.value = t('users.sambaPasswordTooShort')
+    } else {
+      addUserError.value = msg || t('users.addUserFailed')
+    }
   } finally {
     addingUser.value = false
   }

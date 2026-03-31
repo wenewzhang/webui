@@ -103,6 +103,7 @@ export default {
     pleaseSelectUserType: 'Please select user type',
     enterUsername: 'Please enter username',
     addUserSuccess: 'User created successfully',
+    addUserSuccessWithUsername: "User '{username}' created successfully",
     addUserFailed: 'Failed to create user',
   },
   // Footer

@@ -103,6 +103,7 @@ export default {
     pleaseSelectUserType: '请选择用户类型',
     enterUsername: '请输入用户名',
     addUserSuccess: '用户创建成功',
+    addUserSuccessWithUsername: "用户 '{username}' 创建成功",
     addUserFailed: '用户创建失败',
   },
   // 底部信息
