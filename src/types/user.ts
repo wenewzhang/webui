@@ -65,3 +65,23 @@ export interface AddSambaUserResponse {
   success: boolean
   message: string
 }
+
+export interface DeleteUserRequest {
+  username: string
+  token: string
+}
+
+export interface DeleteUserResponse {
+  success: boolean
+  message: string
+}
+
+export interface DeleteSambaUserRequest {
+  username: string
+  token: string
+}
+
+export interface DeleteSambaUserResponse {
+  success: boolean
+  message: string
+}

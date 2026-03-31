@@ -105,6 +105,11 @@ export default {
     addUserSuccess: '用户创建成功',
     addUserSuccessWithUsername: "用户 '{username}' 创建成功",
     addUserFailed: '用户创建失败',
+    deleteUserConfirmTitle: '确认删除用户',
+    deleteUserConfirmMessage: "确定要删除用户 '{username}' 吗？此操作不可撤销。",
+    deleteUserSuccess: '用户删除成功',
+    deleteUserSuccessWithUsername: "用户 '{username}' 删除成功",
+    deleteUserFailed: '用户删除失败',
   },
   // 底部信息
   footer: {

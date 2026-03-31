@@ -1,5 +1,5 @@
 import apiClient from './axios'
-import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse, AddUserRequest, AddUserResponse, AddSambaUserRequest, AddSambaUserResponse } from '@/types/user'
+import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse, AddUserRequest, AddUserResponse, AddSambaUserRequest, AddSambaUserResponse, DeleteUserRequest, DeleteUserResponse, DeleteSambaUserRequest, DeleteSambaUserResponse } from '@/types/user'
 
 export const userApi = {
   // 登录
@@ -45,5 +45,15 @@ export const userApi = {
   // 新增Samba用户
   addSambaUser(data: AddSambaUserRequest): Promise<AddSambaUserResponse> {
     return apiClient.post('/smb/add_user', data).then((res) => res.data)
+  },
+
+  // 删除用户
+  deleteUser(data: DeleteUserRequest): Promise<DeleteUserResponse> {
+    return apiClient.post('/delete_user', data).then((res) => res.data)
+  },
+
+  // 删除Samba用户
+  deleteSambaUser(data: DeleteSambaUserRequest): Promise<DeleteSambaUserResponse> {
+    return apiClient.post('/smb/delete_user', data).then((res) => res.data)
   },
 }

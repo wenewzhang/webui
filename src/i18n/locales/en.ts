@@ -105,6 +105,11 @@ export default {
     addUserSuccess: 'User created successfully',
     addUserSuccessWithUsername: "User '{username}' created successfully",
     addUserFailed: 'Failed to create user',
+    deleteUserConfirmTitle: 'Confirm Delete User',
+    deleteUserConfirmMessage: "Are you sure you want to delete user '{username}'? This action cannot be undone.",
+    deleteUserSuccess: 'User deleted successfully',
+    deleteUserSuccessWithUsername: "User '{username}' deleted successfully",
+    deleteUserFailed: 'Failed to delete user',
   },
   // Footer
   footer: {

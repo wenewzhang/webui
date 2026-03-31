@@ -101,6 +101,7 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button
+                @click="handleDeleteUser(user)"
                 class="inline-flex items-center px-3 py-1 border border-red-300 shadow-sm text-xs font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 {{ $t('users.deleteAccount') || 'Delete Account' }}
@@ -198,6 +199,65 @@
           <button
             type="button"
             @click="closeModal"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+          >
+            {{ $t('common.cancel') || 'Cancel' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete User Confirm Modal -->
+  <div v-if="showDeleteUserModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="delete-user-modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" @click="closeDeleteUserModal"></div>
+
+      <!-- Modal panel -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.054 0 1.918-.816 1.995-1.85l.007-.15V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10c0 1.054.816 1.918 1.85 1.995l.15.007zM4 7h16M10 11v6m4-6v6" />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="delete-user-modal-title">
+              {{ $t('users.deleteUserConfirmTitle') || 'Confirm Delete User' }}
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-gray-500">
+                {{ $t('users.deleteUserConfirmMessage', { username: userToDelete?.name }) || `Are you sure you want to delete user '${userToDelete?.name}'? This action cannot be undone.` }}
+              </p>
+            </div>
+            <!-- Error Message -->
+            <div v-if="deleteUserError" class="mt-2 text-sm text-red-600">
+              {{ deleteUserError }}
+            </div>
+            <!-- Success Message -->
+            <div v-if="deleteUserSuccess" class="mt-2 text-sm text-green-600">
+              {{ deleteUserSuccess }}
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            @click="submitDeleteUser"
+            :disabled="deletingUser"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+          >
+            <svg v-if="deletingUser" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ $t('common.delete') || 'Delete' }}
+          </button>
+          <button
+            type="button"
+            @click="closeDeleteUserModal"
             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
           >
             {{ $t('common.cancel') || 'Cancel' }}
@@ -349,6 +409,13 @@ const addingUser = ref(false)
 const addUserError = ref('')
 const addUserSuccess = ref('')
 
+// Delete user modal state
+const showDeleteUserModal = ref(false)
+const deletingUser = ref(false)
+const deleteUserError = ref('')
+const deleteUserSuccess = ref('')
+const userToDelete = ref<UserInfo | null>(null)
+
 // Add user form
 const addUserForm = reactive({
   userType: '',
@@ -440,6 +507,61 @@ const submitAddUser = async () => {
     }
   } finally {
     addingUser.value = false
+  }
+}
+
+const handleDeleteUser = (user: UserInfo) => {
+  userToDelete.value = user
+  showDeleteUserModal.value = true
+  deleteUserError.value = ''
+  deleteUserSuccess.value = ''
+}
+
+const closeDeleteUserModal = () => {
+  showDeleteUserModal.value = false
+  deleteUserError.value = ''
+  deleteUserSuccess.value = ''
+  userToDelete.value = null
+}
+
+const submitDeleteUser = async () => {
+  if (!userToDelete.value) return
+
+  deletingUser.value = true
+  deleteUserError.value = ''
+  deleteUserSuccess.value = ''
+
+  try {
+    let response
+    if (userToDelete.value.type_ === 'samba') {
+      response = await userApi.deleteSambaUser({
+        username: userToDelete.value.name,
+        token: userStore.token,
+      })
+    } else {
+      response = await userApi.deleteUser({
+        username: userToDelete.value.name,
+        token: userStore.token,
+      })
+    }
+
+    if (response.success) {
+      if (response.message && response.message.includes('successfully')) {
+        deleteUserSuccess.value = t('users.deleteUserSuccessWithUsername', { username: userToDelete.value.name })
+      } else {
+        deleteUserSuccess.value = response.message || t('users.deleteUserSuccess')
+      }
+      setTimeout(() => {
+        closeDeleteUserModal()
+        userStore.listUsers()
+      }, 2000)
+    } else {
+      deleteUserError.value = response.message || t('users.deleteUserFailed')
+    }
+  } catch (err: any) {
+    deleteUserError.value = err.response?.data?.message || t('users.deleteUserFailed')
+  } finally {
+    deletingUser.value = false
   }
 }
 
