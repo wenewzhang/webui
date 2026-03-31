@@ -52,6 +52,12 @@
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {{ $t('users.type') || 'Type' }}
             </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ $t('users.password') || 'Password' }}
+            </th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {{ $t('common.action') || 'Action' }}
+            </th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -73,6 +79,20 @@
               ]">
                 {{ user.type_ }}
               </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <button
+                class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {{ $t('users.changePassword') || 'Change Password' }}
+              </button>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <button
+                class="inline-flex items-center px-3 py-1 border border-red-300 shadow-sm text-xs font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                {{ $t('users.deleteAccount') || 'Delete Account' }}
+              </button>
             </td>
           </tr>
         </tbody>

@@ -29,6 +29,7 @@ export default {
     pleaseSelect: '请选择',
     pleaseInput: '请输入',
     operation: '操作',
+    action: '操作',
     status: '状态',
     date: '日期',
     time: '时间',
@@ -77,6 +78,9 @@ export default {
     noUsers: '没有找到用户',
     name: '名称',
     type: '类型',
+    password: '密码',
+    changePassword: '修改密码',
+    deleteAccount: '删除账号',
   },
   // 底部信息
   footer: {

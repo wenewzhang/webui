@@ -29,6 +29,7 @@ export default {
     pleaseSelect: 'Please select',
     pleaseInput: 'Please input',
     operation: 'Operation',
+    action: 'Action',
     status: 'Status',
     date: 'Date',
     time: 'Time',
@@ -77,6 +78,9 @@ export default {
     noUsers: 'No users found',
     name: 'Name',
     type: 'Type',
+    password: 'Password',
+    changePassword: 'Change Password',
+    deleteAccount: 'Delete Account',
   },
   // Footer
   footer: {
