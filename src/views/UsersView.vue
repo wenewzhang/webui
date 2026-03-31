@@ -286,7 +286,11 @@ const submitChangePassword = async () => {
     }
 
     if (response.success) {
-      passwordSuccess.value = response.message || t('users.changeSuccess')
+      if (currentUser.value?.type_ === 'samba' && response.message?.includes("changed successfully")) {
+        passwordSuccess.value = t('users.sambaChangeSuccess', { username: currentUser.value.name })
+      } else {
+        passwordSuccess.value = response.message || t('users.changeSuccess')
+      }
       // Clear form after success
       setTimeout(() => {
         closeModal()
@@ -298,6 +302,8 @@ const submitChangePassword = async () => {
     const msg = err.response?.data?.message
     if (currentUser.value?.type_ === 'admin' && msg === 'Invalid old password') {
       passwordError.value = t('users.invalidOldPassword')
+    } else if (currentUser.value?.type_ === 'samba' && msg === 'Password too short') {
+      passwordError.value = t('users.sambaPasswordTooShort')
     } else {
       passwordError.value = msg || t('users.changeFailed')
     }

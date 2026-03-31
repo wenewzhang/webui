@@ -95,6 +95,8 @@ export default {
     changeFailed: 'Failed to change password',
     regularUserNotImplemented: 'Regular user password change not implemented yet',
     invalidOldPassword: 'Invalid old password',
+    sambaPasswordTooShort: 'Password too short',
+    sambaChangeSuccess: "Password for user '{username}' changed successfully",
   },
   // Footer
   footer: {
