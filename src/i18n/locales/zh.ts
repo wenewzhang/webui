@@ -110,6 +110,7 @@ export default {
     deleteUserSuccess: '用户删除成功',
     deleteUserSuccessWithUsername: "用户 '{username}' 删除成功",
     deleteUserFailed: '用户删除失败',
+    cannotDeleteAdmin: '无法删除管理员用户',
   },
   // 底部信息
   footer: {

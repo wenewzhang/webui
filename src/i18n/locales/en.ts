@@ -110,6 +110,7 @@ export default {
     deleteUserSuccess: 'User deleted successfully',
     deleteUserSuccessWithUsername: "User '{username}' deleted successfully",
     deleteUserFailed: 'Failed to delete user',
+    cannotDeleteAdmin: 'Cannot delete admin user',
   },
   // Footer
   footer: {

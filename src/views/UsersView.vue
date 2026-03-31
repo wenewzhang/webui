@@ -554,12 +554,17 @@ const submitDeleteUser = async () => {
       setTimeout(() => {
         closeDeleteUserModal()
         userStore.listUsers()
-      }, 2000)
+      }, 3500)
     } else {
       deleteUserError.value = response.message || t('users.deleteUserFailed')
     }
   } catch (err: any) {
-    deleteUserError.value = err.response?.data?.message || t('users.deleteUserFailed')
+    const errorMsg = err.response?.data?.message
+    if (errorMsg === 'Cannot delete admin user') {
+      deleteUserError.value = t('users.cannotDeleteAdmin')
+    } else {
+      deleteUserError.value = errorMsg || t('users.deleteUserFailed')
+    }
   } finally {
     deletingUser.value = false
   }
