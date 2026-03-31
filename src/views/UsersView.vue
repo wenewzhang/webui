@@ -118,46 +118,46 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              {{ $t('users.changeAdminPassword') || 'Change Admin Password' }}
+              {{ $t('users.changePasswordTitle') }}
             </h3>
             <div class="mt-4 space-y-4">
               <!-- Old Password -->
               <div>
                 <label for="old-password" class="block text-sm font-medium text-gray-700">
-                  {{ $t('users.oldPassword') || 'Old Password' }}
+                  {{ $t('users.oldPassword') }}
                 </label>
                 <input
                   id="old-password"
                   v-model="passwordForm.oldPassword"
                   type="password"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  :placeholder="$t('users.oldPassword') || 'Old Password'"
+                  :placeholder="$t('users.oldPassword')"
                 />
               </div>
               <!-- New Password -->
               <div>
                 <label for="new-password" class="block text-sm font-medium text-gray-700">
-                  {{ $t('users.newPassword') || 'New Password' }}
+                  {{ $t('users.newPassword') }}
                 </label>
                 <input
                   id="new-password"
                   v-model="passwordForm.newPassword"
                   type="password"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  :placeholder="$t('users.newPassword') || 'New Password'"
+                  :placeholder="$t('users.newPassword')"
                 />
               </div>
               <!-- Confirm New Password -->
               <div>
                 <label for="confirm-password" class="block text-sm font-medium text-gray-700">
-                  {{ $t('users.confirmNewPassword') || 'Confirm New Password' }}
+                  {{ $t('users.confirmPassword') }}
                 </label>
                 <input
                   id="confirm-password"
                   v-model="passwordForm.confirmPassword"
                   type="password"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  :placeholder="$t('users.confirmNewPassword') || 'Confirm New Password'"
+                  :placeholder="$t('users.confirmPassword')"
                 />
               </div>
               <!-- Error Message -->
@@ -199,10 +199,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
 import { userApi } from '@/api/user'
 import type { UserInfo } from '@/types/user'
 
+const { t } = useI18n()
 const userStore = useUserStore()
 
 // Modal state
@@ -234,7 +236,7 @@ const handleChangePassword = (user: UserInfo) => {
     passwordSuccess.value = ''
   } else {
     // Handle regular user password change (not implemented yet)
-    alert('Regular user password change not implemented yet')
+    alert(t('users.regularUserNotImplemented'))
   }
 }
 
@@ -247,19 +249,19 @@ const closeModal = () => {
 const submitChangePassword = async () => {
   // Validation
   if (!passwordForm.oldPassword) {
-    passwordError.value = 'Please enter old password'
+    passwordError.value = t('users.enterOldPassword')
     return
   }
   if (!passwordForm.newPassword) {
-    passwordError.value = 'Please enter new password'
+    passwordError.value = t('users.enterNewPassword')
     return
   }
   if (!passwordForm.confirmPassword) {
-    passwordError.value = 'Please confirm new password'
+    passwordError.value = t('users.confirmNewPassword')
     return
   }
   if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-    passwordError.value = 'New passwords do not match'
+    passwordError.value = t('users.passwordsNotMatch')
     return
   }
 
@@ -274,16 +276,16 @@ const submitChangePassword = async () => {
     })
 
     if (response.success) {
-      passwordSuccess.value = response.message || 'Password changed successfully'
+      passwordSuccess.value = response.message || t('users.changeSuccess')
       // Clear form after success
       setTimeout(() => {
         closeModal()
-      }, 1500)
+      }, 3500)
     } else {
-      passwordError.value = response.message || 'Failed to change password'
+      passwordError.value = response.message || t('users.changeFailed')
     }
   } catch (err: any) {
-    passwordError.value = err.response?.data?.message || 'Failed to change password'
+    passwordError.value = err.response?.data?.message || t('users.changeFailed')
   } finally {
     changingPassword.value = false
   }

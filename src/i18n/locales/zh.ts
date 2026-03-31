@@ -81,6 +81,18 @@ export default {
     password: '密码',
     changePassword: '修改密码',
     deleteAccount: '删除账号',
+    // 修改密码弹窗
+    changePasswordTitle: '修改管理员密码',
+    oldPassword: '旧密码',
+    newPassword: '新密码',
+    confirmPassword: '确认密码',
+    enterOldPassword: '请输入旧密码',
+    enterNewPassword: '请输入新密码',
+    confirmNewPassword: '请确认新密码',
+    passwordsNotMatch: '新密码不一致',
+    changeSuccess: '密码修改成功',
+    changeFailed: '密码修改失败',
+    regularUserNotImplemented: '普通用户修改密码功能尚未实现',
   },
   // 底部信息
   footer: {

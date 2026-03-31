@@ -81,6 +81,18 @@ export default {
     password: 'Password',
     changePassword: 'Change Password',
     deleteAccount: 'Delete Account',
+    // Change Password Modal
+    changePasswordTitle: 'Change Admin Password',
+    oldPassword: 'Old Password',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    enterOldPassword: 'Please enter old password',
+    enterNewPassword: 'Please enter new password',
+    confirmNewPassword: 'Please confirm new password',
+    passwordsNotMatch: 'New passwords do not match',
+    changeSuccess: 'Password changed successfully',
+    changeFailed: 'Failed to change password',
+    regularUserNotImplemented: 'Regular user password change not implemented yet',
   },
   // Footer
   footer: {
