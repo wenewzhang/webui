@@ -93,6 +93,7 @@ export default {
     changeSuccess: 'Password changed successfully',
     changeFailed: 'Failed to change password',
     regularUserNotImplemented: 'Regular user password change not implemented yet',
+    invalidOldPassword: 'Invalid old password',
   },
   // Footer
   footer: {

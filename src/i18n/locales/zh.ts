@@ -93,6 +93,7 @@ export default {
     changeSuccess: '密码修改成功',
     changeFailed: '密码修改失败',
     regularUserNotImplemented: '普通用户修改密码功能尚未实现',
+    invalidOldPassword: '旧密码错误',
   },
   // 底部信息
   footer: {

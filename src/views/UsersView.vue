@@ -285,7 +285,12 @@ const submitChangePassword = async () => {
       passwordError.value = response.message || t('users.changeFailed')
     }
   } catch (err: any) {
-    passwordError.value = err.response?.data?.message || t('users.changeFailed')
+    const msg = err.response?.data?.message
+    if (msg === 'Invalid old password') {
+      passwordError.value = t('users.invalidOldPassword')
+    } else {
+      passwordError.value = msg || t('users.changeFailed')
+    }
   } finally {
     changingPassword.value = false
   }
