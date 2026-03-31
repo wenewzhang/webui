@@ -1,5 +1,5 @@
 import apiClient from './axios'
-import type { LoginRequest, LoginResponse, ListUsersResponse } from '@/types/user'
+import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse } from '@/types/user'
 
 export const userApi = {
   // 登录
@@ -25,5 +25,10 @@ export const userApi = {
   // 获取用户列表
   listUsers(): Promise<ListUsersResponse> {
     return apiClient.get('/list_users').then((res) => res.data)
+  },
+
+  // 修改管理员密码
+  changeAdminPassword(data: ChangeAdminPasswordRequest): Promise<ChangeAdminPasswordResponse> {
+    return apiClient.post('/change_admin_passwd', data).then((res) => res.data)
   },
 }

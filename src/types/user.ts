@@ -24,3 +24,13 @@ export interface ListUsersResponse {
   message: string
   users: UserInfo[]
 }
+
+export interface ChangeAdminPasswordRequest {
+  old_password: string
+  new_password: string
+}
+
+export interface ChangeAdminPasswordResponse {
+  success: boolean
+  message: string
+}
