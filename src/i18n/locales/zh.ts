@@ -97,6 +97,13 @@ export default {
     invalidOldPassword: '旧密码错误',
     sambaPasswordTooShort: '密码太短',
     sambaChangeSuccess: "用户 '{username}' 的密码修改成功",
+    addUser: '新增用户',
+    addUserTitle: '新增用户',
+    userType: '用户类型',
+    pleaseSelectUserType: '请选择用户类型',
+    enterUsername: '请输入用户名',
+    addUserSuccess: '用户创建成功',
+    addUserFailed: '用户创建失败',
   },
   // 底部信息
   footer: {

@@ -97,6 +97,13 @@ export default {
     invalidOldPassword: 'Invalid old password',
     sambaPasswordTooShort: 'Password too short',
     sambaChangeSuccess: "Password for user '{username}' changed successfully",
+    addUser: 'Add User',
+    addUserTitle: 'Add User',
+    userType: 'User Type',
+    pleaseSelectUserType: 'Please select user type',
+    enterUsername: 'Please enter username',
+    addUserSuccess: 'User created successfully',
+    addUserFailed: 'Failed to create user',
   },
   // Footer
   footer: {

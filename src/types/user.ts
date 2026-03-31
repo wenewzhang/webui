@@ -44,3 +44,24 @@ export interface ChangeSambaPasswordResponse {
   success: boolean
   message: string
 }
+
+export interface AddUserRequest {
+  username: string
+  password: string
+  user_type: string
+}
+
+export interface AddUserResponse {
+  success: boolean
+  message: string
+}
+
+export interface AddSambaUserRequest {
+  username: string
+  password: string
+}
+
+export interface AddSambaUserResponse {
+  success: boolean
+  message: string
+}
