@@ -499,17 +499,23 @@ const submitAddUser = async () => {
       addUserError.value = response.message === 'Password too short' ? t('users.sambaPasswordTooShort') : (response.message || t('users.addUserFailed'))
     }
   } catch (err: any) {
-    const msg = err.response?.data?.message
-    if (msg === 'Password too short') {
-      addUserError.value = t('users.sambaPasswordTooShort')
-    } else if (msg === 'Failed to create system user') {
-      addUserError.value = t('users.cannotCreateSystemUser')
-    } else if (msg === 'User already exists') {
-      addUserError.value = t('users.userAlreadyExists')
-    } else if (msg?.includes('is not allowed')) {
-      addUserError.value = t('users.usernameNotAllowed')
+    if (err.response?.status === 403) {
+      addUserError.value = t('error.forbidden')
     } else {
-      addUserError.value = msg || t('users.addUserFailed')
+      const msg = err.response?.data?.message
+      if (msg === 'Password too short') {
+        addUserError.value = t('users.sambaPasswordTooShort')
+      } else if (msg === 'Failed to create system user') {
+        addUserError.value = t('users.cannotCreateSystemUser')
+      } else if (msg === 'User already exists') {
+        addUserError.value = t('users.userAlreadyExists')
+      } else if (msg === 'Invalid username format') {
+        addUserError.value = t('users.invalidUsernameFormat')
+      } else if (msg?.includes('is not allowed')) {
+        addUserError.value = t('users.usernameNotAllowed')
+      } else {
+        addUserError.value = msg || t('users.addUserFailed')
+      }
     }
   } finally {
     addingUser.value = false
@@ -565,15 +571,19 @@ const submitDeleteUser = async () => {
       deleteUserError.value = response.message || t('users.deleteUserFailed')
     }
   } catch (err: any) {
-    const errorMsg = err.response?.data?.message
-    if (errorMsg === 'Cannot delete admin user') {
-      deleteUserError.value = t('users.cannotDeleteAdmin')
-    } else if (errorMsg?.includes('User not found')) {
-      deleteUserError.value = t('users.userDoesNotExist')
-    } else if (errorMsg?.includes('does not exist')) {
-      deleteUserError.value = t('users.userDoesNotExist')
+    if (err.response?.status === 403) {
+      deleteUserError.value = t('error.forbidden')
     } else {
-      deleteUserError.value = errorMsg || t('users.deleteUserFailed')
+      const errorMsg = err.response?.data?.message
+      if (errorMsg === 'Cannot delete admin user') {
+        deleteUserError.value = t('users.cannotDeleteAdmin')
+      } else if (errorMsg?.includes('User not found')) {
+        deleteUserError.value = t('users.userDoesNotExist')
+      } else if (errorMsg?.includes('does not exist')) {
+        deleteUserError.value = t('users.userDoesNotExist')
+      } else {
+        deleteUserError.value = errorMsg || t('users.deleteUserFailed')
+      }
     }
   } finally {
     deletingUser.value = false
@@ -654,13 +664,17 @@ const submitChangePassword = async () => {
       passwordError.value = response.message || t('users.changeFailed')
     }
   } catch (err: any) {
-    const msg = err.response?.data?.message
-    if (currentUser.value?.type_ === 'admin' && msg === 'Invalid old password') {
-      passwordError.value = t('users.invalidOldPassword')
-    } else if (currentUser.value?.type_ === 'samba' && msg === 'Password too short') {
-      passwordError.value = t('users.sambaPasswordTooShort')
+    if (err.response?.status === 403) {
+      passwordError.value = t('error.forbidden')
     } else {
-      passwordError.value = msg || t('users.changeFailed')
+      const msg = err.response?.data?.message
+      if (currentUser.value?.type_ === 'admin' && msg === 'Invalid old password') {
+        passwordError.value = t('users.invalidOldPassword')
+      } else if (currentUser.value?.type_ === 'samba' && msg === 'Password too short') {
+        passwordError.value = t('users.sambaPasswordTooShort')
+      } else {
+        passwordError.value = msg || t('users.changeFailed')
+      }
     }
   } finally {
     changingPassword.value = false

@@ -102,6 +102,7 @@ export default {
     userType: 'User Type',
     pleaseSelectUserType: 'Please select user type',
     enterUsername: 'Please enter username',
+    invalidUsernameFormat: 'Invalid username format',
     addUserSuccess: 'User created successfully',
     addUserSuccessWithUsername: "User '{username}' created successfully",
     addUserFailed: 'Failed to create user',
