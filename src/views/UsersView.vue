@@ -568,6 +568,10 @@ const submitDeleteUser = async () => {
     const errorMsg = err.response?.data?.message
     if (errorMsg === 'Cannot delete admin user') {
       deleteUserError.value = t('users.cannotDeleteAdmin')
+    } else if (errorMsg?.includes('User not found')) {
+      deleteUserError.value = t('users.userDoesNotExist')
+    } else if (errorMsg?.includes('does not exist')) {
+      deleteUserError.value = t('users.userDoesNotExist')
     } else {
       deleteUserError.value = errorMsg || t('users.deleteUserFailed')
     }

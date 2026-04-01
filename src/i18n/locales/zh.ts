@@ -114,6 +114,7 @@ export default {
     cannotCreateSystemUser: '无法创建系统用户',
     userAlreadyExists: '用户已存在',
     usernameNotAllowed: '用户名不被允许',
+    userDoesNotExist: '用户不存在',
   },
   // 底部信息
   footer: {

@@ -114,6 +114,7 @@ export default {
     cannotCreateSystemUser: 'Failed to delete system user',
     userAlreadyExists: 'User already exists',
     usernameNotAllowed: 'Username is not allowed',
+    userDoesNotExist: 'User does not exist',
   },
   // Footer
   footer: {
