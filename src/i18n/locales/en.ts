@@ -111,6 +111,9 @@ export default {
     deleteUserSuccessWithUsername: "User '{username}' deleted successfully",
     deleteUserFailed: 'Failed to delete user',
     cannotDeleteAdmin: 'Cannot delete admin user',
+    cannotCreateSystemUser: 'Failed to delete system user',
+    userAlreadyExists: 'User already exists',
+    usernameNotAllowed: 'Username is not allowed',
   },
   // Footer
   footer: {

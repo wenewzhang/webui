@@ -502,6 +502,12 @@ const submitAddUser = async () => {
     const msg = err.response?.data?.message
     if (msg === 'Password too short') {
       addUserError.value = t('users.sambaPasswordTooShort')
+    } else if (msg === 'Failed to create system user') {
+      addUserError.value = t('users.cannotCreateSystemUser')
+    } else if (msg === 'User already exists') {
+      addUserError.value = t('users.userAlreadyExists')
+    } else if (msg?.includes('is not allowed')) {
+      addUserError.value = t('users.usernameNotAllowed')
     } else {
       addUserError.value = msg || t('users.addUserFailed')
     }

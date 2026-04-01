@@ -111,6 +111,9 @@ export default {
     deleteUserSuccessWithUsername: "用户 '{username}' 删除成功",
     deleteUserFailed: '用户删除失败',
     cannotDeleteAdmin: '无法删除管理员用户',
+    cannotCreateSystemUser: '无法创建系统用户',
+    userAlreadyExists: '用户已存在',
+    usernameNotAllowed: '用户名不被允许',
   },
   // 底部信息
   footer: {
