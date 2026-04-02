@@ -75,6 +75,14 @@ export default {
     samba: 'Samba',
     apps: 'Apps',
   },
+  // Storage Page
+  storagePage: {
+    deleteDiskConfirmTitle: "Confirm Delete Disk",
+    deleteDiskConfirmMessage: "Are you sure you want to delete disk '{diskName}'? This action cannot be undone.",
+    deleteDiskSuccess: "Disk deleted successfully",
+    deleteDiskFailed: "Failed to delete disk",
+    diskInUseOrNotExist: "Disk is either in use by ZFS or does not exist",
+  },
   // Users Page
   users: {
     noUsers: 'No users found',

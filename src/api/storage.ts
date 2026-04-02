@@ -22,8 +22,17 @@ export interface DisksResponse {
   error: string | null
 }
 
+export interface DeleteDiskResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
+  },
+  deleteDisk(diskName: string): Promise<DeleteDiskResponse> {
+    return apiClient.post('/delete_disk', { disk_name: diskName }).then(res => res.data)
   },
 }

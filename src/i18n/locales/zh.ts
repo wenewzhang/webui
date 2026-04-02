@@ -75,6 +75,14 @@ export default {
     samba: 'Samba',
     apps: '应用',
   },
+  // 存储器页面
+  storagePage: {
+    deleteDiskConfirmTitle: "确认删除磁盘",
+    deleteDiskConfirmMessage: "确定要删除磁盘 '{diskName}' 吗？此操作不可撤销。",
+    deleteDiskSuccess: "磁盘删除成功",
+    deleteDiskFailed: "磁盘删除失败",
+    diskInUseOrNotExist: "磁盘正被 ZFS 使用或不存在",
+  },
   // 用户页面
   users: {
     noUsers: '没有找到用户',
