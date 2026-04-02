@@ -81,6 +81,9 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
   if (lower.includes('in use by zfs') || lower.includes('does not exist')) {
     return t('storagePage.diskInUseOrNotExist')
   }
+  if (lower.includes('only admin users can perform this operation')) {
+    return t('storagePage.onlyAdminCanDeleteDisk')
+  }
   return apiError
 }
 

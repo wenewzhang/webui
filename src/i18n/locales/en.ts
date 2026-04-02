@@ -82,6 +82,7 @@ export default {
     deleteDiskSuccess: "Disk deleted successfully",
     deleteDiskFailed: "Failed to delete disk",
     diskInUseOrNotExist: "Disk is either in use by ZFS or does not exist",
+    onlyAdminCanDeleteDisk: "Only admin users can perform this operation",
   },
   // Users Page
   users: {
