@@ -14,7 +14,7 @@
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-3">
             <h3 class="text-lg font-semibold text-indigo-900">{{ disk.name }}</h3>
-            <span class="text-sm text-indigo-700">{{ disk.size }} · {{ disk.type }}</span>
+            <span class="text-sm text-indigo-700">{{ disk.size }} · {{ disk.type }}<template v-if="disk.mountpoint"> · {{ disk.mountpoint }}</template></span>
           </div>
           <button
             @click="handleDelete(disk)"
