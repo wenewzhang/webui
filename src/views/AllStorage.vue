@@ -239,13 +239,13 @@ const submitPartition = async () => {
       partitionError.value = t('storagePage.invalidPartitionSize')
       return
     }
-    sizeStr = `${val}${partitionForm.unit}`
+    sizeStr = val === 0 ? '0' : `${val}${partitionForm.unit}`
   } else {
     if (val < 0 || val > 100) {
       partitionError.value = t('storagePage.invalidPartitionSize')
       return
     }
-    sizeStr = `${val}%`
+    sizeStr = val === 0 ? '0' : `${val}%`
   }
 
   creatingPartition.value = true
