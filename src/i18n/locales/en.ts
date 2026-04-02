@@ -83,6 +83,16 @@ export default {
     deleteDiskFailed: "Failed to delete disk",
     diskInUseOrNotExist: "Disk is either in use by ZFS or does not exist",
     onlyAdminCanDeleteDisk: "Only admin users can perform this operation",
+    createPartition: "Create Partition",
+    createPartitionTitle: "Create Partition",
+    partitionType: "Partition Type",
+    capacity: "Capacity",
+    percentage: "Percentage",
+    partitionSize: "Partition Size",
+    unit: "Unit",
+    invalidPartitionSize: "Invalid partition size",
+    createPartitionSuccess: "Partition created successfully",
+    createPartitionFailed: "Failed to create partition",
   },
   // Users Page
   users: {

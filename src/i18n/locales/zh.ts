@@ -83,6 +83,16 @@ export default {
     deleteDiskFailed: "磁盘删除失败",
     diskInUseOrNotExist: "磁盘正被 ZFS 使用或不存在",
     onlyAdminCanDeleteDisk: "只有管理员才能执行此操作",
+    createPartition: "创建分区",
+    createPartitionTitle: "创建分区",
+    partitionType: "分区类型",
+    capacity: "容量",
+    percentage: "百分比",
+    partitionSize: "分区大小",
+    unit: "单位",
+    invalidPartitionSize: "无效的分区大小",
+    createPartitionSuccess: "分区创建成功",
+    createPartitionFailed: "分区创建失败",
   },
   // 用户页面
   users: {
