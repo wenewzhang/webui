@@ -30,9 +30,21 @@ const router = createRouter({
         },
         {
           path: 'storage',
-          name: 'Storage',
-          component: () => import('@/views/StorageView.vue'),
-          meta: { title: 'Storage' },
+          redirect: '/storage/all',
+          children: [
+            {
+              path: 'all',
+              name: 'StorageAll',
+              component: () => import('@/views/StorageView.vue'),
+              meta: { title: 'Storage - All' },
+            },
+            {
+              path: 'idle',
+              name: 'StorageIdle',
+              component: () => import('@/views/StorageView.vue'),
+              meta: { title: 'Storage - Idle' },
+            },
+          ],
         },
         {
           path: 'samba',

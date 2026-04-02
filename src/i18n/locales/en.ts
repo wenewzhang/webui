@@ -70,6 +70,8 @@ export default {
   nav: {
     users: 'Users',
     storage: 'Storage',
+    storageAll: 'All',
+    storageIdle: 'Idle',
     samba: 'Samba',
     apps: 'Apps',
   },

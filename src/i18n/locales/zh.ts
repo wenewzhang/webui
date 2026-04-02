@@ -70,6 +70,8 @@ export default {
   nav: {
     users: '用户',
     storage: '存储器',
+    storageAll: '全部',
+    storageIdle: '空闲',
     samba: 'Samba',
     apps: '应用',
   },
