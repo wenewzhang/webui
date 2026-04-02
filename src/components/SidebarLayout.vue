@@ -35,28 +35,75 @@
 
       <!-- 菜单 -->
       <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
-        <router-link
-          v-for="item in menuItems"
-          :key="item.path"
-          :to="item.path"
-          :class="[
-            'group flex items-center rounded-md transition-colors',
-            isCollapsed ? 'justify-start py-3 px-1.5' : 'px-3 py-2.5',
-            isActive(item.path)
-              ? 'bg-indigo-50 text-indigo-700'
-              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-          ]"
-          :title="$t(`nav.${item.name}`)"
-        >
-          <component :is="item.icon" :class="[
-            'h-5 w-5 flex-shrink-0',
-            isCollapsed ? '' : 'mr-3',
-            isActive(item.path) ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500'
-          ]" />
-          <span v-show="!isCollapsed" class="text-sm font-medium whitespace-nowrap">
-            {{ $t(`nav.${item.name}`) }}
-          </span>
-        </router-link>
+        <div v-for="item in menuItems" :key="item.path">
+          <!-- 有子菜单的项 -->
+          <div v-if="item.children">
+            <button
+              @click="toggleSubmenu(item.path)"
+              :class="[
+                'w-full group flex items-center rounded-md transition-colors',
+                isCollapsed ? 'justify-start py-3 px-1.5' : 'px-3 py-2.5',
+                isActive(item.path)
+                  ? 'bg-indigo-50 text-indigo-700'
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              ]"
+              :title="$t(`nav.${item.name}`)"
+            >
+              <component :is="item.icon" :class="[
+                'h-5 w-5 flex-shrink-0',
+                isCollapsed ? '' : 'mr-3',
+                isActive(item.path) ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500'
+              ]" />
+              <span v-show="!isCollapsed" class="flex-1 text-sm font-medium whitespace-nowrap">
+                {{ $t(`nav.${item.name}`) }}
+              </span>
+              <svg v-show="!isCollapsed" :class="[
+                'h-4 w-4 transition-transform',
+                openSubmenus.includes(item.path) ? 'rotate-180' : ''
+              ]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <!-- 子菜单 -->
+            <div v-show="!isCollapsed && openSubmenus.includes(item.path)" class="ml-4 mt-1 space-y-1">
+              <router-link
+                v-for="child in item.children"
+                :key="child.path"
+                :to="child.path"
+                :class="[
+                  'group flex items-center rounded-md transition-colors px-3 py-2',
+                  isActive(child.path)
+                    ? 'bg-indigo-50 text-indigo-700'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                ]"
+              >
+                <span class="text-sm">{{ $t(`nav.${child.name}`) }}</span>
+              </router-link>
+            </div>
+          </div>
+          <!-- 普通菜单项 -->
+          <router-link
+            v-else
+            :to="item.path"
+            :class="[
+              'group flex items-center rounded-md transition-colors',
+              isCollapsed ? 'justify-start py-3 px-1.5' : 'px-3 py-2.5',
+              isActive(item.path)
+                ? 'bg-indigo-50 text-indigo-700'
+                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+            ]"
+            :title="$t(`nav.${item.name}`)"
+          >
+            <component :is="item.icon" :class="[
+              'h-5 w-5 flex-shrink-0',
+              isCollapsed ? '' : 'mr-3',
+              isActive(item.path) ? 'text-indigo-600' : 'text-gray-400 group-hover:text-gray-500'
+            ]" />
+            <span v-show="!isCollapsed" class="text-sm font-medium whitespace-nowrap">
+              {{ $t(`nav.${item.name}`) }}
+            </span>
+          </router-link>
+        </div>
       </nav>
 
       <!-- 底部信息 -->
@@ -109,15 +156,25 @@ const userStore = useUserStore()
 
 // 侧边栏展开/收缩状态
 const isCollapsed = ref(false)
+const openSubmenus = ref<string[]>([])
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
 }
 
+const toggleSubmenu = (path: string) => {
+  const index = openSubmenus.value.indexOf(path)
+  if (index > -1) {
+    openSubmenus.value.splice(index, 1)
+  } else {
+    openSubmenus.value.push(path)
+  }
+}
+
 const UsersIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
   h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z' })
 ])
-const DisksIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
+const StorageIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
   h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4' })
 ])
 const SambaIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
@@ -129,7 +186,7 @@ const AppsIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '0 0 
 
 const menuItems = [
   { name: 'users', path: '/users', icon: UsersIcon },
-  { name: 'disks', path: '/disks', icon: DisksIcon },
+  { name: 'storage', path: '/storage', icon: StorageIcon },
   { name: 'samba', path: '/samba', icon: SambaIcon },
   { name: 'apps', path: '/apps', icon: AppsIcon },
 ]

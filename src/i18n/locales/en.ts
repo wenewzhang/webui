@@ -69,7 +69,7 @@ export default {
   // Navigation
   nav: {
     users: 'Users',
-    disks: 'Disks',
+    storage: 'Storage',
     samba: 'Samba',
     apps: 'Apps',
   },

@@ -72,7 +72,7 @@
 
         <!-- 功能卡片 -->
         <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          <!-- 磁盘管理 -->
+          <!-- 存储器管理 -->
           <div class="bg-white overflow-hidden shadow rounded-lg">
             <div class="p-5">
               <div class="flex items-center">
@@ -83,10 +83,10 @@
                 </div>
                 <div class="ml-5 w-0 flex-1">
                   <dt class="text-sm font-medium text-gray-500 truncate">
-                    磁盘管理
+                    存储器管理
                   </dt>
                   <dd class="text-lg font-medium text-gray-900">
-                    查看和管理磁盘
+                    查看和管理存储器
                   </dd>
                 </div>
               </div>

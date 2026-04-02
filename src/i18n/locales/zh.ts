@@ -69,7 +69,7 @@ export default {
   // 导航菜单
   nav: {
     users: '用户',
-    disks: '磁盘',
+    storage: '存储器',
     samba: 'Samba',
     apps: '应用',
   },

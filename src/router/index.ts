@@ -20,7 +20,7 @@ const router = createRouter({
       path: '/',
       component: () => import('@/components/SidebarLayout.vue'),
       meta: { requiresAuth: true },
-      redirect: '/disks',
+      redirect: '/storage',
       children: [
         {
           path: 'users',
@@ -29,10 +29,10 @@ const router = createRouter({
           meta: { title: 'Users' },
         },
         {
-          path: 'disks',
-          name: 'Disks',
-          component: () => import('@/views/DisksView.vue'),
-          meta: { title: 'Disks' },
+          path: 'storage',
+          name: 'Storage',
+          component: () => import('@/views/StorageView.vue'),
+          meta: { title: 'Storage' },
         },
         {
           path: 'samba',
