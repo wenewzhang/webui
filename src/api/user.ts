@@ -1,5 +1,5 @@
 import apiClient from './axios'
-import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse, AddUserRequest, AddUserResponse, AddSambaUserRequest, AddSambaUserResponse, DeleteUserRequest, DeleteUserResponse, DeleteSambaUserRequest, DeleteSambaUserResponse } from '@/types/user'
+import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse, ChangePasswdRequest, ChangePasswdResponse, AddUserRequest, AddUserResponse, AddSambaUserRequest, AddSambaUserResponse, DeleteUserRequest, DeleteUserResponse, DeleteSambaUserRequest, DeleteSambaUserResponse } from '@/types/user'
 
 export const userApi = {
   // 登录
@@ -35,6 +35,11 @@ export const userApi = {
   // 修改Samba用户密码
   changeSambaPassword(data: ChangeSambaPasswordRequest): Promise<ChangeSambaPasswordResponse> {
     return apiClient.post('/smb/change_passwd', data).then((res) => res.data)
+  },
+
+  // 修改普通用户密码 (share/read)
+  changePasswd(data: ChangePasswdRequest): Promise<ChangePasswdResponse> {
+    return apiClient.post('/change_passwd', data).then((res) => res.data)
   },
 
   // 新增用户

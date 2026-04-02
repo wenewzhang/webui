@@ -82,6 +82,7 @@ export default {
     deleteDiskSuccess: "磁盘删除成功",
     deleteDiskFailed: "磁盘删除失败",
     diskInUseOrNotExist: "磁盘正被 ZFS 使用或不存在",
+    onlyAdminCanDeleteDisk: "只有管理员才能执行此操作",
   },
   // 用户页面
   users: {
@@ -94,6 +95,7 @@ export default {
     // 修改密码弹窗
     changePasswordTitle: '修改管理员密码',
     changeSambaPasswordTitle: '修改 Samba 密码',
+    changeUserPasswordTitle: "修改 {username} 用户的密码",
     oldPassword: '旧密码',
     newPassword: '新密码',
     confirmPassword: '确认密码',

@@ -94,6 +94,7 @@ export default {
     // Change Password Modal
     changePasswordTitle: 'Change Admin Password',
     changeSambaPasswordTitle: 'Change Samba Password',
+    changeUserPasswordTitle: "Change {username} User's Password",
     oldPassword: 'Old Password',
     newPassword: 'New Password',
     confirmPassword: 'Confirm Password',

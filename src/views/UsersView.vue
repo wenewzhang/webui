@@ -130,7 +130,13 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-              {{ currentUser?.type_ === 'samba' ? $t('users.changeSambaPasswordTitle') : $t('users.changePasswordTitle') }}
+              {{
+                currentUser?.type_ === 'samba'
+                  ? $t('users.changeSambaPasswordTitle')
+                  : currentUser?.type_ === 'admin'
+                    ? $t('users.changePasswordTitle')
+                    : $t('users.changeUserPasswordTitle', { username: currentUser?.name })
+              }}
             </h3>
             <div class="mt-4 space-y-4">
               <!-- Old Password (admin only) -->
@@ -644,6 +650,11 @@ const submitChangePassword = async () => {
         username: currentUser.value.name,
         new_password: passwordForm.newPassword,
       })
+    } else if (currentUser.value && ['share', 'read'].includes(currentUser.value.type_)) {
+      response = await userApi.changePasswd({
+        user_id: currentUser.value.name,
+        new_password: passwordForm.newPassword,
+      })
     } else {
       passwordError.value = t('users.changeFailed')
       changingPassword.value = false
@@ -670,8 +681,16 @@ const submitChangePassword = async () => {
       const msg = err.response?.data?.message
       if (currentUser.value?.type_ === 'admin' && msg === 'Invalid old password') {
         passwordError.value = t('users.invalidOldPassword')
-      } else if (currentUser.value?.type_ === 'samba' && msg === 'Password too short') {
+      } else if (
+        ['samba', 'share', 'read'].includes(currentUser.value?.type_ || '') &&
+        msg === 'Password too short'
+      ) {
         passwordError.value = t('users.sambaPasswordTooShort')
+      } else if (
+        ['share', 'read'].includes(currentUser.value?.type_ || '') &&
+        msg === 'User does not exist'
+      ) {
+        passwordError.value = t('users.userDoesNotExist')
       } else {
         passwordError.value = msg || t('users.changeFailed')
       }

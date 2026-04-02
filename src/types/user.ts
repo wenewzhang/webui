@@ -45,6 +45,16 @@ export interface ChangeSambaPasswordResponse {
   message: string
 }
 
+export interface ChangePasswdRequest {
+  user_id: string
+  new_password: string
+}
+
+export interface ChangePasswdResponse {
+  success: boolean
+  message: string
+}
+
 export interface AddUserRequest {
   username: string
   password: string
