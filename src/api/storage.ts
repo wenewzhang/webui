@@ -60,6 +60,12 @@ export interface PoolsResponse {
   error: string | null
 }
 
+export interface ExportPoolResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -75,5 +81,8 @@ export const storageApi = {
   },
   getOnlinePools(): Promise<PoolsResponse> {
     return apiClient.get('/zfs/online_pools').then(res => res.data)
+  },
+  exportPool(poolName: string): Promise<ExportPoolResponse> {
+    return apiClient.post('/zfs/export_pool', { pool_name: poolName }).then(res => res.data)
   },
 }

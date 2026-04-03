@@ -20,7 +20,7 @@
           </svg>
           {{ $t('common.import') }}
         </button>
-        <button @click="exportPools" class="action-btn export-btn">
+        <button @click="showExportAllConfirm" class="action-btn export-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
             <polyline points="7 10 12 15 17 10"/>
@@ -115,6 +115,19 @@
             <span class="footer-label">{{ $t('pool.dedup') || '去重' }}</span>
             <span class="footer-value">{{ pool.dedup }}</span>
           </div>
+          <button 
+            class="export-pool-btn" 
+            @click.stop="showExportConfirm(pool.name)"
+            :disabled="exportingPool === pool.name"
+          >
+            <svg v-if="exportingPool !== pool.name" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" x2="12" y1="15" y2="3"/>
+            </svg>
+            <span v-else class="spinner-small"></span>
+            {{ exportingPool === pool.name ? $t('common.exporting') || '导出中...' : ($t('common.export') || '导出') }}
+          </button>
           <div class="view-detail">
             {{ $t('pool.viewDetail') || '查看详情' }}
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -124,7 +137,6 @@
         </div>
       </div>
     </div>
-
     <!-- 空状态 -->
     <div v-else class="empty-state">
       <div class="empty-icon">
@@ -137,6 +149,33 @@
       <p class="empty-text">{{ $t('pool.noPools') || '暂无存储池' }}</p>
     </div>
   </div>
+  <!-- 导出确认对话框 -->
+  <div v-if="showConfirmDialog" class="confirm-dialog-overlay" @click="cancelExport">
+    <div class="confirm-dialog" @click.stop>
+      <div class="confirm-dialog-header">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="warning-icon">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+          <path d="M12 9v4"/>
+          <path d="M12 17h.01"/>
+        </svg>
+        <h3>{{ $t('pool.exportConfirmTitle') || '确认导出存储池' }}</h3>
+      </div>
+      <div class="confirm-dialog-body">
+        <p>{{ $t('pool.exportConfirmMessage') || '确定要导出存储池' }} <strong>{{ pendingExportPool }}</strong> {{ $t('pool.exportConfirmQuestion') || '吗？' }}</p>
+        <p class="warning-text">{{ $t('pool.exportWarning') || '导出后该存储池将不再可用，但数据会被保留。' }}</p>
+      </div>
+      <div class="confirm-dialog-footer">
+        <button @click="cancelExport" class="btn-cancel">
+          {{ $t('common.cancel') || '取消' }}
+        </button>
+        <button @click="confirmExport" class="btn-confirm" :disabled="exporting">
+          <span v-if="exporting" class="spinner-small"></span>
+          {{ exporting ? ($t('common.exporting') || '导出中...') : ($t('common.confirm') || '确认') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script setup lang="ts">
@@ -148,6 +187,10 @@ const router = useRouter()
 const pools = ref<Pool[]>([])
 const loading = ref(false)
 const error = ref('')
+const showConfirmDialog = ref(false)
+const pendingExportPool = ref('')
+const exporting = ref(false)
+const exportingPool = ref('')
 
 // 获取健康状态样式
 const getHealthClass = (health: string) => {
@@ -195,9 +238,47 @@ const importPools = () => {
   // TODO: 实现导入逻辑
 }
 
-// 导出存储池
-const exportPools = () => {
-  // TODO: 实现导出逻辑
+// 显示导出确认对话框
+const showExportConfirm = (poolName: string) => {
+  pendingExportPool.value = poolName
+  showConfirmDialog.value = true
+}
+
+// 显示导出所有存储池确认
+const showExportAllConfirm = () => {
+  alert($t('pool.selectPoolToExport') || '请选择一个存储池进行导出')
+}
+
+// 取消导出
+const cancelExport = () => {
+  showConfirmDialog.value = false
+  pendingExportPool.value = ''
+}
+
+// 确认导出
+const confirmExport = async () => {
+  if (!pendingExportPool.value) return
+  
+  exporting.value = true
+  exportingPool.value = pendingExportPool.value
+  
+  try {
+    const response = await storageApi.exportPool(pendingExportPool.value)
+    if (response.success) {
+      alert($t('pool.exportSuccess') || `存储池 ${pendingExportPool.value} 导出成功`)
+      // 刷新存储池列表
+      await fetchPools()
+    } else {
+      alert(response.error || ($t('pool.exportFailed') || '导出失败'))
+    }
+  } catch (err: any) {
+    alert(err.message || ($t('pool.exportFailed') || '导出失败'))
+  } finally {
+    exporting.value = false
+    exportingPool.value = ''
+    showConfirmDialog.value = false
+    pendingExportPool.value = ''
+  }
 }
 
 onMounted(() => {
@@ -538,6 +619,168 @@ onMounted(() => {
 
 .empty-text {
   font-size: 16px;
+}
+
+/* 导出按钮 */
+.export-pool-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-pool-btn:hover:not(:disabled) {
+  background: #fde68a;
+  border-color: #f59e0b;
+}
+
+.export-pool-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fbbf24;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+/* 确认对话框 */
+.confirm-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: dialog-appear 0.2s ease;
+}
+
+@keyframes dialog-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.confirm-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.confirm-dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.warning-icon {
+  color: #f59e0b;
+  flex-shrink: 0;
+}
+
+.confirm-dialog-body {
+  padding: 20px 24px;
+}
+
+.confirm-dialog-body p {
+  margin: 0 0 12px 0;
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.confirm-dialog-body p:last-child {
+  margin-bottom: 0;
+}
+
+.warning-text {
+  color: #92400e;
+  background: #fef3c7;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.confirm-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-cancel {
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.btn-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #f59e0b;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: #d97706;
+}
+
+.btn-confirm:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /* 响应式 */
