@@ -165,10 +165,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { storageApi, type Pool } from '@/api/storage'
 
 const router = useRouter()
+const route = useRoute()
 const loading = ref(false)
 const error = ref('')
 const poolData = ref<Pool | null>(null)
@@ -200,7 +201,13 @@ const fetchPoolData = async () => {
   try {
     const response = await storageApi.getOnlinePools()
     if (response.success && response.data && response.data.length > 0) {
-      poolData.value = response.data[0]
+      const poolName = route.params.name as string
+      const matchedPool = response.data.find((pool: Pool) => pool.name === poolName)
+      if (matchedPool) {
+        poolData.value = matchedPool
+      } else {
+        error.value = `Pool "${poolName}" not found`
+      }
     } else {
       error.value = 'No pool data available'
     }
