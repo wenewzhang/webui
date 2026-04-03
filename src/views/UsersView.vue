@@ -662,7 +662,7 @@ const submitChangePassword = async () => {
     }
 
     if (response.success) {
-      if (currentUser.value?.type_ === 'samba' && response.message?.includes("changed successfully")) {
+      if ((currentUser.value?.type_ === 'samba' || currentUser.value?.type_ === 'share' || currentUser.value?.type_ === 'read') && response.message?.includes("changed successfully")) {
         passwordSuccess.value = t('users.sambaChangeSuccess', { username: currentUser.value.name })
       } else {
         passwordSuccess.value = response.message || t('users.changeSuccess')
