@@ -35,6 +35,8 @@ export default {
     time: '时间',
     description: '描述',
     remark: '备注',
+    export: '导出',
+    import: '导入',
   },
   // 登录页面
   login: {

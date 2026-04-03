@@ -35,6 +35,8 @@ export default {
     time: 'Time',
     description: 'Description',
     remark: 'Remark',
+    export: 'Export',
+    import: 'Import',
   },
   // Login Page
   login: {
