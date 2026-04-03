@@ -27,6 +27,15 @@
               {{ $t('storagePage.createPartition') }}
             </button>
             <button
+              @click="openClearLabelModal(disk)"
+              class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+            >
+              <svg class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+              </svg>
+              {{ $t('storagePage.clearLabel') }}
+            </button>
+            <button
               @click="handleDelete(disk)"
               class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
@@ -54,6 +63,73 @@
           </div>
         </div>
         <div v-else class="text-sm text-gray-500">No partitions</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Label Modal -->
+  <div v-if="showClearLabelModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="clear-label-modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" @click="closeClearLabelModal"></div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="clear-label-modal-title">
+              {{ $t('storagePage.clearLabelTitle') }}
+            </h3>
+            <div class="mt-4 space-y-4">
+              <!-- Partition Select -->
+              <div>
+                <label for="partition-select" class="block text-sm font-medium text-gray-700">{{ $t('storagePage.selectPartition') }}</label>
+                <select
+                  id="partition-select"
+                  v-model="selectedPartition"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
+                >
+                  <option value="">{{ $t('storagePage.pleaseSelectPartition') }}</option>
+                  <option v-for="partition in currentClearLabelDisk?.children" :key="partition.name" :value="partition.name">
+                    {{ partition.name }} ({{ partition.size }})
+                  </option>
+                </select>
+              </div>
+              <!-- Error Message -->
+              <div v-if="clearLabelError" class="text-sm text-red-600">
+                {{ clearLabelError }}
+              </div>
+              <!-- Success Message -->
+              <div v-if="clearLabelSuccess" class="text-sm text-green-600">
+                {{ clearLabelSuccess }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            @click="submitClearLabel"
+            :disabled="clearingLabel || !selectedPartition"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-orange-600 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50"
+          >
+            <svg v-if="clearingLabel" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ $t('storagePage.clear') }}
+          </button>
+          <button
+            type="button"
+            @click="closeClearLabelModal"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -190,6 +266,14 @@ const partitionForm = reactive({
   unit: 'G' as 'M' | 'G' | 'T',
 })
 
+// Clear Label modal state
+const showClearLabelModal = ref(false)
+const clearingLabel = ref(false)
+const clearLabelError = ref('')
+const clearLabelSuccess = ref('')
+const currentClearLabelDisk = ref<Disk | null>(null)
+const selectedPartition = ref('')
+
 const fetchDisks = async () => {
   loading.value = true
   error.value = null
@@ -222,6 +306,47 @@ const closePartitionModal = () => {
   partitionError.value = ''
   partitionSuccess.value = ''
   currentPartitionDisk.value = null
+}
+
+const openClearLabelModal = (disk: Disk) => {
+  currentClearLabelDisk.value = disk
+  selectedPartition.value = ''
+  clearLabelError.value = ''
+  clearLabelSuccess.value = ''
+  showClearLabelModal.value = true
+}
+
+const closeClearLabelModal = () => {
+  showClearLabelModal.value = false
+  clearLabelError.value = ''
+  clearLabelSuccess.value = ''
+  currentClearLabelDisk.value = null
+  selectedPartition.value = ''
+}
+
+const submitClearLabel = async () => {
+  if (!selectedPartition.value) return
+
+  clearingLabel.value = true
+  clearLabelError.value = ''
+  clearLabelSuccess.value = ''
+
+  try {
+    const res = await storageApi.clearLabel(selectedPartition.value)
+    if (res.success) {
+      clearLabelSuccess.value = t('storagePage.clearLabelSuccess')
+      setTimeout(() => {
+        closeClearLabelModal()
+        fetchDisks()
+      }, 1500)
+    } else {
+      clearLabelError.value = res.error || t('storagePage.clearLabelFailed')
+    }
+  } catch (err: any) {
+    clearLabelError.value = err.response?.data?.error || t('storagePage.clearLabelFailed')
+  } finally {
+    clearingLabel.value = false
+  }
 }
 
 const submitPartition = async () => {

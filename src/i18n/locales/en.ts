@@ -71,6 +71,7 @@ export default {
     users: 'Users',
     storage: 'Storage',
     storageAll: 'All',
+    storagePool: 'Pool',
     storageIdle: 'Idle',
     samba: 'Samba',
     apps: 'Apps',
@@ -93,6 +94,13 @@ export default {
     invalidPartitionSize: "Invalid partition size",
     createPartitionSuccess: "Partition created successfully",
     createPartitionFailed: "Failed to create partition",
+    clearLabel: "Clear Label",
+    clearLabelTitle: "Clear Partition Label",
+    selectPartition: "Select Partition",
+    pleaseSelectPartition: "Please select a partition",
+    clear: "Clear",
+    clearLabelSuccess: "Label cleared successfully",
+    clearLabelFailed: "Failed to clear label",
   },
   // Users Page
   users: {
@@ -142,6 +150,25 @@ export default {
   // Footer
   footer: {
     copyright: '© 2025 Zuti Storage System. All rights reserved.',
+  },
+  // Pool
+  pool: {
+    name: 'Name',
+    size: 'Total Size',
+    alloc: 'Allocated',
+    free: 'Free Space',
+    used: 'Used',
+    cap: 'Capacity',
+    frag: 'Fragmentation',
+    health: 'Health',
+    dedup: 'Deduplication',
+    ckpoint: 'Checkpoint',
+    expandsz: 'Expand Size',
+    altroot: 'Altroot',
+    noPools: 'No pools available',
+    viewDetail: 'View Details',
+    detail: 'Pool Details',
+    info: 'Pool Information',
   },
   // Error Messages
   error: {

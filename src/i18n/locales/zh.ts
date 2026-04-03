@@ -71,6 +71,7 @@ export default {
     users: '用户',
     storage: '存储器',
     storageAll: '全部',
+    storagePool: '存储池',
     storageIdle: '空闲',
     samba: 'Samba',
     apps: '应用',
@@ -93,6 +94,13 @@ export default {
     invalidPartitionSize: "无效的分区大小",
     createPartitionSuccess: "分区创建成功",
     createPartitionFailed: "分区创建失败",
+    clearLabel: "清除标签",
+    clearLabelTitle: "清除分区标签",
+    selectPartition: "选择分区",
+    pleaseSelectPartition: "请选择分区",
+    clear: "清除",
+    clearLabelSuccess: "标签清除成功",
+    clearLabelFailed: "标签清除失败",
   },
   // 用户页面
   users: {
@@ -142,6 +150,25 @@ export default {
   // 底部信息
   footer: {
     copyright: '© 2025 Zuti Storage System. 保留所有权利。',
+  },
+  // 存储池
+  pool: {
+    name: '名称',
+    size: '总容量',
+    alloc: '已分配',
+    free: '可用空间',
+    used: '已用',
+    cap: '使用率',
+    frag: '碎片率',
+    health: '健康状态',
+    dedup: '去重率',
+    ckpoint: '检查点',
+    expandsz: '扩展大小',
+    altroot: '备用根',
+    noPools: '暂无存储池',
+    viewDetail: '查看详情',
+    detail: '存储池详情',
+    info: '存储池信息',
   },
   // 错误信息
   error: {
