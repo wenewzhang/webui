@@ -137,6 +137,7 @@
         </div>
       </div>
     </div>
+
     <!-- 空状态 -->
     <div v-else class="empty-state">
       <div class="empty-icon">
@@ -176,6 +177,27 @@
     </div>
   </div>
 
+    <!-- 导出错误提示 -->
+    <div v-if="exportError" class="export-error-toast">
+      <div class="error-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="error-content">
+        <p class="error-title">{{ $t('pool.exportFailed') || '导出失败' }}</p>
+        <p class="error-detail">{{ exportError }}</p>
+      </div>
+      <button class="error-close" @click="exportError = ''">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    
 </template>
 
 <script setup lang="ts">
@@ -191,6 +213,7 @@ const showConfirmDialog = ref(false)
 const pendingExportPool = ref('')
 const exporting = ref(false)
 const exportingPool = ref('')
+const exportError = ref('')
 
 // 获取健康状态样式
 const getHealthClass = (health: string) => {
@@ -261,18 +284,21 @@ const confirmExport = async () => {
   
   exporting.value = true
   exportingPool.value = pendingExportPool.value
+  exportError.value = ''
   
   try {
     const response = await storageApi.exportPool(pendingExportPool.value)
     if (response.success) {
       alert($t('pool.exportSuccess', { poolName: pendingExportPool.value }))
-      // 刷新存储池列表
       await fetchPools()
     } else {
-      alert(response.error || ($t('pool.exportFailed') || '导出失败'))
+      const errorMsg = response.message 
+        ? `${response.message}: ${response.error}` 
+        : (response.error || ($t('pool.exportFailed') || '导出失败'))
+      exportError.value = errorMsg
     }
   } catch (err: any) {
-    alert(err.message || ($t('pool.exportFailed') || '导出失败'))
+    exportError.value = err.message || ($t('pool.exportFailed') || '导出失败')
   } finally {
     exporting.value = false
     exportingPool.value = ''
@@ -781,6 +807,82 @@ onMounted(() => {
 .btn-confirm:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/* 导出错误提示 */
+.export-error-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  z-index: 2000;
+  animation: toast-appear 0.3s ease;
+}
+
+@keyframes toast-appear {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.export-error-toast .error-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: #fee2e2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dc2626;
+}
+
+.error-content {
+  flex: 1;
+}
+
+.error-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.error-detail {
+  margin: 0;
+  font-size: 13px;
+  color: #b91c1c;
+  word-break: break-word;
+}
+
+.error-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-close:hover {
+  color: #6b7280;
 }
 
 /* 响应式 */
