@@ -83,6 +83,6 @@ export const storageApi = {
     return apiClient.get('/zfs/online_pools').then(res => res.data)
   },
   exportPool(poolName: string): Promise<ExportPoolResponse> {
-    return apiClient.post('/zfs/export_pool', { pool_name: poolName }).then(res => res.data)
+    return apiClient.post('/zfs/export_pool', { poolname: poolName }).then(res => res.data)
   },
 }

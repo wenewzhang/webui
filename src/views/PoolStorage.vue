@@ -161,7 +161,7 @@
         <h3>{{ $t('pool.exportConfirmTitle') || '确认导出存储池' }}</h3>
       </div>
       <div class="confirm-dialog-body">
-        <p>{{ $t('pool.exportConfirmMessage') || '确定要导出存储池' }} <strong>{{ pendingExportPool }}</strong> {{ $t('pool.exportConfirmQuestion') || '吗？' }}</p>
+        <p>{{ $t('pool.exportConfirmMessage', { poolName: pendingExportPool }) }}</p>
         <p class="warning-text">{{ $t('pool.exportWarning') || '导出后该存储池将不再可用，但数据会被保留。' }}</p>
       </div>
       <div class="confirm-dialog-footer">
@@ -265,7 +265,7 @@ const confirmExport = async () => {
   try {
     const response = await storageApi.exportPool(pendingExportPool.value)
     if (response.success) {
-      alert($t('pool.exportSuccess') || `存储池 ${pendingExportPool.value} 导出成功`)
+      alert($t('pool.exportSuccess', { poolName: pendingExportPool.value }))
       // 刷新存储池列表
       await fetchPools()
     } else {
