@@ -66,11 +66,7 @@ export interface ExportPoolResponse {
   error: string | null
 }
 
-export interface OfflinePool {
-  name: string
-  id: string
-  state: string
-}
+export type OfflinePool = string
 
 export interface OfflinePoolsResponse {
   success: boolean

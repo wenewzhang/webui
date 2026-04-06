@@ -251,8 +251,8 @@
             <div class="form-group">
               <label>{{ $t('pool.poolName') }}</label>
               <select v-model="selectedPool" class="form-select">
-                <option v-for="pool in offlinePools" :key="pool.id" :value="pool.name">
-                  {{ pool.name }}
+                <option v-for="pool in offlinePools" :key="pool" :value="pool">
+                  {{ pool }}
                 </option>
               </select>
             </div>
@@ -410,7 +410,7 @@ const importPools = async () => {
     if (response.success) {
       offlinePools.value = response.data
       if (response.data.length > 0) {
-        selectedPool.value = response.data[0].name
+        selectedPool.value = response.data[0]
       }
     } else {
       importError.value = response.error || t('pool.fetchOfflinePoolsFailed')
