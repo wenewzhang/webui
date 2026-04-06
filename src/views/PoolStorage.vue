@@ -116,11 +116,11 @@
             <span class="footer-value">{{ pool.dedup }}</span>
           </div>
           <div class="footer-stat">
-            <span class="footer-label">{{ $t('pool.canmount') || '可挂载' }}</span>
+            <span class="footer-label">{{ $t('pool.canmount') || 'Mount at Boot' }}</span>
             <span class="footer-value">{{ pool.canmount }}</span>
           </div>
           <div class="footer-stat">
-            <span class="footer-label">{{ $t('pool.mountpoint') || '挂载点' }}</span>
+            <span class="footer-label">{{ $t('pool.mountpoint') || 'Mount Point' }}</span>
             <span class="footer-value">{{ pool.mountpoint }}</span>
           </div>
           <button 

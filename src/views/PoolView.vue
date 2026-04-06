@@ -158,11 +158,11 @@
             <span class="info-value">{{ poolData.altroot }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.canmount') || '可挂载' }}</span>
+            <span class="info-label">{{ $t('pool.canmount') || 'Mount at Boot' }}</span>
             <span class="info-value">{{ poolData.canmount }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.mountpoint') || '挂载点' }}</span>
+            <span class="info-label">{{ $t('pool.mountpoint') || 'Mount Point' }}</span>
             <span class="info-value">{{ poolData.mountpoint }}</span>
           </div>
         </div>
