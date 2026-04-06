@@ -38,19 +38,29 @@
           <!-- 后面 -->
           <div class="face face-back">
             <div class="face-content">
-              <div class="label">DEDUP</div>
-              <div class="value">{{ poolData.dedup }}</div>
+              <div class="stat-item">
+                <span class="stat-label">{{ $t('pool.dedup') }}</span>
+                <span class="stat-value">{{ poolData.dedup }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">{{ $t('pool.canmount') }}</span>
+                <span class="stat-value">{{ poolData.canmount }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">{{ $t('pool.mountpoint') }}</span>
+                <span class="stat-value" style="font-size: 14px;">{{ poolData.mountpoint }}</span>
+              </div>
             </div>
           </div>
           <!-- 右面 -->
           <div class="face face-right">
             <div class="face-content">
               <div class="stat-item">
-                <span class="stat-label">容量</span>
+                <span class="stat-label">{{ $t('pool.cap') }}</span>
                 <span class="stat-value">{{ poolData.cap }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">碎片</span>
+                <span class="stat-label">{{ $t('pool.frag') }}</span>
                 <span class="stat-value">{{ poolData.frag }}</span>
               </div>
             </div>
@@ -59,11 +69,11 @@
           <div class="face face-left">
             <div class="face-content">
               <div class="stat-item">
-                <span class="stat-label">检查点</span>
+                <span class="stat-label">{{ $t('pool.ckpoint') }}</span>
                 <span class="stat-value">{{ poolData.ckpoint }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">扩展</span>
+                <span class="stat-label">{{ $t('pool.expandsz') }}</span>
                 <span class="stat-value">{{ poolData.expandsz }}</span>
               </div>
             </div>
