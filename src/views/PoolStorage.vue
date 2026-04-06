@@ -115,6 +115,14 @@
             <span class="footer-label">{{ $t('pool.dedup') || '去重' }}</span>
             <span class="footer-value">{{ pool.dedup }}</span>
           </div>
+          <div class="footer-stat">
+            <span class="footer-label">{{ $t('pool.canmount') || '可挂载' }}</span>
+            <span class="footer-value">{{ pool.canmount }}</span>
+          </div>
+          <div class="footer-stat">
+            <span class="footer-label">{{ $t('pool.mountpoint') || '挂载点' }}</span>
+            <span class="footer-value">{{ pool.mountpoint }}</span>
+          </div>
           <button 
             class="export-pool-btn" 
             @click.stop="showExportConfirm(pool.name)"

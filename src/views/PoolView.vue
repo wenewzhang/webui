@@ -157,6 +157,14 @@
             <span class="info-label">{{ $t('pool.altroot') || '备用根' }}</span>
             <span class="info-value">{{ poolData.altroot }}</span>
           </div>
+          <div class="info-item">
+            <span class="info-label">{{ $t('pool.canmount') || '可挂载' }}</span>
+            <span class="info-value">{{ poolData.canmount }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{{ $t('pool.mountpoint') || '挂载点' }}</span>
+            <span class="info-value">{{ poolData.mountpoint }}</span>
+          </div>
         </div>
       </div>
     </div>

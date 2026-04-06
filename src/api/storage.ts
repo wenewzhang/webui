@@ -52,6 +52,8 @@ export interface Pool {
   dedup: string
   health: string
   altroot: string
+  canmount: string
+  mountpoint: string
 }
 
 export interface PoolsResponse {
