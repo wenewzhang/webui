@@ -203,7 +203,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { storageApi, type Pool } from '@/api/storage'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const pools = ref<Pool[]>([])
@@ -269,7 +272,7 @@ const showExportConfirm = (poolName: string) => {
 
 // 显示导出所有存储池确认
 const showExportAllConfirm = () => {
-  alert($t('pool.selectPoolToExport') || '请选择一个存储池进行导出')
+  alert(t('pool.selectPoolToExport') || '请选择一个存储池进行导出')
 }
 
 // 取消导出
@@ -289,16 +292,16 @@ const confirmExport = async () => {
   try {
     const response = await storageApi.exportPool(pendingExportPool.value)
     if (response.success) {
-      alert($t('pool.exportSuccess', { poolName: pendingExportPool.value }))
+      alert(t('pool.exportSuccess', { poolName: pendingExportPool.value }))
       await fetchPools()
     } else {
       const errorMsg = response.message 
         ? `${response.message}: ${response.error}` 
-        : (response.error || ($t('pool.exportFailed') || '导出失败'))
+        : (response.error || (t('pool.exportFailed') || '导出失败'))
       exportError.value = errorMsg
     }
   } catch (err: any) {
-    exportError.value = err.message || ($t('pool.exportFailed') || '导出失败')
+    exportError.value = err.message || (t('pool.exportFailed') || '导出失败')
   } finally {
     exporting.value = false
     exportingPool.value = ''
