@@ -197,6 +197,26 @@
         </svg>
       </button>
     </div>
+
+    <!-- 导出成功提示 -->
+    <div v-if="exportSuccess" class="export-success-toast">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="success-content">
+        <p class="success-title">{{ t('pool.exportSuccessTitle') || '导出成功' }}</p>
+        <p class="success-detail">{{ exportSuccess }}</p>
+      </div>
+      <button class="success-close" @click="exportSuccess = ''">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
     
 </template>
 
@@ -217,6 +237,7 @@ const pendingExportPool = ref('')
 const exporting = ref(false)
 const exportingPool = ref('')
 const exportError = ref('')
+const exportSuccess = ref('')
 
 // 获取健康状态样式
 const getHealthClass = (health: string) => {
@@ -292,7 +313,7 @@ const confirmExport = async () => {
   try {
     const response = await storageApi.exportPool(pendingExportPool.value)
     if (response.success) {
-      alert(t('pool.exportSuccess', { poolName: pendingExportPool.value }))
+      exportSuccess.value = t('pool.exportSuccess', { poolName: pendingExportPool.value })
       await fetchPools()
     } else {
       const errorMsg = response.message 
@@ -307,6 +328,10 @@ const confirmExport = async () => {
     exportingPool.value = ''
     showConfirmDialog.value = false
     pendingExportPool.value = ''
+    // 3秒后自动关闭成功提示
+    setTimeout(() => {
+      exportSuccess.value = ''
+    }, 3000)
   }
 }
 
@@ -886,6 +911,71 @@ onMounted(() => {
 
 .error-close:hover {
   color: #6b7280;
+}
+
+/* 导出成功提示 */
+.export-success-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  z-index: 2000;
+  animation: toast-appear 0.3s ease;
+}
+
+.export-success-toast .success-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: #dcfce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #16a34a;
+}
+
+.success-content {
+  flex: 1;
+}
+
+.success-title {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.success-detail {
+  margin: 0;
+  font-size: 13px;
+  color: #15803d;
+  word-break: break-word;
+}
+
+.success-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #86efac;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-close:hover {
+  color: #16a34a;
 }
 
 /* 响应式 */
