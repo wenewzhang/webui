@@ -227,13 +227,13 @@
             <polyline points="17 8 12 3 7 8"/>
             <line x1="12" x2="12" y1="3" y2="15"/>
           </svg>
-          <h3>{{ '导入存储池' }}</h3>
+          <h3>{{ $t('pool.importTitle') }}</h3>
         </div>
         <div class="confirm-dialog-body">
           <!-- 加载状态 -->
           <div v-if="loadingOfflinePools" class="import-loading">
             <div class="spinner-small"></div>
-            <span>正在获取离线存储池...</span>
+            <span>{{ $t('pool.importLoading') }}</span>
           </div>
           
           <!-- 没有数据 -->
@@ -243,13 +243,13 @@
               <line x1="12" y1="8" x2="12" y2="12"/>
               <line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
-            <p>找不到待导入的数据池</p>
+            <p>{{ $t('pool.noOfflinePools') }}</p>
           </div>
           
           <!-- 导入表单 -->
           <div v-else class="import-form">
             <div class="form-group">
-              <label>数据池名称</label>
+              <label>{{ $t('pool.poolName') }}</label>
               <select v-model="selectedPool" class="form-select">
                 <option v-for="pool in offlinePools" :key="pool.id" :value="pool.name">
                   {{ pool.name }}
@@ -258,19 +258,19 @@
             </div>
             
             <div class="form-group">
-              <label>挂载路径</label>
+              <label>{{ $t('pool.mountPoint') }}</label>
               <input 
                 v-model="mountPoint" 
                 type="text" 
                 class="form-input" 
-                placeholder="例如: /mnt/pool1"
+                :placeholder="$t('pool.mountPointPlaceholder')"
               />
             </div>
             
             <div class="form-group checkbox-group">
               <label class="checkbox-label">
                 <input v-model="bootEnabled" type="checkbox" />
-                <span>随系统启动自动挂载</span>
+                <span>{{ $t('pool.bootEnabled') }}</span>
               </label>
             </div>
             
@@ -287,7 +287,7 @@
         </div>
         <div class="confirm-dialog-footer">
           <button @click="cancelImport" class="btn-cancel">
-            {{ '取消' }}
+            {{ $t('common.cancel') }}
           </button>
           <button 
             v-if="offlinePools.length > 0"
@@ -296,7 +296,7 @@
             :disabled="importing"
           >
             <span v-if="importing" class="spinner-small"></span>
-            {{ importing ? '导入中...' : '确认导入' }}
+            {{ importing ? $t('pool.importing') : $t('pool.confirmImport') }}
           </button>
         </div>
       </div>
@@ -311,7 +311,7 @@
         </svg>
       </div>
       <div class="success-content">
-        <p class="success-title">导入成功</p>
+        <p class="success-title">{{ $t('pool.importSuccessTitle') }}</p>
         <p class="success-detail">{{ importSuccess }}</p>
       </div>
       <button class="success-close" @click="importSuccess = ''">
@@ -413,10 +413,10 @@ const importPools = async () => {
         selectedPool.value = response.data[0].name
       }
     } else {
-      importError.value = response.error || '获取离线存储池失败'
+      importError.value = response.error || t('pool.fetchOfflinePoolsFailed')
     }
   } catch (err: any) {
-    importError.value = err.message || '网络错误'
+    importError.value = err.message || t('error.networkError')
   } finally {
     loadingOfflinePools.value = false
   }
@@ -434,11 +434,11 @@ const cancelImport = () => {
 // 确认导入
 const confirmImport = async () => {
   if (!selectedPool.value) {
-    importError.value = '请选择数据池'
+    importError.value = t('pool.selectPoolRequired')
     return
   }
   if (!mountPoint.value.trim()) {
-    importError.value = '请输入挂载路径'
+    importError.value = t('pool.mountPointRequired')
     return
   }
   
@@ -452,7 +452,7 @@ const confirmImport = async () => {
       bootEnabled.value
     )
     if (response.success) {
-      importSuccess.value = `存储池 "${selectedPool.value}" 导入成功`
+      importSuccess.value = t('pool.importSuccess', { poolName: selectedPool.value })
       cancelImport()
       await fetchPools()
       // 3秒后自动关闭成功提示
@@ -460,10 +460,10 @@ const confirmImport = async () => {
         importSuccess.value = ''
       }, 3000)
     } else {
-      importError.value = response.error || '导入失败'
+      importError.value = response.error || t('pool.importFailed')
     }
   } catch (err: any) {
-    importError.value = err.message || '导入失败'
+    importError.value = err.message || t('pool.importFailed')
   } finally {
     importing.value = false
   }
