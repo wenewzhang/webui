@@ -437,10 +437,6 @@ const confirmImport = async () => {
     importError.value = t('pool.selectPoolRequired')
     return
   }
-  if (!mountPoint.value.trim()) {
-    importError.value = t('pool.mountPointRequired')
-    return
-  }
   
   importing.value = true
   importError.value = ''

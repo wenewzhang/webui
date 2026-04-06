@@ -75,7 +75,7 @@ export interface OfflinePoolsResponse {
 }
 
 export interface ImportPoolRequest {
-  pool_name: string
+  poolname: string
   mount_point: string
   boot_enabled: boolean
 }
@@ -110,7 +110,7 @@ export const storageApi = {
   },
   importPool(poolName: string, mountPoint: string, bootEnabled: boolean): Promise<ImportPoolResponse> {
     return apiClient.post('/zfs/import_pool', {
-      pool_name: poolName,
+      poolname: poolName,
       mount_point: mountPoint,
       boot_enabled: bootEnabled
     }).then(res => res.data)
