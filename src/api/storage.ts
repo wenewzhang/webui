@@ -66,6 +66,30 @@ export interface ExportPoolResponse {
   error: string | null
 }
 
+export interface OfflinePool {
+  name: string
+  id: string
+  state: string
+}
+
+export interface OfflinePoolsResponse {
+  success: boolean
+  data: OfflinePool[]
+  error: string | null
+}
+
+export interface ImportPoolRequest {
+  pool_name: string
+  mount_point: string
+  boot_enabled: boolean
+}
+
+export interface ImportPoolResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -84,5 +108,15 @@ export const storageApi = {
   },
   exportPool(poolName: string): Promise<ExportPoolResponse> {
     return apiClient.post('/zfs/export_pool', { poolname: poolName }).then(res => res.data)
+  },
+  getOfflinePools(): Promise<OfflinePoolsResponse> {
+    return apiClient.get('/zfs/offline_pools').then(res => res.data)
+  },
+  importPool(poolName: string, mountPoint: string, bootEnabled: boolean): Promise<ImportPoolResponse> {
+    return apiClient.post('/zfs/import_pool', {
+      pool_name: poolName,
+      mount_point: mountPoint,
+      boot_enabled: bootEnabled
+    }).then(res => res.data)
   },
 }

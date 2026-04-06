@@ -217,6 +217,110 @@
         </svg>
       </button>
     </div>
+
+    <!-- 导入对话框 -->
+    <div v-if="showImportDialog" class="confirm-dialog-overlay" @click="cancelImport">
+      <div class="import-dialog" @click.stop>
+        <div class="confirm-dialog-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="import-icon">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" x2="12" y1="3" y2="15"/>
+          </svg>
+          <h3>{{ '导入存储池' }}</h3>
+        </div>
+        <div class="confirm-dialog-body">
+          <!-- 加载状态 -->
+          <div v-if="loadingOfflinePools" class="import-loading">
+            <div class="spinner-small"></div>
+            <span>正在获取离线存储池...</span>
+          </div>
+          
+          <!-- 没有数据 -->
+          <div v-else-if="offlinePools.length === 0" class="import-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <p>找不到待导入的数据池</p>
+          </div>
+          
+          <!-- 导入表单 -->
+          <div v-else class="import-form">
+            <div class="form-group">
+              <label>数据池名称</label>
+              <select v-model="selectedPool" class="form-select">
+                <option v-for="pool in offlinePools" :key="pool.id" :value="pool.name">
+                  {{ pool.name }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>挂载路径</label>
+              <input 
+                v-model="mountPoint" 
+                type="text" 
+                class="form-input" 
+                placeholder="例如: /mnt/pool1"
+              />
+            </div>
+            
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input v-model="bootEnabled" type="checkbox" />
+                <span>随系统启动自动挂载</span>
+              </label>
+            </div>
+            
+            <!-- 错误提示 -->
+            <div v-if="importError" class="import-error">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span>{{ importError }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="confirm-dialog-footer">
+          <button @click="cancelImport" class="btn-cancel">
+            {{ '取消' }}
+          </button>
+          <button 
+            v-if="offlinePools.length > 0"
+            @click="confirmImport" 
+            class="btn-confirm import-btn-primary" 
+            :disabled="importing"
+          >
+            <span v-if="importing" class="spinner-small"></span>
+            {{ importing ? '导入中...' : '确认导入' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 导入成功提示 -->
+    <div v-if="importSuccess" class="export-success-toast">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="success-content">
+        <p class="success-title">导入成功</p>
+        <p class="success-detail">{{ importSuccess }}</p>
+      </div>
+      <button class="success-close" @click="importSuccess = ''">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
     
 </template>
 
@@ -224,7 +328,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { storageApi, type Pool } from '@/api/storage'
+import { storageApi, type Pool, type OfflinePool } from '@/api/storage'
 
 const { t } = useI18n()
 
@@ -238,6 +342,17 @@ const exporting = ref(false)
 const exportingPool = ref('')
 const exportError = ref('')
 const exportSuccess = ref('')
+
+// 导入对话框相关
+const showImportDialog = ref(false)
+const offlinePools = ref<OfflinePool[]>([])
+const selectedPool = ref('')
+const mountPoint = ref('')
+const bootEnabled = ref(false)
+const loadingOfflinePools = ref(false)
+const importError = ref('')
+const importSuccess = ref('')
+const importing = ref(false)
 
 // 获取健康状态样式
 const getHealthClass = (health: string) => {
@@ -280,9 +395,78 @@ const goToPoolDetail = (poolName: string) => {
   router.push({ name: 'PoolView', params: { name: poolName } })
 }
 
-// 导入存储池
-const importPools = () => {
-  // TODO: 实现导入逻辑
+// 导入存储池 - 显示导入对话框
+const importPools = async () => {
+  showImportDialog.value = true
+  loadingOfflinePools.value = true
+  importError.value = ''
+  offlinePools.value = []
+  selectedPool.value = ''
+  mountPoint.value = ''
+  bootEnabled.value = false
+  
+  try {
+    const response = await storageApi.getOfflinePools()
+    if (response.success) {
+      offlinePools.value = response.data
+      if (response.data.length > 0) {
+        selectedPool.value = response.data[0].name
+      }
+    } else {
+      importError.value = response.error || '获取离线存储池失败'
+    }
+  } catch (err: any) {
+    importError.value = err.message || '网络错误'
+  } finally {
+    loadingOfflinePools.value = false
+  }
+}
+
+// 取消导入
+const cancelImport = () => {
+  showImportDialog.value = false
+  selectedPool.value = ''
+  mountPoint.value = ''
+  bootEnabled.value = false
+  importError.value = ''
+}
+
+// 确认导入
+const confirmImport = async () => {
+  if (!selectedPool.value) {
+    importError.value = '请选择数据池'
+    return
+  }
+  if (!mountPoint.value.trim()) {
+    importError.value = '请输入挂载路径'
+    return
+  }
+  
+  importing.value = true
+  importError.value = ''
+  
+  try {
+    const response = await storageApi.importPool(
+      selectedPool.value,
+      mountPoint.value.trim(),
+      bootEnabled.value
+    )
+    if (response.success) {
+      importSuccess.value = `存储池 "${selectedPool.value}" 导入成功`
+      cancelImport()
+      await fetchPools()
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        importSuccess.value = ''
+      }, 3000)
+    } else {
+      importError.value = response.error || '导入失败'
+    }
+  } catch (err: any) {
+    importError.value = err.message || '导入失败'
+  } finally {
+    importing.value = false
+  }
 }
 
 // 显示导出确认对话框
@@ -976,6 +1160,128 @@ onMounted(() => {
 
 .success-close:hover {
   color: #16a34a;
+}
+
+/* 导入对话框样式 */
+.import-dialog {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: dialog-appear 0.2s ease;
+}
+
+.import-icon {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.import-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.import-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  color: #9ca3af;
+}
+
+.import-empty svg {
+  color: #d1d5db;
+}
+
+.import-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-select,
+.form-input {
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2937;
+  background: #fff;
+  transition: all 0.2s;
+}
+
+.form-select:focus,
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+.checkbox-group {
+  margin-top: 8px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 400 !important;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: #3b82f6;
+}
+
+.import-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #fee2e2;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.import-btn-primary {
+  background: #3b82f6 !important;
+}
+
+.import-btn-primary:hover:not(:disabled) {
+  background: #2563eb !important;
 }
 
 /* 响应式 */
