@@ -175,6 +175,7 @@ export default {
     exportConfirmMessage: "确定要导出存储池 '{poolName}' 吗？",
     exportWarning: '导出后该存储池将不再可用，但数据会被保留。',
     exportSuccess: "存储池 '{poolName}' 导出成功",
+    exportSuccessTitle: '导出成功',
     exportFailed: '导出存储池失败',
     selectPoolToExport: '请选择一个存储池进行导出',
   },

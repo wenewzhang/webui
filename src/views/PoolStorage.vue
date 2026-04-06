@@ -207,7 +207,7 @@
         </svg>
       </div>
       <div class="success-content">
-        <p class="success-title">{{ t('pool.exportSuccessTitle') || '导出成功' }}</p>
+        <p class="success-title">{{ t('pool.exportSuccessTitle') }}</p>
         <p class="success-detail">{{ exportSuccess }}</p>
       </div>
       <button class="success-close" @click="exportSuccess = ''">

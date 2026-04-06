@@ -175,6 +175,7 @@ export default {
     exportConfirmMessage: "Are you sure you want to export storage pool '{poolName}'?",
     exportWarning: 'After export, the storage pool will no longer be available, but data will be preserved.',
     exportSuccess: "Storage pool '{poolName}' exported successfully",
+    exportSuccessTitle: 'Export Successful',
     exportFailed: 'Failed to export storage pool',
     selectPoolToExport: 'Please select a storage pool to export',
   },
