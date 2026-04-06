@@ -37,6 +37,7 @@ export default {
     remark: 'Remark',
     export: 'Export',
     import: 'Import',
+    retry: 'Retry',
   },
   // Login Page
   login: {
@@ -203,5 +204,6 @@ export default {
     notFound: 'Requested resource not found',
     timeout: 'Request timeout, please try again later',
     unknown: 'An unknown error occurred',
+    requestFailed: 'Request failed with status code {status}',
   },
 }

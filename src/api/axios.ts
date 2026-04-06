@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores/user'
+import i18n from '@/i18n'
 
 // 创建 axios 实例
 const apiClient = axios.create({
@@ -36,6 +37,10 @@ apiClient.interceptors.response.use(
       const userStore = useUserStore()
       userStore.logout()
       window.location.href = '/login'
+    }
+    // i18n 化错误消息
+    if (error.response?.status) {
+      error.message = i18n.global.t('error.requestFailed', { status: error.response.status })
     }
     return Promise.reject(error)
   }

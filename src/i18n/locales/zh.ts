@@ -37,6 +37,7 @@ export default {
     remark: '备注',
     export: '导出',
     import: '导入',
+    retry: '重试',
   },
   // 登录页面
   login: {
@@ -203,5 +204,6 @@ export default {
     notFound: '请求的资源不存在',
     timeout: '请求超时，请稍后重试',
     unknown: '发生未知错误',
+    requestFailed: '请求失败，状态码：{status}',
   },
 }
