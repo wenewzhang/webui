@@ -61,9 +61,24 @@
           </div>
           <div class="pool-title-section">
             <h3 class="pool-name">{{ pool.name }}</h3>
-            <span class="health-badge" :class="getHealthClass(pool.health)">
-              {{ pool.health }}
-            </span>
+            <div class="pool-title-row">
+              <span class="health-badge" :class="getHealthClass(pool.health)">
+                {{ pool.health }}
+              </span>
+              <button 
+                class="export-pool-btn-small" 
+                @click.stop="showExportConfirm(pool.name)"
+                :disabled="exportingPool === pool.name"
+              >
+                <svg v-if="exportingPool !== pool.name" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" x2="12" y1="15" y2="3"/>
+                </svg>
+                <span v-else class="spinner-small"></span>
+                {{ exportingPool === pool.name ? $t('common.exporting') || '导出中...' : ($t('common.export') || '导出') }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -123,19 +138,6 @@
             <span class="footer-label">{{ $t('pool.mountpoint') || 'Mount Point' }}</span>
             <span class="footer-value">{{ pool.mountpoint }}</span>
           </div>
-          <button 
-            class="export-pool-btn" 
-            @click.stop="showExportConfirm(pool.name)"
-            :disabled="exportingPool === pool.name"
-          >
-            <svg v-if="exportingPool !== pool.name" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" x2="12" y1="15" y2="3"/>
-            </svg>
-            <span v-else class="spinner-small"></span>
-            {{ exportingPool === pool.name ? $t('common.exporting') || '导出中...' : ($t('common.export') || '导出') }}
-          </button>
           <div class="view-detail">
             {{ $t('pool.viewDetail') || '查看详情' }}
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -679,6 +681,12 @@ onMounted(() => {
   flex: 1;
 }
 
+.pool-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .pool-name {
   font-size: 20px;
   font-weight: 600;
@@ -885,6 +893,32 @@ onMounted(() => {
 }
 
 .export-pool-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* 小型导出按钮（用于标题区域） */
+.export-pool-btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 6px;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.export-pool-btn-small:hover:not(:disabled) {
+  background: #fde68a;
+  border-color: #f59e0b;
+}
+
+.export-pool-btn-small:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
