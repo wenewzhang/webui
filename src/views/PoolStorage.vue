@@ -84,22 +84,22 @@
         <div class="pool-stats">
           <div class="stat-row">
             <div class="stat">
-              <span class="stat-label">{{ $t('pool.size') || '总容量' }}</span>
-              <span class="stat-value">{{ pool.size }}</span>
+              <span class="pool-stat-label">{{ $t('pool.size') || '总容量' }}</span>
+              <span class="pool-stat-value">{{ pool.size }}</span>
             </div>
             <div class="stat">
-              <span class="stat-label">{{ $t('pool.alloc') || '已用' }}</span>
-              <span class="stat-value">{{ pool.alloc }}</span>
+              <span class="pool-stat-label">{{ $t('pool.alloc') || '已用' }}</span>
+              <span class="pool-stat-value">{{ pool.alloc }}</span>
             </div>
           </div>
           <div class="stat-row">
             <div class="stat">
-              <span class="stat-label">{{ $t('pool.free') || '可用' }}</span>
-              <span class="stat-value">{{ pool.free }}</span>
+              <span class="pool-stat-label">{{ $t('pool.free') || '可用' }}</span>
+              <span class="pool-stat-value">{{ pool.free }}</span>
             </div>
             <div class="stat">
-              <span class="stat-label">{{ $t('pool.cap') || '使用率' }}</span>
-              <span class="stat-value" :class="getCapacityClass(pool.cap)">{{ pool.cap }}</span>
+              <span class="pool-stat-label">{{ $t('pool.cap') || '使用率' }}</span>
+              <span class="pool-stat-value" :class="getCapacityClass(pool.cap)">{{ pool.cap }}</span>
             </div>
           </div>
         </div>
@@ -377,9 +377,9 @@ const getHealthClass = (health: string) => {
 // 获取容量使用率样式
 const getCapacityClass = (cap: string) => {
   const capNum = parseInt(cap)
-  if (capNum >= 90) return 'cap-high'
-  if (capNum >= 70) return 'cap-medium'
-  return 'cap-low'
+  if (capNum >= 90) return 'pool-cap-high'
+  if (capNum >= 70) return 'pool-cap-medium'
+  return 'pool-cap-low'
 }
 
 // 获取存储池数据

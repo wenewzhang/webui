@@ -222,26 +222,26 @@
   gap: 4px;
 }
 
-.stat-label {
+.pool-stat-label {
   font-size: 12px;
   color: #6b7280;
 }
 
-.stat-value {
+.pool-stat-value {
   font-size: 16px;
   font-weight: 600;
   color: #1f2937;
 }
 
-.cap-high {
+.pool-cap-high {
   color: #dc2626;
 }
 
-.cap-medium {
+.pool-cap-medium {
   color: #f59e0b;
 }
 
-.cap-low {
+.pool-cap-low {
   color: #10b981;
 }
 
