@@ -104,6 +104,7 @@ export default {
     clear: "清除",
     clearLabelSuccess: "标签清除成功",
     clearLabelFailed: "标签清除失败",
+    clearLabelFailedFor: "清除分区 '{partitionName}' 的标签失败，ZFS标签可能不存在",
   },
   // 用户页面
   users: {

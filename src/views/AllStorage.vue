@@ -340,10 +340,21 @@ const submitClearLabel = async () => {
         fetchDisks()
       }, 1500)
     } else {
-      clearLabelError.value = res.error || t('storagePage.clearLabelFailed')
+      // 处理 "failed to clear label for xxx" 错误消息
+      if (res.error && res.error.includes('failed to clear label for')) {
+        clearLabelError.value = t('storagePage.clearLabelFailedFor', { partitionName: selectedPartition.value })
+      } else {
+        clearLabelError.value = res.error || t('storagePage.clearLabelFailed')
+      }
     }
   } catch (err: any) {
-    clearLabelError.value = err.response?.data?.error || t('storagePage.clearLabelFailed')
+    const errorMsg = err.response?.data?.error
+    // 处理 "failed to clear label for xxx" 错误消息
+    if (errorMsg && errorMsg.includes('failed to clear label for')) {
+      clearLabelError.value = t('storagePage.clearLabelFailedFor', { partitionName: selectedPartition.value })
+    } else {
+      clearLabelError.value = errorMsg || t('storagePage.clearLabelFailed')
+    }
   } finally {
     clearingLabel.value = false
   }

@@ -104,6 +104,7 @@ export default {
     clear: "Clear",
     clearLabelSuccess: "Label cleared successfully",
     clearLabelFailed: "Failed to clear label",
+    clearLabelFailedFor: "Failed to clear label for partition '{partitionName}', ZFS label may not exist",
   },
   // Users Page
   users: {
