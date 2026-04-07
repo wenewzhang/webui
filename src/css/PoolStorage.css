@@ -166,14 +166,14 @@
   gap: 12px;
 }
 
-.pool-name {
+.pool-card-name {
   font-size: 20px;
   font-weight: 600;
   color: #1f2937;
   margin: 0 0 8px 0;
 }
 
-.health-badge {
+.pool-health-badge {
   display: inline-block;
   padding: 4px 12px;
   border-radius: 20px;
@@ -181,23 +181,23 @@
   font-weight: 500;
 }
 
-.health-online {
+.pool-health-online {
   background: #d1fae5;
   color: #065f46;
 }
 
-.health-degraded {
+.pool-health-degraded {
   background: #fef3c7;
   color: #92400e;
 }
 
-.health-offline,
-.health-faulted {
+.pool-health-offline,
+.pool-health-faulted {
   background: #fee2e2;
   color: #991b1b;
 }
 
-.health-unknown {
+.pool-health-unknown {
   background: #f3f4f6;
   color: #6b7280;
 }

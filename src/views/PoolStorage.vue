@@ -59,9 +59,9 @@
             </svg>
           </div>
           <div class="pool-title-section">
-            <h3 class="pool-name">{{ pool.name }}</h3>
+            <h3 class="pool-card-name">{{ pool.name }}</h3>
             <div class="pool-title-row">
-              <span class="health-badge" :class="getHealthClass(pool.health)">
+              <span class="pool-health-badge" :class="getHealthClass(pool.health)">
                 {{ pool.health }}
               </span>
               <button 
@@ -367,11 +367,11 @@ const importing = ref(false)
 // 获取健康状态样式
 const getHealthClass = (health: string) => {
   const healthLower = health.toLowerCase()
-  if (healthLower === 'online') return 'health-online'
-  if (healthLower === 'degraded') return 'health-degraded'
-  if (healthLower === 'offline') return 'health-offline'
-  if (healthLower === 'faulted') return 'health-faulted'
-  return 'health-unknown'
+  if (healthLower === 'online') return 'pool-health-online'
+  if (healthLower === 'degraded') return 'pool-health-degraded'
+  if (healthLower === 'offline') return 'pool-health-offline'
+  if (healthLower === 'faulted') return 'pool-health-faulted'
+  return 'pool-health-unknown'
 }
 
 // 获取容量使用率样式
