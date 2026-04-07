@@ -88,6 +88,12 @@ export interface ImportPoolResponse {
   error: string | null
 }
 
+export interface CreatePoolResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -112,6 +118,13 @@ export const storageApi = {
   },
   importPool(poolName: string, mountPoint: string, bootEnabled: boolean): Promise<ImportPoolResponse> {
     return apiClient.post('/zfs/import_pool', {
+      poolname: poolName,
+      mount_point: mountPoint,
+      boot_enabled: bootEnabled
+    }).then(res => res.data)
+  },
+  createPool(poolName: string, mountPoint: string, bootEnabled: boolean): Promise<CreatePoolResponse> {
+    return apiClient.post('/zfs/create_pool', {
       poolname: poolName,
       mount_point: mountPoint,
       boot_enabled: bootEnabled

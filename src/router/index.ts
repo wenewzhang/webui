@@ -45,6 +45,12 @@ const router = createRouter({
               meta: { title: 'Storage - Pool' },
             },
             {
+              path: 'pool/create',
+              name: 'PoolCreate',
+              component: () => import('@/views/PoolCreater.vue'),
+              meta: { title: 'Create Pool' },
+            },
+            {
               path: 'pool/:name',
               name: 'PoolView',
               component: () => import('@/views/PoolView.vue'),

@@ -47,6 +47,17 @@
   cursor: not-allowed;
 }
 
+.create-btn {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #fff;
+}
+
+.create-btn:hover:not(:disabled) {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
 .spinning {
   animation: spin 1s linear infinite;
 }
