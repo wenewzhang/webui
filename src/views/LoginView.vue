@@ -183,7 +183,7 @@ const handleLogin = async () => {
   })
 
   if (result.success) {
-    router.push('/')
+    router.push('/users')
   }
 }
 </script>
