@@ -24,21 +24,63 @@
       </div>
 
       <div class="form-group">
-        <label for="mountPoint">{{ $t('pool.mountPoint') || '挂载点' }}</label>
-        <input
-          id="mountPoint"
-          v-model="form.mountPoint"
-          type="text"
-          class="form-input"
-          :placeholder="$t('pool.mountPointPlaceholder') || '例如: /mnt/pool'"
-        />
+        <label for="poolType">{{ $t('pool.poolType') || '存储池类型' }}</label>
+        <select id="poolType" v-model="form.type" class="form-input form-select">
+          <option value="">{{ $t('pool.selectType') || '请选择类型' }}</option>
+          <option value="single">Single</option>
+          <option value="strip">Strip</option>
+          <option value="mirror">Mirror</option>
+          <option value="raidz1">RAIDZ1</option>
+          <option value="raidz2">RAIDZ2</option>
+          <option value="raidz3">RAIDZ3</option>
+        </select>
       </div>
 
-      <div class="form-group checkbox-group">
-        <label class="checkbox-label">
-          <input v-model="form.bootEnabled" type="checkbox" />
-          <span>{{ $t('pool.bootEnabled') || '开机自动挂载' }}</span>
-        </label>
+      <!-- 磁盘选择区域 -->
+      <div class="form-group">
+        <div class="disk-section-header">
+          <label>{{ $t('pool.disks') || '磁盘' }}</label>
+          <button 
+            v-if="form.disks.length < 15" 
+            @click="addDisk" 
+            class="btn-add-disk"
+            type="button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            {{ $t('pool.addDisk') || '添加磁盘' }}
+          </button>
+        </div>
+        
+        <div v-for="(disk, index) in form.disks" :key="index" class="disk-select-row">
+          <select v-model="form.disks[index]" class="form-input form-select disk-select">
+            <option value="">{{ $t('pool.selectDisk') || '请选择磁盘或分区' }}</option>
+            <option 
+              v-for="item in getAvailableItems(index)" 
+              :key="item.name" 
+              :value="item.name"
+            >
+              {{ item.label }}
+            </option>
+          </select>
+          <button 
+            v-if="form.disks.length > 1" 
+            @click="removeDisk(index)" 
+            class="btn-remove-disk"
+            type="button"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div v-if="form.disks.length === 0" class="disk-hint">
+          {{ $t('pool.clickAddDisk') || '点击"添加磁盘"按钮添加磁盘' }}
+        </div>
       </div>
 
       <!-- 错误提示 -->
@@ -66,30 +108,99 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { storageApi } from '@/api/storage'
+import { storageApi, type FreeDisk, type FreePart } from '@/api/storage'
 
 const { t } = useI18n()
 const router = useRouter()
 
 const form = reactive({
   name: '',
-  mountPoint: '',
-  bootEnabled: true,
+  type: '',
+  disks: [''] as string[],
 })
 
+// 可用磁盘和分区列表
+const availableDisks = ref<FreeDisk[]>([])
+const availableParts = ref<FreePart[]>([])
 const error = ref('')
 const creating = ref(false)
+
+// 合并的选项列表（磁盘和分区）
+const allAvailableItems = computed(() => {
+  const disks = availableDisks.value.map(disk => ({
+    name: disk.name,
+    size: disk.size,
+    type: 'disk' as const,
+    label: `${disk.name} (${disk.size}) [磁盘]`
+  }))
+  const parts = availableParts.value.map(part => ({
+    name: part.name,
+    size: part.size,
+    type: 'part' as const,
+    label: `${part.name} (${part.size}) [分区]`
+  }))
+  return [...disks, ...parts]
+})
+
+// 获取可用磁盘和分区列表
+const fetchAvailableItems = async () => {
+  try {
+    const [disksResponse, partsResponse] = await Promise.all([
+      storageApi.getFreeDisks(),
+      storageApi.getFreeParts()
+    ])
+    if (disksResponse.success) {
+      availableDisks.value = disksResponse.data
+    }
+    if (partsResponse.success) {
+      availableParts.value = partsResponse.data
+    }
+  } catch (err: any) {
+    console.error('Failed to fetch available items:', err)
+  }
+}
+
+// 获取当前索引可用的选项（排除已选择的）
+const getAvailableItems = (currentIndex: number) => {
+  const selectedItems = form.disks.filter((_, index) => index !== currentIndex)
+  return allAvailableItems.value.filter(item => !selectedItems.includes(item.name))
+}
+
+// 添加磁盘
+const addDisk = () => {
+  if (form.disks.length < 15) {
+    form.disks.push('')
+  }
+}
+
+// 移除磁盘
+const removeDisk = (index: number) => {
+  form.disks.splice(index, 1)
+}
 
 const goBack = () => {
   router.push('/storage/pool')
 }
 
 const createPool = async () => {
+  // 验证
   if (!form.name.trim()) {
     error.value = t('pool.poolNameRequired') || '请输入存储池名称'
+    return
+  }
+
+  if (!form.type) {
+    error.value = t('pool.poolTypeRequired') || '请选择存储池类型'
+    return
+  }
+
+  // 过滤空磁盘
+  const validDisks = form.disks.filter(disk => disk.trim() !== '')
+  if (validDisks.length === 0) {
+    error.value = t('pool.diskRequired') || '请至少选择一块磁盘'
     return
   }
 
@@ -99,8 +210,8 @@ const createPool = async () => {
   try {
     const response = await storageApi.createPool(
       form.name.trim(),
-      form.mountPoint.trim(),
-      form.bootEnabled
+      form.type,
+      validDisks
     )
     if (response.success) {
       router.push('/storage/pool')
@@ -113,6 +224,14 @@ const createPool = async () => {
     creating.value = false
   }
 }
+
+onMounted(() => {
+  fetchAvailableItems()
+  // 默认添加一个磁盘选择
+  if (form.disks.length === 0) {
+    form.disks.push('')
+  }
+})
 </script>
 
 <style scoped>
@@ -188,6 +307,88 @@ const createPool = async () => {
   outline: none;
   border-color: #6366f1;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* 磁盘选择区域样式 */
+.disk-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.disk-section-header label {
+  margin-bottom: 0;
+}
+
+.btn-add-disk {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 6px;
+  color: #059669;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-disk:hover {
+  background-color: #d1fae5;
+  border-color: #6ee7b7;
+}
+
+.disk-select-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.disk-select {
+  flex: 1;
+}
+
+.btn-remove-disk {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #dc2626;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-remove-disk:hover {
+  background-color: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.disk-hint {
+  padding: 16px;
+  background-color: #f9fafb;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  text-align: center;
 }
 
 .checkbox-group {

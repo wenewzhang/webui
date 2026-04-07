@@ -94,6 +94,30 @@ export interface CreatePoolResponse {
   error: string | null
 }
 
+export interface FreeDisk {
+  name: string
+  size: string
+  type: string
+}
+
+export interface FreeDisksResponse {
+  success: boolean
+  data: FreeDisk[]
+  error: string | null
+}
+
+export interface FreePart {
+  name: string
+  size: string
+  type: string
+}
+
+export interface FreePartsResponse {
+  success: boolean
+  data: FreePart[]
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -123,11 +147,17 @@ export const storageApi = {
       boot_enabled: bootEnabled
     }).then(res => res.data)
   },
-  createPool(poolName: string, mountPoint: string, bootEnabled: boolean): Promise<CreatePoolResponse> {
-    return apiClient.post('/zfs/create_pool', {
-      poolname: poolName,
-      mount_point: mountPoint,
-      boot_enabled: bootEnabled
+  createPool(poolName: string, poolType: string, devices: string[]): Promise<CreatePoolResponse> {
+    return apiClient.post('/create_pool', {
+      pool_name: poolName,
+      pool_type: poolType,
+      devices: devices
     }).then(res => res.data)
+  },
+  getFreeDisks(): Promise<FreeDisksResponse> {
+    return apiClient.get('/get_free_disks').then(res => res.data)
+  },
+  getFreeParts(): Promise<FreePartsResponse> {
+    return apiClient.get('/get_free_parts').then(res => res.data)
   },
 }
