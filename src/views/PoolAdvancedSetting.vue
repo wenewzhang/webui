@@ -33,7 +33,7 @@
       </div>
       
       <div class="settings-grid">
-        <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync'].includes(key) }">
+        <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync', 'checksum'].includes(key) }">
           <div class="setting-label">{{ key }}</div>
           <!-- primarycache 可编辑下拉框 -->
           <div v-if="key === 'primarycache'" class="setting-edit">
@@ -347,10 +347,30 @@
               class="setting-select"
               :disabled="saving"
             >
+              <option value="on">on</option>
               <option value="off">off</option>
               <option value="lz4">lz4</option>
-              <option value="zstd">zstd</option>
+              <option value="lzjb">lzjb</option>
+              <option value="zle">zle</option>
               <option value="gzip">gzip</option>
+              <option value="gzip-1">gzip-1</option>
+              <option value="gzip-2">gzip-2</option>
+              <option value="gzip-3">gzip-3</option>
+              <option value="gzip-4">gzip-4</option>
+              <option value="gzip-5">gzip-5</option>
+              <option value="gzip-6">gzip-6</option>
+              <option value="gzip-7">gzip-7</option>
+              <option value="gzip-8">gzip-8</option>
+              <option value="gzip-9">gzip-9</option>
+              <option value="zstd">zstd</option>
+              <option value="zstd-fast">zstd-fast</option>
+              <option value="zstd-1">zstd-1</option>
+              <option value="zstd-2">zstd-2</option>
+              <option value="zstd-3">zstd-3</option>
+              <option value="zstd-5">zstd-5</option>
+              <option value="zstd-10">zstd-10</option>
+              <option value="zstd-15">zstd-15</option>
+              <option value="zstd-19">zstd-19</option>
             </select>
             <button 
               @click="saveCompression" 
@@ -381,6 +401,36 @@
               @click="saveSync" 
               class="save-btn"
               :disabled="saving || syncValue === originalSync"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- checksum 可编辑下拉框 -->
+          <div v-else-if="key === 'checksum'" class="setting-edit">
+            <select 
+              v-model="checksumValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="on">on</option>
+              <option value="off">off</option>
+              <option value="fletcher2">fletcher2</option>
+              <option value="fletcher4">fletcher4</option>
+              <option value="sha256">sha256</option>
+              <option value="sha512">sha512</option>
+              <option value="skein">skein</option>
+              <option value="edonr">edonr</option>
+            </select>
+            <button 
+              @click="saveChecksum" 
+              class="save-btn"
+              :disabled="saving || checksumValue === originalChecksum"
             >
               <span v-if="saving" class="spinner-small"></span>
               <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -521,6 +571,10 @@ const originalCompression = ref('off')
 const syncValue = ref('standard')
 const originalSync = ref('standard')
 
+// checksum 编辑相关
+const checksumValue = ref('on')
+const originalChecksum = ref('on')
+
 const saving = ref(false)
 const saveSuccess = ref(false)
 const saveError = ref('')
@@ -622,6 +676,11 @@ const fetchAdvancedSettings = async () => {
       if (response.data.sync) {
         syncValue.value = response.data.sync
         originalSync.value = response.data.sync
+      }
+      // 初始化 checksum 值
+      if (response.data.checksum) {
+        checksumValue.value = response.data.checksum
+        originalChecksum.value = response.data.checksum
       }
     } else {
       error.value = response.error || 'Failed to fetch advanced settings'
@@ -1037,6 +1096,33 @@ const saveSync = async () => {
       }, 3000)
     } else {
       saveError.value = response.error || 'Failed to save sync'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 checksum 设置
+const saveChecksum = async () => {
+  if (!poolName.value || !checksumValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolChecksum(poolName.value, checksumValue.value)
+    if (response.success) {
+      originalChecksum.value = checksumValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save checksum'
     }
   } catch (err: any) {
     saveError.value = err.message || 'Network error'

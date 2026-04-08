@@ -208,6 +208,12 @@ export interface SetPoolSyncResponse {
   error: string | null
 }
 
+export interface SetPoolChecksumResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -294,5 +300,8 @@ export const storageApi = {
   },
   setPoolSync(poolName: string, value: string): Promise<SetPoolSyncResponse> {
     return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, sync: value }).then(res => res.data)
+  },
+  setPoolChecksum(poolName: string, value: string): Promise<SetPoolChecksumResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, checksum: value }).then(res => res.data)
   },
 }
