@@ -16,6 +16,9 @@ export default {
     info: 'Info',
     close: 'Close',
     save: 'Save',
+    saving: 'Saving...',
+    saveSuccess: 'Save Successful',
+    saveFailed: 'Save Failed',
     delete: 'Delete',
     edit: 'Edit',
     create: 'Create',
@@ -38,6 +41,7 @@ export default {
     export: 'Export',
     import: 'Import',
     retry: 'Retry',
+    advanced: 'Advanced',
   },
   // Login Page
   login: {
@@ -158,6 +162,8 @@ export default {
   // Pool
   pool: {
     name: 'Name',
+    advancedSetting: 'Advanced Settings',
+    noAdvancedData: 'No advanced settings data',
     size: 'Total Size',
     alloc: 'Allocated',
     free: 'Free Space',

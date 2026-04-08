@@ -16,6 +16,9 @@ export default {
     info: '信息',
     close: '关闭',
     save: '保存',
+    saving: '保存中...',
+    saveSuccess: '保存成功',
+    saveFailed: '保存失败',
     delete: '删除',
     edit: '编辑',
     create: '创建',
@@ -38,6 +41,7 @@ export default {
     export: '导出',
     import: '导入',
     retry: '重试',
+    advanced: '高级',
   },
   // 登录页面
   login: {
@@ -158,6 +162,8 @@ export default {
   // 存储池
   pool: {
     name: '名称',
+    advancedSetting: '高级设置',
+    noAdvancedData: '暂无高级设置数据',
     size: '总容量',
     alloc: '已分配',
     free: '可用空间',
