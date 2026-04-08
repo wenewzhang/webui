@@ -124,6 +124,48 @@ export interface PoolAdvancedSettingResponse {
   error: string | null
 }
 
+export interface SetPoolPrimaryCacheResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolQuotaResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolMountpointResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolRecordsizeResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolAtimeResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolRelatimeResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolReadonlyResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -168,5 +210,26 @@ export const storageApi = {
   },
   getPoolAdvancedSetting(poolName: string): Promise<PoolAdvancedSettingResponse> {
     return apiClient.get('/zfs/pool_advanced_setting', { params: { dataset: poolName } }).then(res => res.data)
+  },
+  setPoolPrimaryCache(poolName: string, value: string): Promise<SetPoolPrimaryCacheResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, primarycache: value }).then(res => res.data)
+  },
+  setPoolQuota(poolName: string, value: string): Promise<SetPoolQuotaResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, quota: value }).then(res => res.data)
+  },
+  setPoolMountpoint(poolName: string, value: string): Promise<SetPoolMountpointResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, mountpoint: value }).then(res => res.data)
+  },
+  setPoolRecordsize(poolName: string, value: string): Promise<SetPoolRecordsizeResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, recordsize: value }).then(res => res.data)
+  },
+  setPoolAtime(poolName: string, value: string): Promise<SetPoolAtimeResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, atime: value }).then(res => res.data)
+  },
+  setPoolRelatime(poolName: string, value: string): Promise<SetPoolRelatimeResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, relatime: value }).then(res => res.data)
+  },
+  setPoolReadonly(poolName: string, value: string): Promise<SetPoolReadonlyResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, readonly: value }).then(res => res.data)
   },
 }
