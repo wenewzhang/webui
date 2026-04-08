@@ -166,6 +166,48 @@ export interface SetPoolReadonlyResponse {
   error: string | null
 }
 
+export interface SetPoolAclmodeResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolAcltypeResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolAclinheritResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolCanmountResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolLogbiasResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolCompressionResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface SetPoolSyncResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -231,5 +273,26 @@ export const storageApi = {
   },
   setPoolReadonly(poolName: string, value: string): Promise<SetPoolReadonlyResponse> {
     return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, readonly: value }).then(res => res.data)
+  },
+  setPoolAclmode(poolName: string, value: string): Promise<SetPoolAclmodeResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, aclmode: value }).then(res => res.data)
+  },
+  setPoolAcltype(poolName: string, value: string): Promise<SetPoolAcltypeResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, acltype: value }).then(res => res.data)
+  },
+  setPoolAclinherit(poolName: string, value: string): Promise<SetPoolAclinheritResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, aclinherit: value }).then(res => res.data)
+  },
+  setPoolCanmount(poolName: string, value: string): Promise<SetPoolCanmountResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, canmount: value }).then(res => res.data)
+  },
+  setPoolLogbias(poolName: string, value: string): Promise<SetPoolLogbiasResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, logbias: value }).then(res => res.data)
+  },
+  setPoolCompression(poolName: string, value: string): Promise<SetPoolCompressionResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, compression: value }).then(res => res.data)
+  },
+  setPoolSync(poolName: string, value: string): Promise<SetPoolSyncResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, sync: value }).then(res => res.data)
   },
 }

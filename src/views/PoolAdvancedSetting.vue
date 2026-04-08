@@ -33,7 +33,7 @@
       </div>
       
       <div class="settings-grid">
-        <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly'].includes(key) }">
+        <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync'].includes(key) }">
           <div class="setting-label">{{ key }}</div>
           <!-- primarycache 可编辑下拉框 -->
           <div v-if="key === 'primarycache'" class="setting-edit">
@@ -214,6 +214,183 @@
               {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
             </button>
           </div>
+          <!-- aclmode 可编辑下拉框 -->
+          <div v-else-if="key === 'aclmode'" class="setting-edit">
+            <select 
+              v-model="aclmodeValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="discard">discard</option>
+              <option value="groupmask">groupmask</option>
+              <option value="passthrough">passthrough</option>
+            </select>
+            <button 
+              @click="saveAclmode" 
+              class="save-btn"
+              :disabled="saving || aclmodeValue === originalAclmode"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- acltype 可编辑下拉框 -->
+          <div v-else-if="key === 'acltype'" class="setting-edit">
+            <select 
+              v-model="acltypeValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="nfsv4">nfsv4</option>
+              <option value="off">off</option>
+              <option value="posix">posix</option>
+            </select>
+            <button 
+              @click="saveAcltype" 
+              class="save-btn"
+              :disabled="saving || acltypeValue === originalAcltype"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- aclinherit 可编辑下拉框 -->
+          <div v-else-if="key === 'aclinherit'" class="setting-edit">
+            <select 
+              v-model="aclinheritValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="restricted">restricted</option>
+              <option value="passthrough">passthrough</option>
+              <option value="passthrough-x">passthrough-x</option>
+              <option value="noallow">noallow</option>
+              <option value="discard">discard</option>
+            </select>
+            <button 
+              @click="saveAclinherit" 
+              class="save-btn"
+              :disabled="saving || aclinheritValue === originalAclinherit"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- canmount 可编辑下拉框 -->
+          <div v-else-if="key === 'canmount'" class="setting-edit">
+            <select 
+              v-model="canmountValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="on">on</option>
+              <option value="off">off</option>
+              <option value="noauto">noauto</option>
+            </select>
+            <button 
+              @click="saveCanmount" 
+              class="save-btn"
+              :disabled="saving || canmountValue === originalCanmount"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- logbias 可编辑下拉框 -->
+          <div v-else-if="key === 'logbias'" class="setting-edit">
+            <select 
+              v-model="logbiasValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="latency">latency</option>
+              <option value="throughput">throughput</option>
+            </select>
+            <button 
+              @click="saveLogbias" 
+              class="save-btn"
+              :disabled="saving || logbiasValue === originalLogbias"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- compression 可编辑下拉框 -->
+          <div v-else-if="key === 'compression'" class="setting-edit">
+            <select 
+              v-model="compressionValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="off">off</option>
+              <option value="lz4">lz4</option>
+              <option value="zstd">zstd</option>
+              <option value="gzip">gzip</option>
+            </select>
+            <button 
+              @click="saveCompression" 
+              class="save-btn"
+              :disabled="saving || compressionValue === originalCompression"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
+          <!-- sync 可编辑下拉框 -->
+          <div v-else-if="key === 'sync'" class="setting-edit">
+            <select 
+              v-model="syncValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="standard">standard</option>
+              <option value="always">always</option>
+              <option value="disabled">disabled</option>
+            </select>
+            <button 
+              @click="saveSync" 
+              class="save-btn"
+              :disabled="saving || syncValue === originalSync"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+            </button>
+          </div>
           <!-- 其他字段只读 -->
           <div v-else class="setting-value">{{ value }}</div>
         </div>
@@ -316,6 +493,34 @@ const originalRelatime = ref('off')
 const readonlyValue = ref('off')
 const originalReadonly = ref('off')
 
+// aclmode 编辑相关
+const aclmodeValue = ref('discard')
+const originalAclmode = ref('discard')
+
+// acltype 编辑相关
+const acltypeValue = ref('off')
+const originalAcltype = ref('off')
+
+// aclinherit 编辑相关
+const aclinheritValue = ref('restricted')
+const originalAclinherit = ref('restricted')
+
+// canmount 编辑相关
+const canmountValue = ref('on')
+const originalCanmount = ref('on')
+
+// logbias 编辑相关
+const logbiasValue = ref('latency')
+const originalLogbias = ref('latency')
+
+// compression 编辑相关
+const compressionValue = ref('off')
+const originalCompression = ref('off')
+
+// sync 编辑相关
+const syncValue = ref('standard')
+const originalSync = ref('standard')
+
 const saving = ref(false)
 const saveSuccess = ref(false)
 const saveError = ref('')
@@ -382,6 +587,41 @@ const fetchAdvancedSettings = async () => {
       if (response.data.readonly) {
         readonlyValue.value = response.data.readonly
         originalReadonly.value = response.data.readonly
+      }
+      // 初始化 aclmode 值
+      if (response.data.aclmode) {
+        aclmodeValue.value = response.data.aclmode
+        originalAclmode.value = response.data.aclmode
+      }
+      // 初始化 acltype 值
+      if (response.data.acltype) {
+        acltypeValue.value = response.data.acltype
+        originalAcltype.value = response.data.acltype
+      }
+      // 初始化 aclinherit 值
+      if (response.data.aclinherit) {
+        aclinheritValue.value = response.data.aclinherit
+        originalAclinherit.value = response.data.aclinherit
+      }
+      // 初始化 canmount 值
+      if (response.data.canmount) {
+        canmountValue.value = response.data.canmount
+        originalCanmount.value = response.data.canmount
+      }
+      // 初始化 logbias 值
+      if (response.data.logbias) {
+        logbiasValue.value = response.data.logbias
+        originalLogbias.value = response.data.logbias
+      }
+      // 初始化 compression 值
+      if (response.data.compression) {
+        compressionValue.value = response.data.compression
+        originalCompression.value = response.data.compression
+      }
+      // 初始化 sync 值
+      if (response.data.sync) {
+        syncValue.value = response.data.sync
+        originalSync.value = response.data.sync
       }
     } else {
       error.value = response.error || 'Failed to fetch advanced settings'
@@ -608,6 +848,195 @@ const saveReadonly = async () => {
       }, 3000)
     } else {
       saveError.value = response.error || 'Failed to save readonly'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 aclmode 设置
+const saveAclmode = async () => {
+  if (!poolName.value || !aclmodeValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolAclmode(poolName.value, aclmodeValue.value)
+    if (response.success) {
+      originalAclmode.value = aclmodeValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save aclmode'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 acltype 设置
+const saveAcltype = async () => {
+  if (!poolName.value || !acltypeValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolAcltype(poolName.value, acltypeValue.value)
+    if (response.success) {
+      originalAcltype.value = acltypeValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save acltype'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 aclinherit 设置
+const saveAclinherit = async () => {
+  if (!poolName.value || !aclinheritValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolAclinherit(poolName.value, aclinheritValue.value)
+    if (response.success) {
+      originalAclinherit.value = aclinheritValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save aclinherit'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 canmount 设置
+const saveCanmount = async () => {
+  if (!poolName.value || !canmountValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolCanmount(poolName.value, canmountValue.value)
+    if (response.success) {
+      originalCanmount.value = canmountValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save canmount'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 logbias 设置
+const saveLogbias = async () => {
+  if (!poolName.value || !logbiasValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolLogbias(poolName.value, logbiasValue.value)
+    if (response.success) {
+      originalLogbias.value = logbiasValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save logbias'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 compression 设置
+const saveCompression = async () => {
+  if (!poolName.value || !compressionValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolCompression(poolName.value, compressionValue.value)
+    if (response.success) {
+      originalCompression.value = compressionValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save compression'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 sync 设置
+const saveSync = async () => {
+  if (!poolName.value || !syncValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolSync(poolName.value, syncValue.value)
+    if (response.success) {
+      originalSync.value = syncValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save sync'
     }
   } catch (err: any) {
     saveError.value = err.message || 'Network error'
