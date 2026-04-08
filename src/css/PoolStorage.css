@@ -402,6 +402,32 @@
   cursor: not-allowed;
 }
 
+/* 小型高级设置按钮（用于标题区域） */
+.advanced-setting-btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #eff6ff;
+  border: 1px solid #3b82f6;
+  border-radius: 6px;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.advanced-setting-btn-small:hover:not(:disabled) {
+  background: #dbeafe;
+  border-color: #2563eb;
+}
+
+.advanced-setting-btn-small:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .spinner-small {
   width: 14px;
   height: 14px;

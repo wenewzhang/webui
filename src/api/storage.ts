@@ -118,6 +118,12 @@ export interface FreePartsResponse {
   error: string | null
 }
 
+export interface PoolAdvancedSettingResponse {
+  success: boolean
+  data: Record<string, string>
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -159,5 +165,8 @@ export const storageApi = {
   },
   getFreeParts(): Promise<FreePartsResponse> {
     return apiClient.get('/get_free_parts').then(res => res.data)
+  },
+  getPoolAdvancedSetting(poolName: string): Promise<PoolAdvancedSettingResponse> {
+    return apiClient.get('/zfs/pool_advanced_setting', { params: { dataset: poolName } }).then(res => res.data)
   },
 }

@@ -57,6 +57,12 @@ const router = createRouter({
               meta: { title: 'Pool Details' },
             },
             {
+              path: 'pool/advanced',
+              name: 'PoolAdvancedSetting',
+              component: () => import('@/views/PoolAdvancedSetting.vue'),
+              meta: { title: 'Pool Advanced Settings' },
+            },
+            {
               path: 'idle',
               name: 'StorageIdle',
               component: () => import('@/views/StorageView.vue'),
