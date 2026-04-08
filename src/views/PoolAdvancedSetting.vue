@@ -34,7 +34,7 @@
       
       <div class="settings-grid">
         <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync', 'checksum'].includes(key) }">
-          <div class="setting-label">{{ key }}</div>
+          <div class="setting-label">{{ $t('pool.' + key) || key }}</div>
           <!-- primarycache 可编辑下拉框 -->
           <div v-if="key === 'primarycache'" class="setting-edit">
             <select 

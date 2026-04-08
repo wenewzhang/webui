@@ -134,13 +134,13 @@ const allAvailableItems = computed(() => {
     name: disk.name,
     size: disk.size,
     type: 'disk' as const,
-    label: `${disk.name} (${disk.size}) [磁盘]`
+    label: `${disk.name} (${disk.size}) [${t('pool.disk')}]`
   }))
   const parts = availableParts.value.map(part => ({
     name: part.name,
     size: part.size,
     type: 'part' as const,
-    label: `${part.name} (${part.size}) [分区]`
+    label: `${part.name} (${part.size}) [${t('pool.partition')}]`
   }))
   return [...disks, ...parts]
 })
