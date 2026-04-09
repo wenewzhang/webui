@@ -42,15 +42,15 @@
       <div v-else class="checkpoint-detail">
         <div class="checkpoint-item">
           <div class="checkpoint-row">
-            <span class="checkpoint-label">Pool:</span>
+            <span class="checkpoint-label">{{ $t('pool.poolLabel') || 'Pool' }}:</span>
             <span class="checkpoint-value">{{ checkpoint.pool }}</span>
           </div>
           <div class="checkpoint-row">
-            <span class="checkpoint-label">Property:</span>
+            <span class="checkpoint-label">{{ $t('pool.propertyLabel') || 'Property' }}:</span>
             <span class="checkpoint-value">{{ checkpoint.property }}</span>
           </div>
           <div class="checkpoint-row">
-            <span class="checkpoint-label">Value:</span>
+            <span class="checkpoint-label">{{ $t('pool.valueLabel') || 'Value' }}:</span>
             <span class="checkpoint-value">
               {{ checkpoint.value }}
               <template v-if="checkpoint.value !== '-'">
@@ -66,7 +66,7 @@
             </span>
           </div>
           <div class="checkpoint-row">
-            <span class="checkpoint-label">Source:</span>
+            <span class="checkpoint-label">{{ $t('pool.sourceLabel') || 'Source' }}:</span>
             <span class="checkpoint-value">{{ checkpoint.source }}</span>
           </div>
         </div>
