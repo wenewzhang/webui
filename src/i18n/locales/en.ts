@@ -249,6 +249,7 @@ export default {
     devicesRequired: "Only {provided} devices provided, but {required} required",
     devicesUnavailable: "One or more devices is currently unavailable",
     devicesTooSmall: "One or more devices is less than the minimum size (64M)",
+    importFailedDeviceUnavailable: "Cannot import '{poolName}': one or more devices is currently unavailable",
   },
   // Error Messages
   error: {

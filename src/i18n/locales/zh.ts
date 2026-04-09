@@ -249,6 +249,7 @@ export default {
     devicesRequired: "只提供了 {provided} 个设备，但需要 {required} 个",
     devicesUnavailable: "一个或多个设备当前不可用",
     devicesTooSmall: "一个或多个设备小于最小容量（64M）",
+    importFailedDeviceUnavailable: "无法导入 '{poolName}'：一个或多个设备当前不可用",
   },
   // 错误信息
   error: {

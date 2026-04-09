@@ -503,7 +503,14 @@ const confirmImport = async () => {
         importSuccess.value = ''
       }, 3000)
     } else {
-      importError.value = response.error || t('pool.importFailed')
+      const errMsg = response.error || ''
+      const unavailableMatch = errMsg.match(/cannot import '([^']+)': one or more devices is currently unavailable/)
+      if (unavailableMatch) {
+        const poolName = unavailableMatch[1]
+        importError.value = t('pool.importFailedDeviceUnavailable', { poolName })
+      } else {
+        importError.value = response.error || t('pool.importFailed')
+      }
     }
   } catch (err: any) {
     importError.value = err.message || t('pool.importFailed')
