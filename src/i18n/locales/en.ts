@@ -43,6 +43,7 @@ export default {
     import: 'Import',
     retry: 'Retry',
     advanced: 'Advanced',
+    checkpoint: 'Checkpoint',
   },
   // Login Page
   login: {
@@ -200,6 +201,9 @@ export default {
     health: 'Health',
     dedup: 'Deduplication',
     ckpoint: 'Checkpoint',
+    checkpoint: 'Checkpoint',
+    checkpointDescription: 'Manage pool checkpoints and snapshots',
+    noCheckpoints: 'No checkpoints',
     expandsz: 'Expand Size',
     altroot: 'Altroot',
     noPools: 'No pools available',

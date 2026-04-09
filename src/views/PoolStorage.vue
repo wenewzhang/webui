@@ -87,6 +87,16 @@
                 </svg>
                 {{ $t('common.advanced') || '高级' }}
               </button>
+              <button 
+                class="checkpoint-btn-small" 
+                @click.stop="goToCheckpoint(pool.name)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <circle cx="12" cy="12" r="4"/>
+                </svg>
+                {{ $t('common.checkpoint') || '检查点' }}
+              </button>
             </div>
           </div>
         </div>
@@ -418,6 +428,11 @@ const goToPoolDetail = (poolName: string) => {
 // 跳转到高级设置
 const goToAdvancedSetting = (poolName: string) => {
   router.push({ name: 'PoolAdvancedSetting', query: { pool: poolName } })
+}
+
+// 跳转到检查点页面
+const goToCheckpoint = (poolName: string) => {
+  router.push({ name: 'PoolChkpoint', query: { pool: poolName } })
 }
 
 // 跳转到创建存储池页面

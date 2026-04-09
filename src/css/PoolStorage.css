@@ -428,6 +428,32 @@
   cursor: not-allowed;
 }
 
+/* 小型检查点按钮（用于标题区域） */
+.checkpoint-btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #f0fdf4;
+  border: 1px solid #22c55e;
+  border-radius: 6px;
+  color: #15803d;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.checkpoint-btn-small:hover:not(:disabled) {
+  background: #dcfce7;
+  border-color: #16a34a;
+}
+
+.checkpoint-btn-small:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .spinner-small {
   width: 14px;
   height: 14px;

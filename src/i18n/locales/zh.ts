@@ -43,6 +43,7 @@ export default {
     import: '导入',
     retry: '重试',
     advanced: '高级',
+    checkpoint: '检查点',
   },
   // 登录页面
   login: {
@@ -200,6 +201,9 @@ export default {
     health: '健康状态',
     dedup: '去重率',
     ckpoint: '检查点',
+    checkpoint: '检查点',
+    checkpointDescription: '管理存储池的检查点和快照',
+    noCheckpoints: '暂无检查点',
     expandsz: '扩展大小',
     altroot: '备用根',
     noPools: '暂无存储池',
