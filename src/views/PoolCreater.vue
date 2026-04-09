@@ -237,6 +237,8 @@ const createPool = async () => {
           provided: devicesMatch[1], 
           required: devicesMatch[2] 
         })
+      } else if (errMsg.includes('Only admin users can perform this operation')) {
+        error.value = t('pool.permissionDenied')
       } else {
         error.value = errMsg || t('pool.createFailed')
       }
