@@ -216,7 +216,7 @@
         </svg>
       </div>
       <div class="error-content">
-        <p class="error-title">{{ $t('pool.exportFailed') }}</p>
+        <p class="error-title">{{ $t('pool.exportFailedTitle') }}</p>
         <p class="error-detail">{{ exportError }}</p>
         <p class="error-detail">{{ exportErrorDetail }}</p>
       </div>
@@ -545,12 +545,17 @@ const confirmExport = async () => {
       // 刷新列表，但失败不影响导出成功状态
       fetchPools().catch(() => {})
     } else {
-      exportError.value = response.message || t('pool.exportFailed')
+      // 从 response.message 提取 pool 名称，如 "Failed to export pool 'one-pool'"
+      const match = response.message?.match(/'([^']+)'/)
+      const poolName = match ? match[1] : ''
+      // const poolName = response.message.match(/pool '([^']+)'/)?.[1]
+      console.log(poolName)
+      exportError.value = t('pool.exportFailed', { poolName })
       exportErrorDetail.value = response.error || ''
     }
   } catch (err: any) {
     exportError.value = err.message
-    exportErrorDetail.value = 'xxxx'
+    exportErrorDetail.value = ''
   } finally {
     exporting.value = false
     exportingPool.value = ''
