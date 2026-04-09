@@ -3,6 +3,14 @@
     <div class="header-section">
       <h2 class="page-title">{{ $t('pool.checkpoint') || '检查点' }}</h2>
       <div class="button-group">
+        <button @click="createCheckpoint" class="action-btn create-btn" :disabled="creating">
+          <svg v-if="!creating" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span v-else class="spinner-small"></span>
+          {{ creating ? ($t('common.creating') || '创建中...') : ($t('common.create') || '创建检查点') }}
+        </button>
         <button @click="goBack" class="action-btn back-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"/>
@@ -67,6 +75,7 @@ const route = useRoute()
 
 const poolName = ref('')
 const loading = ref(false)
+const creating = ref(false)
 const checkpoint = ref<Checkpoint | null>(null)
 const error = ref('')
 
@@ -94,6 +103,29 @@ const fetchCheckpoints = async () => {
     error.value = err.message || t('error.networkError')
   } finally {
     loading.value = false
+  }
+}
+
+const createCheckpoint = async () => {
+  if (!poolName.value) {
+    error.value = t('pool.selectPoolRequired') || '请选择存储池'
+    return
+  }
+  
+  creating.value = true
+  error.value = ''
+  
+  try {
+    const response = await storageApi.createCheckpoint(poolName.value)
+    if (response.success) {
+      await fetchCheckpoints()
+    } else {
+      error.value = response.error || t('error.unknown')
+    }
+  } catch (err: any) {
+    error.value = err.message || t('error.networkError')
+  } finally {
+    creating.value = false
   }
 }
 
@@ -148,6 +180,32 @@ onMounted(() => {
 
 .back-btn:hover {
   background-color: var(--bg-hover, #e5e7eb);
+}
+
+.create-btn {
+  background-color: #22c55e;
+  color: #fff;
+  border-color: #22c55e;
+}
+
+.create-btn:hover:not(:disabled) {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+.create-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
 }
 
 .pool-info-card {

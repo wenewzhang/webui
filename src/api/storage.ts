@@ -227,6 +227,12 @@ export interface CheckpointsResponse {
   error: string | null
 }
 
+export interface CreateCheckpointResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -319,5 +325,8 @@ export const storageApi = {
   },
   getCheckpoints(poolName: string): Promise<CheckpointsResponse> {
     return apiClient.get('/chk/checkpoint', { params: { poolname: poolName } }).then(res => res.data)
+  },
+  createCheckpoint(poolName: string): Promise<CreateCheckpointResponse> {
+    return apiClient.post('/chk/checkpoint', { poolname: poolName }).then(res => res.data)
   },
 }
