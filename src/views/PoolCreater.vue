@@ -216,10 +216,33 @@ const createPool = async () => {
     if (response.success) {
       router.push('/storage/pool')
     } else {
-      error.value = response.error || (t('pool.createFailed'))
+      console.log('el')
+      const errMsg = response.error || ''
+      const unavailableMatch = errMsg.match(/cannot create '([^']+)': one or more devices is currently unavailable/)
+      if (unavailableMatch) {
+        error.value = t('pool.devicesUnavailable')
+      } else error.value = response.error || (t('pool.createFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || (t('pool.createFailed'))
+    // Handle axios error response (e.g., 400 Bad Request)
+    console.log("cat")
+    if (err.response?.data) {
+      const responseData = err.response.data
+      const errMsg = responseData.error || responseData.message || ''
+      // Check for "Only X devices provided, but Y required" pattern and i18n it
+      const devicesMatch = errMsg.match(/Only (\d+) devices? provided, but (\d+) required/)
+      // Check for "cannot create 'poolname': one or more devices is currently unavailable"
+      if (devicesMatch) {
+        error.value = t('pool.devicesRequired', { 
+          provided: devicesMatch[1], 
+          required: devicesMatch[2] 
+        })
+      } else {
+        error.value = errMsg || t('pool.createFailed')
+      }
+    } else {
+      error.value = err.message || t('pool.createFailed')
+    }
   } finally {
     creating.value = false
   }

@@ -244,6 +244,8 @@ export default {
     mountPointRequired: 'Please enter mount point',
     fetchOfflinePoolsFailed: 'Failed to get offline pools',
     poolDatasetBusy: 'Cannot unmount: pool or dataset is busy',
+    devicesRequired: "Only {provided} devices provided, but {required} required",
+    devicesUnavailable: "One or more devices is currently unavailable",
   },
   // Error Messages
   error: {

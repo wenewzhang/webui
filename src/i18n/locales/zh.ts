@@ -244,6 +244,8 @@ export default {
     mountPointRequired: '请输入挂载路径',
     fetchOfflinePoolsFailed: '获取离线存储池失败',
     poolDatasetBusy: '无法卸载：存储池或数据集正忙',
+    devicesRequired: "只提供了 {provided} 个设备，但需要 {required} 个",
+    devicesUnavailable: "一个或多个设备当前不可用",
   },
   // 错误信息
   error: {
