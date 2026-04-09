@@ -287,7 +287,7 @@
             </div>
             
             <div class="form-group">
-              <label>{{ $t('pool.mountPoint') }}</label>
+              <label>{{ $t('pool.mountpoint') }}</label>
               <input 
                 v-model="mountPoint" 
                 type="text" 
