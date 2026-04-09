@@ -559,8 +559,20 @@ const confirmExport = async () => {
       }
     }
   } catch (err: any) {
-    exportError.value = err.message
-    exportErrorDetail.value = ''
+    console.log('catch')
+    console.log(err)
+    // 从 err.response.data 获取服务器返回的错误信息
+    const errorData = err.response?.data
+    if (errorData?.message?.includes('Permission denied') || err.message?.includes('Permission denied')) {
+      exportError.value = t('pool.permissionDenied')
+      exportErrorDetail.value = ''
+    } else if (errorData) {
+      exportError.value = errorData.message || err.message
+      exportErrorDetail.value = errorData.error || ''
+    } else {
+      exportError.value = err.message
+      exportErrorDetail.value = ''
+    }
   } finally {
     exporting.value = false
     exportingPool.value = ''

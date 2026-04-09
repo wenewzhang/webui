@@ -244,6 +244,7 @@ export default {
     mountPointRequired: 'Please enter mount point',
     fetchOfflinePoolsFailed: 'Failed to get offline pools',
     poolDatasetBusy: 'Cannot unmount: pool or dataset is busy',
+    permissionDenied: 'Permission denied: only admin users can perform this operation',
     devicesRequired: "Only {provided} devices provided, but {required} required",
     devicesUnavailable: "One or more devices is currently unavailable",
     devicesTooSmall: "One or more devices is less than the minimum size (64M)",
