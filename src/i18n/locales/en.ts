@@ -59,6 +59,7 @@ export default {
     forgotPassword: 'Forgot password?',
     loggingIn: 'Logging in...',
     loginFailed: 'Login failed',
+    invalidUsernameOrPassword: 'Invalid username or password',
     logoutSuccess: 'Logout successful',
     sessionExpired: 'Session expired, please login again',
   },

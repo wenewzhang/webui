@@ -59,6 +59,7 @@ export default {
     forgotPassword: '忘记密码？',
     loggingIn: '登录中...',
     loginFailed: '登录失败',
+    invalidUsernameOrPassword: '用户名或密码错误',
     logoutSuccess: '登出成功',
     sessionExpired: '会话已过期，请重新登录',
   },
