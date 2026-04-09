@@ -216,7 +216,6 @@ const createPool = async () => {
     if (response.success) {
       router.push('/storage/pool')
     } else {
-      console.log('el')
       const errMsg = response.error || ''
       const unavailableMatch = errMsg.match(/cannot create '([^']+)': one or more devices is currently unavailable/)
       const tooSmallMatch = errMsg.match(/cannot create '([^']+)': one or more devices is less than the minimum size/)
@@ -228,7 +227,6 @@ const createPool = async () => {
     }
   } catch (err: any) {
     // Handle axios error response (e.g., 400 Bad Request)
-    console.log("cat")
     if (err.response?.data) {
       const responseData = err.response.data
       const errMsg = responseData.error || responseData.message || ''
