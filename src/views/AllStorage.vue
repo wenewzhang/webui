@@ -352,6 +352,9 @@ const submitClearLabel = async () => {
     // 处理 "failed to clear label for xxx" 错误消息
     if (errorMsg && errorMsg.includes('failed to clear label for')) {
       clearLabelError.value = t('storagePage.clearLabelFailedFor', { partitionName: selectedPartition.value })
+    } else if (errorMsg.includes('Only admin users can perform this operation') )  {
+      clearLabelError.value = t('pool.permissionDenied')
+      // exportErrorDetail.value = ''
     } else {
       clearLabelError.value = errorMsg || t('storagePage.clearLabelFailed')
     }
@@ -400,7 +403,11 @@ const submitPartition = async () => {
       partitionError.value = res.error || t('storagePage.createPartitionFailed')
     }
   } catch (err: any) {
-    partitionError.value = err.response?.data?.error || t('storagePage.createPartitionFailed')
+    const errorMsg = err.response?.data?.error
+    if (errorMsg.includes('Only admin users can perform this operation') )  {
+      partitionError.value = t('pool.permissionDenied')
+      // exportErrorDetail.value = ''
+    } else partitionError.value = err.response?.data?.error || t('storagePage.createPartitionFailed')
   } finally {
     creatingPartition.value = false
   }
