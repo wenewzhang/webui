@@ -513,7 +513,13 @@ const confirmImport = async () => {
       }
     }
   } catch (err: any) {
-    importError.value = err.message || t('pool.importFailed')
+    const errData = err.response?.data
+    const errMsg = errData?.error || err.message || ''
+    if (errMsg.includes('Only admin users can perform this operation')) {
+      importError.value = t('pool.permissionDenied')
+    } else {
+      importError.value = errMsg || t('pool.importFailed')
+    }
   } finally {
     importing.value = false
   }
