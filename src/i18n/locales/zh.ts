@@ -180,7 +180,7 @@ export default {
     clickAddDisk: '点击“添加磁盘”按钮添加磁盘',
     poolNameRequired: '请输入存储池名称',
     poolTypeRequired: '请选择存储池类型',
-    disk: '磁盙8',
+    disk: '磁盘',
     partition: '分区',
     diskRequired: '请至少选择一块磁盘',
     primarycache: '主缓存 - 控制ARC缓存类型，all=缓存所有数据，metadata=仅缓存元数据，none=不缓存',
