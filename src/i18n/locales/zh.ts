@@ -47,6 +47,7 @@ export default {
     retry: '重试',
     advanced: '高级',
     checkpoint: '检查点',
+    creating: '创建中...',
   },
   // 登录页面
   login: {

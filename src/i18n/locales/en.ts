@@ -47,6 +47,7 @@ export default {
     retry: 'Retry',
     advanced: 'Advanced',
     checkpoint: 'Checkpoint',
+    creating: 'Creating...',
   },
   // Login Page
   login: {
