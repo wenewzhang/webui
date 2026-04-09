@@ -243,6 +243,7 @@ export default {
     selectPoolRequired: '请选择数据池',
     mountPointRequired: '请输入挂载路径',
     fetchOfflinePoolsFailed: '获取离线存储池失败',
+    poolDatasetBusy: '无法卸载：存储池或数据集正忙',
   },
   // 错误信息
   error: {

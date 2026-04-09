@@ -243,6 +243,7 @@ export default {
     selectPoolRequired: 'Please select a pool',
     mountPointRequired: 'Please enter mount point',
     fetchOfflinePoolsFailed: 'Failed to get offline pools',
+    poolDatasetBusy: 'Cannot unmount: pool or dataset is busy',
   },
   // Error Messages
   error: {

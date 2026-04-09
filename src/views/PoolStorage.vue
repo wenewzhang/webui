@@ -551,7 +551,12 @@ const confirmExport = async () => {
       // const poolName = response.message.match(/pool '([^']+)'/)?.[1]
       console.log(poolName)
       exportError.value = t('pool.exportFailed', { poolName })
-      exportErrorDetail.value = response.error || ''
+      // Check for specific error messages and use i18n translations
+      if (response.error?.includes('pool or dataset is busy')) {
+        exportErrorDetail.value = t('pool.poolDatasetBusy')
+      } else {
+        exportErrorDetail.value = response.error || ''
+      }
     }
   } catch (err: any) {
     exportError.value = err.message
