@@ -218,6 +218,7 @@
       <div class="error-content">
         <p class="error-title">{{ $t('pool.exportFailed') }}</p>
         <p class="error-detail">{{ exportError }}</p>
+        <p class="error-detail">{{ exportErrorDetail }}</p>
       </div>
       <button class="error-close" @click="exportError = ''">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -371,6 +372,7 @@ const pendingExportPool = ref('')
 const exporting = ref(false)
 const exportingPool = ref('')
 const exportError = ref('')
+const exportErrorDetail = ref('')
 const exportSuccess = ref('')
 
 // 导入对话框相关
@@ -534,20 +536,21 @@ const confirmExport = async () => {
   exporting.value = true
   exportingPool.value = pendingExportPool.value
   exportError.value = ''
+  exportErrorDetail.value = ''
   
   try {
     const response = await storageApi.exportPool(pendingExportPool.value)
     if (response.success) {
       exportSuccess.value = t('pool.exportSuccess', { poolName: pendingExportPool.value })
-      await fetchPools()
+      // 刷新列表，但失败不影响导出成功状态
+      fetchPools().catch(() => {})
     } else {
-      const errorMsg = response.message 
-        ? `${response.message}: ${response.error}` 
-        : (response.error || (t('pool.exportFailed')))
-      exportError.value = errorMsg
+      exportError.value = response.message || t('pool.exportFailed')
+      exportErrorDetail.value = response.error || ''
     }
   } catch (err: any) {
-    exportError.value = err.message || (t('pool.exportFailed'))
+    exportError.value = err.message
+    exportErrorDetail.value = 'xxxx'
   } finally {
     exporting.value = false
     exportingPool.value = ''

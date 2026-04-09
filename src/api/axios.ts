@@ -38,6 +38,10 @@ apiClient.interceptors.response.use(
       userStore.logout()
       window.location.href = '/login'
     }
+    // 500 错误返回服务器错误信息，让业务代码处理
+    if (error.response?.status === 500 && error.response?.data) {
+      return Promise.resolve(error.response)
+    }
     // i18n 化错误消息
     if (error.response?.status) {
       error.message = i18n.global.t('error.requestFailed', { status: error.response.status })
