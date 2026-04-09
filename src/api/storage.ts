@@ -233,6 +233,18 @@ export interface CreateCheckpointResponse {
   error: string | null
 }
 
+export interface DeleteCheckpointResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
+export interface RollbackCheckpointResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -328,5 +340,11 @@ export const storageApi = {
   },
   createCheckpoint(poolName: string): Promise<CreateCheckpointResponse> {
     return apiClient.post('/chk/checkpoint', { poolname: poolName }).then(res => res.data)
+  },
+  deleteCheckpoint(poolName: string): Promise<DeleteCheckpointResponse> {
+    return apiClient.delete('/chk/checkpoint', { params: { poolname: poolName } }).then(res => res.data)
+  },
+  rollbackCheckpoint(poolName: string): Promise<RollbackCheckpointResponse> {
+    return apiClient.post('/chk/rollback', { poolname: poolName }).then(res => res.data)
   },
 }
