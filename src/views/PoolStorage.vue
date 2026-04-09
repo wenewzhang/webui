@@ -8,7 +8,7 @@
             <line x1="12" y1="5" x2="12" y2="19"/>
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
-          {{ $t('common.create') || '创建' }}
+          {{ $t('common.create') }}
         </button>
         <button @click="fetchPools" class="action-btn refresh-btn" :disabled="loading">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="{ 'spinning': loading }">
@@ -17,7 +17,7 @@
             <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
             <path d="M16 16h5v5"/>
           </svg>
-          {{ $t('common.refresh') || '刷新' }}
+          {{ $t('common.refresh') }}
         </button>
         <button @click="importPools" class="action-btn import-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -39,7 +39,7 @@
     <!-- 错误状态 -->
     <div v-else-if="error" class="error-state">
       <p class="error-message">{{ error }}</p>
-      <button @click="fetchPools" class="retry-btn">{{ $t('common.retry') || '重试' }}</button>
+      <button @click="fetchPools" class="retry-btn">{{ $t('common.retry') }}</button>
     </div>
 
     <!-- 存储池列表 -->
@@ -75,7 +75,7 @@
                   <line x1="12" x2="12" y1="15" y2="3"/>
                 </svg>
                 <span v-else class="spinner-small"></span>
-                {{ exportingPool === pool.name ? $t('common.exporting') || '导出中...' : ($t('common.export') || '导出') }}
+                {{ exportingPool === pool.name ? $t('common.exporting') : $t('common.export') }}
               </button>
               <button 
                 class="advanced-setting-btn-small" 
@@ -85,7 +85,7 @@
                   <circle cx="12" cy="12" r="3"/>
                   <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                 </svg>
-                {{ $t('common.advanced') || '高级' }}
+                {{ $t('common.advanced') }}
               </button>
               <button 
                 class="checkpoint-btn-small" 
@@ -95,7 +95,7 @@
                   <circle cx="12" cy="12" r="10"/>
                   <circle cx="12" cy="12" r="4"/>
                 </svg>
-                {{ $t('common.checkpoint') || '检查点' }}
+                {{ $t('common.checkpoint') }}
               </button>
             </div>
           </div>
@@ -104,21 +104,21 @@
         <div class="pool-stats">
           <div class="stat-row">
             <div class="stat">
-              <span class="pool-stat-label">{{ $t('pool.size') || '总容量' }}</span>
+              <span class="pool-stat-label">{{ $t('pool.size') }}</span>
               <span class="pool-stat-value">{{ pool.size }}</span>
             </div>
             <div class="stat">
-              <span class="pool-stat-label">{{ $t('pool.alloc') || '已用' }}</span>
+              <span class="pool-stat-label">{{ $t('pool.alloc') }}</span>
               <span class="pool-stat-value">{{ pool.alloc }}</span>
             </div>
           </div>
           <div class="stat-row">
             <div class="stat">
-              <span class="pool-stat-label">{{ $t('pool.free') || '可用' }}</span>
+              <span class="pool-stat-label">{{ $t('pool.free') }}</span>
               <span class="pool-stat-value">{{ pool.free }}</span>
             </div>
             <div class="stat">
-              <span class="pool-stat-label">{{ $t('pool.cap') || '使用率' }}</span>
+              <span class="pool-stat-label">{{ $t('pool.cap') }}</span>
               <span class="pool-stat-value" :class="getCapacityClass(pool.cap)">{{ pool.cap }}</span>
             </div>
           </div>
@@ -131,34 +131,34 @@
           <div class="capacity-legend">
             <span class="legend-item">
               <span class="legend-dot used"></span>
-              {{ $t('pool.used') || '已用' }} {{ pool.alloc }}
+              {{ $t('pool.used') }} {{ pool.alloc }}
             </span>
             <span class="legend-item">
               <span class="legend-dot free"></span>
-              {{ $t('pool.free') || '可用' }} {{ pool.free }}
+              {{ $t('pool.free') }} {{ pool.free }}
             </span>
           </div>
         </div>
 
         <div class="pool-footer">
           <div class="footer-stat">
-            <span class="footer-label">{{ $t('pool.frag') || '碎片' }}</span>
+            <span class="footer-label">{{ $t('pool.frag') }}</span>
             <span class="footer-value">{{ pool.frag }}</span>
           </div>
           <div class="footer-stat">
-            <span class="footer-label">{{ $t('pool.dedup') || '去重' }}</span>
+            <span class="footer-label">{{ $t('pool.dedup') }}</span>
             <span class="footer-value">{{ pool.dedup }}</span>
           </div>
           <div class="footer-stat">
-            <span class="footer-label">{{ $t('pool.canmount') || 'Mount at Boot' }}</span>
+            <span class="footer-label">{{ $t('pool.canmount') }}</span>
             <span class="footer-value">{{ pool.canmount }}</span>
           </div>
           <div class="footer-stat">
-            <span class="footer-label">{{ $t('pool.mountpoint') || 'Mount Point' }}</span>
+            <span class="footer-label">{{ $t('pool.mountpoint') }}</span>
             <span class="footer-value">{{ pool.mountpoint }}</span>
           </div>
           <div class="view-detail">
-            {{ $t('pool.viewDetail') || '查看详情' }}
+            {{ $t('pool.viewDetail') }}
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m9 18 6-6-6-6"/>
             </svg>
@@ -176,7 +176,7 @@
           <path d="M3 12A9 3 0 0 0 21 12"/>
         </svg>
       </div>
-      <p class="empty-text">{{ $t('pool.noPools') || '暂无存储池' }}</p>
+      <p class="empty-text">{{ $t('pool.noPools') }}</p>
     </div>
   </div>
   <!-- 导出确认对话框 -->
@@ -188,19 +188,19 @@
           <path d="M12 9v4"/>
           <path d="M12 17h.01"/>
         </svg>
-        <h3>{{ $t('pool.exportConfirmTitle') || '确认导出存储池' }}</h3>
+        <h3>{{ $t('pool.exportConfirmTitle') }}</h3>
       </div>
       <div class="confirm-dialog-body">
         <p>{{ $t('pool.exportConfirmMessage', { poolName: pendingExportPool }) }}</p>
-        <p class="warning-text">{{ $t('pool.exportWarning') || '导出后该存储池将不再可用，但数据会被保留。' }}</p>
+        <p class="warning-text">{{ $t('pool.exportWarning') }}</p>
       </div>
       <div class="confirm-dialog-footer">
         <button @click="cancelExport" class="btn-cancel">
-          {{ $t('common.cancel') || '取消' }}
+          {{ $t('common.cancel') }}
         </button>
         <button @click="confirmExport" class="btn-confirm" :disabled="exporting">
           <span v-if="exporting" class="spinner-small"></span>
-          {{ exporting ? ($t('common.exporting') || '导出中...') : ($t('common.confirm') || '确认') }}
+          {{ exporting ? $t('common.exporting') : $t('common.confirm') }}
         </button>
       </div>
     </div>
@@ -216,7 +216,7 @@
         </svg>
       </div>
       <div class="error-content">
-        <p class="error-title">{{ $t('pool.exportFailed') || '导出失败' }}</p>
+        <p class="error-title">{{ $t('pool.exportFailed') }}</p>
         <p class="error-detail">{{ exportError }}</p>
       </div>
       <button class="error-close" @click="exportError = ''">
@@ -518,7 +518,7 @@ const showExportConfirm = (poolName: string) => {
 
 // 显示导出所有存储池确认
 const showExportAllConfirm = () => {
-  alert(t('pool.selectPoolToExport') || '请选择一个存储池进行导出')
+  alert(t('pool.selectPoolToExport'))
 }
 
 // 取消导出
@@ -543,11 +543,11 @@ const confirmExport = async () => {
     } else {
       const errorMsg = response.message 
         ? `${response.message}: ${response.error}` 
-        : (response.error || (t('pool.exportFailed') || '导出失败'))
+        : (response.error || (t('pool.exportFailed')))
       exportError.value = errorMsg
     }
   } catch (err: any) {
-    exportError.value = err.message || (t('pool.exportFailed') || '导出失败')
+    exportError.value = err.message || (t('pool.exportFailed'))
   } finally {
     exporting.value = false
     exportingPool.value = ''

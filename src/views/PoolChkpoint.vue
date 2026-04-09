@@ -1,7 +1,7 @@
 <template>
   <div class="pool-chkpoint-container">
     <div class="header-section">
-      <h2 class="page-title">{{ $t('pool.checkpoint') || '检查点' }}</h2>
+      <h2 class="page-title">{{ $t('pool.checkpoint') }}</h2>
       <div class="button-group">
         <button @click="createCheckpoint" class="action-btn create-btn" :disabled="creating || !canCreateCheckpoint">
           <svg v-if="!creating" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -9,21 +9,21 @@
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
           <span v-else class="spinner-small"></span>
-          {{ creating ? ($t('common.creating') || '创建中...') : ($t('common.create') || '创建检查点') }}
+          {{ creating ? $t('common.creating') : $t('common.create') }}
         </button>
         <button @click="goBack" class="action-btn back-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"/>
             <polyline points="12 19 5 12 12 5"/>
           </svg>
-          {{ $t('common.back') || '返回' }}
+          {{ $t('common.back') }}
         </button>
       </div>
     </div>
 
     <div class="pool-info-card">
       <h3>{{ poolName }}</h3>
-      <p>{{ $t('pool.checkpointDescription') || '管理存储池的检查点和快照' }}</p>
+      <p>{{ $t('pool.checkpointDescription') }}</p>
     </div>
 
     <!-- 检查点列表 -->
@@ -34,39 +34,39 @@
       </div>
       <div v-else-if="error && !showRollbackHelp" class="error-state">
         <p class="error-message">{{ error }}</p>
-        <button @click="fetchCheckpoints" class="retry-btn">{{ $t('common.retry') || '重试' }}</button>
+        <button @click="fetchCheckpoints" class="retry-btn">{{ $t('common.retry') }}</button>
       </div>
       <div v-else-if="!checkpoint" class="empty-state">
-        <p>{{ $t('pool.noCheckpoints') || '暂无检查点' }}</p>
+        <p>{{ $t('pool.noCheckpoints') }}</p>
       </div>
       <div v-else class="checkpoint-detail">
         <div class="checkpoint-item">
           <div class="checkpoint-row">
-            <span class="checkpoint-label">{{ $t('pool.poolLabel') || 'Pool' }}:</span>
+            <span class="checkpoint-label">{{ $t('pool.poolLabel') }}:</span>
             <span class="checkpoint-value">{{ checkpoint.pool }}</span>
           </div>
           <div class="checkpoint-row">
-            <span class="checkpoint-label">{{ $t('pool.propertyLabel') || 'Property' }}:</span>
+            <span class="checkpoint-label">{{ $t('pool.propertyLabel') }}:</span>
             <span class="checkpoint-value">{{ checkpoint.property }}</span>
           </div>
           <div class="checkpoint-row">
-            <span class="checkpoint-label">{{ $t('pool.valueLabel') || 'Value' }}:</span>
+            <span class="checkpoint-label">{{ $t('pool.valueLabel') }}:</span>
             <span class="checkpoint-value">
               {{ checkpoint.value }}
               <template v-if="checkpoint.value !== '-'">
                 <button @click="deleteCheckpoint" class="action-btn-small delete-btn" :disabled="deleting">
                   <span v-if="deleting" class="spinner-small-btn"></span>
-                  {{ deleting ? ($t('common.deleting') || '删除中...') : ($t('common.delete') || '删除检查点') }}
+                  {{ deleting ? $t('common.deleting') : $t('common.delete') }}
                 </button>
                 <button @click="rollbackCheckpoint" class="action-btn-small rollback-btn" :disabled="rollingback">
                   <span v-if="rollingback" class="spinner-small-btn"></span>
-                  {{ rollingback ? ($t('common.rollingback') || '回滚中...') : ($t('common.rollback') || '回滚到检查点') }}
+                  {{ rollingback ? $t('common.rollingback') : $t('common.rollback') }}
                 </button>
               </template>
             </span>
           </div>
           <div class="checkpoint-row">
-            <span class="checkpoint-label">{{ $t('pool.sourceLabel') || 'Source' }}:</span>
+            <span class="checkpoint-label">{{ $t('pool.sourceLabel') }}:</span>
             <span class="checkpoint-value">{{ checkpoint.source }}</span>
           </div>
         </div>
@@ -81,7 +81,7 @@
           <line x1="12" y1="8" x2="12" y2="12"/>
           <line x1="12" y1="16" x2="12.01" y2="16"/>
         </svg>
-        <span class="rollback-help-title">{{ $t('pool.rollbackFailed') || '回滚失败' }}</span>
+        <span class="rollback-help-title">{{ $t('pool.rollbackFailed') }}</span>
         <button @click="showRollbackHelp = false" class="close-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -131,7 +131,7 @@ const goBack = () => {
 
 const fetchCheckpoints = async () => {
   if (!poolName.value) {
-    error.value = t('pool.selectPoolRequired') || '请选择存储池'
+    error.value = t('pool.selectPoolRequired')
     return
   }
   
@@ -154,7 +154,7 @@ const fetchCheckpoints = async () => {
 
 const createCheckpoint = async () => {
   if (!poolName.value) {
-    error.value = t('pool.selectPoolRequired') || '请选择存储池'
+    error.value = t('pool.selectPoolRequired')
     return
   }
   
@@ -177,7 +177,7 @@ const createCheckpoint = async () => {
 
 const deleteCheckpoint = async () => {
   if (!poolName.value) {
-    error.value = t('pool.selectPoolRequired') || '请选择存储池'
+    error.value = t('pool.selectPoolRequired')
     return
   }
   
@@ -200,7 +200,7 @@ const deleteCheckpoint = async () => {
 
 const rollbackCheckpoint = async () => {
   if (!poolName.value) {
-    error.value = t('pool.selectPoolRequired') || '请选择存储池'
+    error.value = t('pool.selectPoolRequired')
     return
   }
   

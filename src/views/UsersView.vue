@@ -10,7 +10,7 @@
           <svg class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
-          {{ $t('users.addUser') || 'Add User' }}
+          {{ $t('users.addUser') }}
         </button>
         <button
           @click="handleRefresh"
@@ -50,7 +50,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       </div>
-      <p class="text-gray-500">{{ $t('users.noUsers') || 'No users found' }}</p>
+      <p class="text-gray-500">{{ $t('users.noUsers') }}</p>
     </div>
 
     <div v-else class="overflow-x-auto">
@@ -61,13 +61,13 @@
               {{ $t('users.name') }}
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {{ $t('users.type') || 'Type' }}
+              {{ $t('users.type') }}
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {{ $t('users.password') || 'Password' }}
+              {{ $t('users.password') }}
             </th>
             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              {{ $t('common.action') || 'Action' }}
+              {{ $t('common.action') }}
             </th>
           </tr>
         </thead>
@@ -96,7 +96,7 @@
                 @click="handleChangePassword(user)"
                 class="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                {{ $t('users.changePassword') || 'Change Password' }}
+                {{ $t('users.changePassword') }}
               </button>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
@@ -104,7 +104,7 @@
                 @click="handleDeleteUser(user)"
                 class="inline-flex items-center px-3 py-1 border border-red-300 shadow-sm text-xs font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
-                {{ $t('users.deleteAccount') || 'Delete Account' }}
+                {{ $t('users.deleteAccount') }}
               </button>
             </td>
           </tr>
@@ -200,14 +200,14 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            {{ $t('common.confirm') || 'Confirm' }}
+            {{ $t('common.confirm') }}
           </button>
           <button
             type="button"
             @click="closeModal"
             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
           >
-            {{ $t('common.cancel') || 'Cancel' }}
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </div>
@@ -231,11 +231,11 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="delete-user-modal-title">
-              {{ $t('users.deleteUserConfirmTitle') || 'Confirm Delete User' }}
+              {{ $t('users.deleteUserConfirmTitle') }}
             </h3>
             <div class="mt-2">
               <p class="text-sm text-gray-500">
-                {{ $t('users.deleteUserConfirmMessage', { username: userToDelete?.name }) || `Are you sure you want to delete user '${userToDelete?.name}'? This action cannot be undone.` }}
+                {{ $t('users.deleteUserConfirmMessage', { username: userToDelete?.name }) }}
               </p>
             </div>
             <!-- Error Message -->
@@ -259,14 +259,14 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            {{ $t('common.delete') || 'Delete' }}
+            {{ $t('common.delete') }}
           </button>
           <button
             type="button"
             @click="closeDeleteUserModal"
             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
           >
-            {{ $t('common.cancel') || 'Cancel' }}
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </div>
@@ -290,20 +290,20 @@
           </div>
           <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
             <h3 class="text-lg leading-6 font-medium text-gray-900" id="add-user-modal-title">
-              {{ $t('users.addUserTitle') || 'Add User' }}
+              {{ $t('users.addUserTitle') }}
             </h3>
             <div class="mt-4 space-y-4">
               <!-- User Type -->
               <div>
                 <label for="add-user-type" class="block text-sm font-medium text-gray-700">
-                  {{ $t('users.userType') || 'User Type' }}
+                  {{ $t('users.userType') }}
                 </label>
                 <select
                   id="add-user-type"
                   v-model="addUserForm.userType"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
-                  <option value="">{{ $t('users.pleaseSelectUserType') || 'Please select user type' }}</option>
+                  <option value="">{{ $t('users.pleaseSelectUserType') }}</option>
                   <option value="share">share</option>
                   <option value="read">read</option>
                   <option value="samba">samba</option>
@@ -319,7 +319,7 @@
                   v-model="addUserForm.username"
                   type="text"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  :placeholder="$t('users.enterUsername') || 'Please enter username'"
+                  :placeholder="$t('users.enterUsername')"
                 />
               </div>
               <!-- Password -->
@@ -370,14 +370,14 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            {{ $t('common.confirm') || 'Confirm' }}
+            {{ $t('common.confirm') }}
           </button>
           <button
             type="button"
             @click="closeAddUserModal"
             class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
           >
-            {{ $t('common.cancel') || 'Cancel' }}
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </div>

@@ -5,21 +5,21 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="m15 18-6-6 6-6"/>
         </svg>
-        {{ $t('common.back') || '返回' }}
+        {{ $t('common.back') }}
       </button>
-      <h1 class="title">{{ $t('pool.detail') || '存储池详情' }}</h1>
+      <h1 class="title">{{ $t('pool.detail') }}</h1>
     </div>
 
     <!-- 加载状态 -->
     <div v-if="loading" class="loading-container">
       <div class="spinner"></div>
-      <p>{{ $t('common.loading') || '加载中...' }}</p>
+      <p>{{ $t('common.loading') }}</p>
     </div>
 
     <!-- 错误状态 -->
     <div v-else-if="error" class="error-container">
       <p class="error-text">{{ error }}</p>
-      <button @click="fetchPoolData" class="retry-btn">{{ $t('common.retry') || '重试' }}</button>
+      <button @click="fetchPoolData" class="retry-btn">{{ $t('common.retry') }}</button>
     </div>
 
     <!-- 3D 圆柱形立方体展示 -->
@@ -125,54 +125,54 @@
 
       <!-- 数据详情表格 -->
       <div class="details-panel">
-        <h3>{{ $t('pool.info') || '存储池信息' }}</h3>
+        <h3>{{ $t('pool.info') }}</h3>
         <div class="info-grid">
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.name') || '名称' }}</span>
+            <span class="info-label">{{ $t('pool.name') }}</span>
             <span class="info-value">{{ poolData.name }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.size') || '总大小' }}</span>
+            <span class="info-label">{{ $t('pool.size') }}</span>
             <span class="info-value">{{ poolData.size }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.alloc') || '已分配' }}</span>
+            <span class="info-label">{{ $t('pool.alloc') }}</span>
             <span class="info-value">{{ poolData.alloc }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.free') || '可用' }}</span>
+            <span class="info-label">{{ $t('pool.free') }}</span>
             <span class="info-value">{{ poolData.free }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.cap') || '容量使用率' }}</span>
+            <span class="info-label">{{ $t('pool.cap') }}</span>
             <span class="info-value">{{ poolData.cap }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.frag') || '碎片率' }}</span>
+            <span class="info-label">{{ $t('pool.frag') }}</span>
             <span class="info-value">{{ poolData.frag }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.health') || '健康状态' }}</span>
+            <span class="info-label">{{ $t('pool.health') }}</span>
             <span class="info-value" :class="getHealthClass(poolData.health)">{{ poolData.health }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.dedup') || '去重率' }}</span>
+            <span class="info-label">{{ $t('pool.dedup') }}</span>
             <span class="info-value">{{ poolData.dedup }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.ckpoint') || '检查点' }}</span>
+            <span class="info-label">{{ $t('pool.ckpoint') }}</span>
             <span class="info-value">{{ poolData.ckpoint }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.altroot') || '备用根' }}</span>
+            <span class="info-label">{{ $t('pool.altroot') }}</span>
             <span class="info-value">{{ poolData.altroot }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.canmount') || 'Mount at Boot' }}</span>
+            <span class="info-label">{{ $t('pool.canmount') }}</span>
             <span class="info-value">{{ poolData.canmount }}</span>
           </div>
           <div class="info-item">
-            <span class="info-label">{{ $t('pool.mountpoint') || 'Mount Point' }}</span>
+            <span class="info-label">{{ $t('pool.mountpoint') }}</span>
             <span class="info-value">{{ poolData.mountpoint }}</span>
           </div>
         </div>

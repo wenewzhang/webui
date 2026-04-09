@@ -6,27 +6,27 @@
           <path d="M19 12H5"/>
           <path d="M12 19l-7-7 7-7"/>
         </svg>
-        {{ $t('common.back') || '返回' }}
+        {{ $t('common.back') }}
       </button>
-      <h2 class="page-title">{{ $t('pool.createPool') || '创建存储池' }}</h2>
+      <h2 class="page-title">{{ $t('pool.createPool') }}</h2>
     </div>
 
     <div class="form-container">
       <div class="form-group">
-        <label for="poolName">{{ $t('pool.poolName') || '存储池名称' }}</label>
+        <label for="poolName">{{ $t('pool.poolName') }}</label>
         <input
           id="poolName"
           v-model="form.name"
           type="text"
           class="form-input"
-          :placeholder="$t('pool.poolNamePlaceholder') || '请输入存储池名称'"
+          :placeholder="$t('pool.poolNamePlaceholder')"
         />
       </div>
 
       <div class="form-group">
-        <label for="poolType">{{ $t('pool.poolType') || '存储池类型' }}</label>
+        <label for="poolType">{{ $t('pool.poolType') }}</label>
         <select id="poolType" v-model="form.type" class="form-input form-select">
-          <option value="">{{ $t('pool.selectType') || '请选择类型' }}</option>
+          <option value="">{{ $t('pool.selectType') }}</option>
           <option value="single">Single</option>
           <option value="strip">Strip</option>
           <option value="mirror">Mirror</option>
@@ -39,7 +39,7 @@
       <!-- 磁盘选择区域 -->
       <div class="form-group">
         <div class="disk-section-header">
-          <label>{{ $t('pool.disks') || '磁盘' }}</label>
+          <label>{{ $t('pool.disks') }}</label>
           <button 
             v-if="form.disks.length < 15" 
             @click="addDisk" 
@@ -50,13 +50,13 @@
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
-            {{ $t('pool.addDisk') || '添加磁盘' }}
+            {{ $t('pool.addDisk') }}
           </button>
         </div>
         
         <div v-for="(disk, index) in form.disks" :key="index" class="disk-select-row">
           <select v-model="form.disks[index]" class="form-input form-select disk-select">
-            <option value="">{{ $t('pool.selectDisk') || '请选择磁盘或分区' }}</option>
+            <option value="">{{ $t('pool.selectDisk') }}</option>
             <option 
               v-for="item in getAvailableItems(index)" 
               :key="item.name" 
@@ -79,7 +79,7 @@
         </div>
         
         <div v-if="form.disks.length === 0" class="disk-hint">
-          {{ $t('pool.clickAddDisk') || '点击"添加磁盘"按钮添加磁盘' }}
+          {{ $t('pool.clickAddDisk') }}
         </div>
       </div>
 
@@ -96,11 +96,11 @@
       <!-- 操作按钮 -->
       <div class="form-actions">
         <button @click="goBack" class="btn-cancel">
-          {{ $t('common.cancel') || '取消' }}
+          {{ $t('common.cancel') }}
         </button>
         <button @click="createPool" class="btn-create" :disabled="creating">
           <span v-if="creating" class="spinner-small"></span>
-          {{ creating ? ($t('common.creating') || '创建中...') : ($t('common.create') || '创建') }}
+          {{ creating ? $t('common.creating') : $t('common.create') }}
         </button>
       </div>
     </div>
@@ -188,19 +188,19 @@ const goBack = () => {
 const createPool = async () => {
   // 验证
   if (!form.name.trim()) {
-    error.value = t('pool.poolNameRequired') || '请输入存储池名称'
+    error.value = t('pool.poolNameRequired')
     return
   }
 
   if (!form.type) {
-    error.value = t('pool.poolTypeRequired') || '请选择存储池类型'
+    error.value = t('pool.poolTypeRequired')
     return
   }
 
   // 过滤空磁盘
   const validDisks = form.disks.filter(disk => disk.trim() !== '')
   if (validDisks.length === 0) {
-    error.value = t('pool.diskRequired') || '请至少选择一块磁盘'
+    error.value = t('pool.diskRequired')
     return
   }
 
@@ -216,10 +216,10 @@ const createPool = async () => {
     if (response.success) {
       router.push('/storage/pool')
     } else {
-      error.value = response.error || (t('pool.createFailed') || '创建失败')
+      error.value = response.error || (t('pool.createFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || (t('pool.createFailed') || '创建失败')
+    error.value = err.message || (t('pool.createFailed'))
   } finally {
     creating.value = false
   }

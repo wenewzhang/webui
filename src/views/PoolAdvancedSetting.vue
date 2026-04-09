@@ -1,14 +1,14 @@
 <template>
   <div class="pool-advanced-setting-container">
     <div class="header-section">
-      <h2 class="page-title">{{ $t('pool.advancedSetting') || '高级设置' }}</h2>
+      <h2 class="page-title">{{ $t('pool.advancedSetting') }}</h2>
       <div class="button-group">
         <button @click="goBack" class="action-btn back-btn">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="19" y1="12" x2="5" y2="12"/>
             <polyline points="12 19 5 12 12 5"/>
           </svg>
-          {{ $t('common.back') || '返回' }}
+          {{ $t('common.back') }}
         </button>
       </div>
     </div>
@@ -16,25 +16,25 @@
     <!-- 加载状态 -->
     <div v-if="loading" class="loading-state">
       <div class="spinner"></div>
-      <p>{{ $t('common.loading') || '加载中...' }}</p>
+      <p>{{ $t('common.loading') }}</p>
     </div>
 
     <!-- 错误状态 -->
     <div v-else-if="error" class="error-state">
       <p class="error-message">{{ error }}</p>
-      <button @click="fetchAdvancedSettings" class="retry-btn">{{ $t('common.retry') || '重试' }}</button>
+      <button @click="fetchAdvancedSettings" class="retry-btn">{{ $t('common.retry') }}</button>
     </div>
 
     <!-- 高级设置数据 -->
     <div v-else-if="advancedData" class="settings-content">
       <div class="pool-name-header">
-        <span class="label">{{ $t('pool.name') || '存储池' }}:</span>
+        <span class="label">{{ $t('pool.name') }}:</span>
         <span class="value">{{ poolName }}</span>
       </div>
       
       <div class="settings-grid">
         <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync', 'checksum'].includes(key) }">
-          <div class="setting-label">{{ $t('pool.' + key) || key }}</div>
+          <div class="setting-label">{{ $t('pool.' + key) }}</div>
           <!-- primarycache 可编辑下拉框 -->
           <div v-if="key === 'primarycache'" class="setting-edit">
             <select 
@@ -57,7 +57,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- quota 可编辑输入 -->
@@ -90,7 +90,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- mountpoint 可编辑输入 -->
@@ -113,7 +113,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- recordsize 可编辑下拉框 -->
@@ -139,7 +139,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- atime 可编辑下拉框 -->
@@ -163,7 +163,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- relatime 可编辑下拉框 -->
@@ -187,7 +187,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- readonly 可编辑下拉框 -->
@@ -211,7 +211,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- aclmode 可编辑下拉框 -->
@@ -236,7 +236,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- acltype 可编辑下拉框 -->
@@ -261,7 +261,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- aclinherit 可编辑下拉框 -->
@@ -288,7 +288,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- canmount 可编辑下拉框 -->
@@ -313,7 +313,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- logbias 可编辑下拉框 -->
@@ -337,7 +337,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- compression 可编辑下拉框 -->
@@ -383,7 +383,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- sync 可编辑下拉框 -->
@@ -408,7 +408,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- checksum 可编辑下拉框 -->
@@ -438,7 +438,7 @@
                 <polyline points="17 21 17 13 7 13 7 21"/>
                 <polyline points="7 3 7 8 15 8"/>
               </svg>
-              {{ saving ? ($t('common.saving') || '保存中...') : ($t('common.save') || '保存') }}
+              {{ saving ? $t('common.saving') : $t('common.save') }}
             </button>
           </div>
           <!-- 其他字段只读 -->
@@ -456,7 +456,7 @@
           <line x1="12" y1="8" x2="12.01" y2="8"/>
         </svg>
       </div>
-      <p class="empty-text">{{ $t('pool.noAdvancedData') || '暂无高级设置数据' }}</p>
+      <p class="empty-text">{{ $t('pool.noAdvancedData') }}</p>
     </div>
 
     <!-- 保存成功提示 -->
@@ -468,7 +468,7 @@
         </svg>
       </div>
       <div class="success-content">
-        <p class="success-title">{{ $t('common.saveSuccess') || '保存成功' }}</p>
+        <p class="success-title">{{ $t('common.saveSuccess') }}</p>
       </div>
       <button class="success-close" @click="saveSuccess = false">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -488,7 +488,7 @@
         </svg>
       </div>
       <div class="error-content">
-        <p class="error-title">{{ $t('common.saveFailed') || '保存失败' }}</p>
+        <p class="error-title">{{ $t('common.saveFailed') }}</p>
         <p class="error-detail">{{ saveError }}</p>
       </div>
       <button class="error-close" @click="saveError = ''">
