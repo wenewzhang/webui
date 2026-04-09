@@ -58,7 +58,9 @@ export const useUserStore = defineStore(
         } else {
           message = err.response.data?.message || t('error.unknown')
         }
-        error.value = message
+        if (message === 'Invalid username or password') {
+          error.value = t('login.invalidUsernameOrPassword')
+        } else error.value = message
         return { success: false, message }
       } finally {
         loading.value = false

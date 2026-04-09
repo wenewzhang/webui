@@ -33,7 +33,9 @@ apiClient.interceptors.response.use(
     return response
   },
   (error) => {
-    if (error.response?.status === 401) {
+    // 排除登录接口的 401 错误（用户名密码错误），避免刷新页面
+    const isLoginRequest = error.config?.url?.includes('/login')
+    if (error.response?.status === 401 && !isLoginRequest) {
       const userStore = useUserStore()
       userStore.logout()
       window.location.href = '/login'

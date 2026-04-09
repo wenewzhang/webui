@@ -170,10 +170,7 @@ onMounted(() => {
   if (message) {
     if (message === 'User created successfully') {
       successMessage.value = t('createAdmin.userCreatedSuccess')
-    } else if (message === 'Invalid username or password') {
-      userStore.error = t('login.invalidUsernameOrPassword')
-    } else {
-      console.log('el')
+    }  else {
       userStore.error = message as string
     }
   }
