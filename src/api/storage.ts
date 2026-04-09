@@ -342,7 +342,7 @@ export const storageApi = {
     return apiClient.post('/chk/checkpoint', { poolname: poolName }).then(res => res.data)
   },
   deleteCheckpoint(poolName: string): Promise<DeleteCheckpointResponse> {
-    return apiClient.delete('/chk/checkpoint', { params: { poolname: poolName } }).then(res => res.data)
+    return apiClient.delete('/chk/checkpoint', { data: { poolname: poolName } }).then(res => res.data)
   },
   rollbackCheckpoint(poolName: string): Promise<RollbackCheckpointResponse> {
     return apiClient.post('/chk/rollback', { poolname: poolName }).then(res => res.data)
