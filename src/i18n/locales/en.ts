@@ -246,6 +246,7 @@ export default {
     poolDatasetBusy: 'Cannot unmount: pool or dataset is busy',
     devicesRequired: "Only {provided} devices provided, but {required} required",
     devicesUnavailable: "One or more devices is currently unavailable",
+    devicesTooSmall: "One or more devices is less than the minimum size (64M)",
   },
   // Error Messages
   error: {

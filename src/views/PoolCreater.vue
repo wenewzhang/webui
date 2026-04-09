@@ -219,8 +219,11 @@ const createPool = async () => {
       console.log('el')
       const errMsg = response.error || ''
       const unavailableMatch = errMsg.match(/cannot create '([^']+)': one or more devices is currently unavailable/)
+      const tooSmallMatch = errMsg.match(/cannot create '([^']+)': one or more devices is less than the minimum size/)
       if (unavailableMatch) {
         error.value = t('pool.devicesUnavailable')
+      } else if (tooSmallMatch) {
+        error.value = t('pool.devicesTooSmall')
       } else error.value = response.error || (t('pool.createFailed'))
     }
   } catch (err: any) {
@@ -231,7 +234,6 @@ const createPool = async () => {
       const errMsg = responseData.error || responseData.message || ''
       // Check for "Only X devices provided, but Y required" pattern and i18n it
       const devicesMatch = errMsg.match(/Only (\d+) devices? provided, but (\d+) required/)
-      // Check for "cannot create 'poolname': one or more devices is currently unavailable"
       if (devicesMatch) {
         error.value = t('pool.devicesRequired', { 
           provided: devicesMatch[1], 
