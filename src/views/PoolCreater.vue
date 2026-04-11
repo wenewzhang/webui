@@ -33,6 +33,7 @@
           <option value="raidz1">RAIDZ1</option>
           <option value="raidz2">RAIDZ2</option>
           <option value="raidz3">RAIDZ3</option>
+          <option value="raid10">RAID10</option>
         </select>
       </div>
 

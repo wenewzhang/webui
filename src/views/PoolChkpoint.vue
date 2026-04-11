@@ -170,7 +170,7 @@ const createCheckpoint = async () => {
     }
   } catch (err: any) {
     // error.value = err.message || t('error.networkError')
-      const errorData = err.response?.data
+    const errorData = err.response?.data
     if (errorData?.message?.includes('Permission denied') || err.message?.includes('Permission denied')) {
       error.value = t('pool.permissionDenied')
       // exportErrorDetail.value = ''
