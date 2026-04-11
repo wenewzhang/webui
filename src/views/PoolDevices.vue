@@ -523,12 +523,12 @@ const handleDetach = async (deviceName: string) => {
       detachError.value = response.error || t('error.unknown')
       // 显示错误 toast
       const errorMsg = response.error || 'Unknown error'
-      showToastMessage(`Failed to detach device from pool '${poolName.value}'\n${errorMsg}`, 'error')
+      showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }
   } catch (err: any) {
     detachError.value = err.message || t('error.networkError')
     // 显示网络错误 toast
-    showToastMessage(`Failed to detach device from pool '${poolName.value}'\n${err.message || 'Network error'}`, 'error')
+    showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${err.message || t('error.networkError')}`, 'error')
   } finally {
     detaching.value = false
     selectedPoolDevice.value = null
@@ -570,11 +570,11 @@ const handleAttach = async () => {
     } else {
       // 显示错误 toast
       const errorMsg = response.error || 'Unknown error'
-      showToastMessage(`Failed to attach device to pool '${poolName.value}'\n${errorMsg}`, 'error')
+      showToastMessage(`${t('pool.attachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }
   } catch (err: any) {
     // 显示网络错误 toast
-    showToastMessage(`Failed to attach device to pool '${poolName.value}'\n${err.message || 'Network error'}`, 'error')
+    showToastMessage(`${t('pool.attachFailed', { poolName: poolName.value })}\n${err.message || t('error.networkError')}`, 'error')
   } finally {
     attaching.value = false
   }
