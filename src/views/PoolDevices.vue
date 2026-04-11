@@ -41,16 +41,30 @@
         <p>{{ $t('pool.noDevices') }}</p>
       </div>
       <div v-else class="devices-content">
-        <div v-for="device in devices" :key="device.name" class="device-item">
+        <div 
+          v-for="device in devices" 
+          :key="device.name" 
+          class="device-item"
+          :class="{ 'selected': isPoolDeviceSelected(device.name) }"
+          @click="selectPoolDevice(device.name)"
+        >
           <div class="device-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg v-if="!isPoolDeviceSelected(device.name)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
               <line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
           <div class="device-info">
             <div class="device-name">{{ device.name }}</div>
             <div class="device-size">{{ device.size }}</div>
+          </div>
+          <div v-if="isPoolDeviceSelected(device.name)" class="check-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
           </div>
         </div>
       </div>
@@ -84,12 +98,21 @@
         </div>
         <div v-else class="disks-content">
           <!-- 可用磁盘 -->
-          <div v-for="disk in freeDisks" :key="disk.name" class="disk-item">
+          <div 
+            v-for="disk in freeDisks" 
+            :key="disk.name" 
+            class="disk-item"
+            :class="{ 'selected': isDiskSelected(disk.name) }"
+            @click="selectDisk(disk.name)"
+          >
             <div class="disk-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg v-if="!isDiskSelected(disk.name)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
                 <path d="M12 12 2.1 10.5"/>
                 <path d="M12 12v10"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
             <div class="disk-info">
@@ -99,14 +122,28 @@
                 <span class="disk-type">{{ disk.type }}</span>
               </div>
             </div>
+            <div v-if="isDiskSelected(disk.name)" class="check-indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
           </div>
           
           <!-- 可用分区 -->
-          <div v-for="part in freeParts" :key="part.name" class="disk-item partition-item">
+          <div 
+            v-for="part in freeParts" 
+            :key="part.name" 
+            class="disk-item partition-item"
+            :class="{ 'selected': isPartSelected(part.name) }"
+            @click="selectPart(part.name)"
+          >
             <div class="disk-icon partition-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg v-if="!isPartSelected(part.name)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="4" y="3" width="16" height="18" rx="2" ry="2"/>
                 <line x1="8" y1="3" x2="8" y2="21"/>
+              </svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
             <div class="disk-info">
@@ -115,6 +152,11 @@
                 <span class="disk-size">{{ part.size }}</span>
                 <span class="disk-type">{{ part.type }}</span>
               </div>
+            </div>
+            <div v-if="isPartSelected(part.name)" class="check-indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
             </div>
           </div>
         </div>
@@ -143,6 +185,12 @@ const freeDisks = ref<FreeDisk[]>([])
 const freeParts = ref<FreePart[]>([])
 const freeDiskLoading = ref(false)
 const freeDiskError = ref('')
+
+// 选中的设备（磁盘或分区，只能选择一个）
+const selectedDevice = ref<{ name: string; type: 'disk' | 'part' } | null>(null)
+
+// 选中的池设备（只能选择一个）
+const selectedPoolDevice = ref<string | null>(null)
 
 const goBack = () => {
   router.push({ name: 'StoragePool' })
@@ -198,6 +246,54 @@ const fetchFreeDisksAndParts = async () => {
   } finally {
     freeDiskLoading.value = false
   }
+}
+
+// 选择磁盘（单选）
+const selectDisk = (diskName: string) => {
+  if (selectedDevice.value?.name === diskName && selectedDevice.value?.type === 'disk') {
+    // 如果已选中则取消选择
+    selectedDevice.value = null
+  } else {
+    // 选择新的磁盘（会取消之前的选择）
+    selectedDevice.value = { name: diskName, type: 'disk' }
+  }
+}
+
+// 选择分区（单选）
+const selectPart = (partName: string) => {
+  if (selectedDevice.value?.name === partName && selectedDevice.value?.type === 'part') {
+    // 如果已选中则取消选择
+    selectedDevice.value = null
+  } else {
+    // 选择新的分区（会取消之前的选择）
+    selectedDevice.value = { name: partName, type: 'part' }
+  }
+}
+
+// 判断是否选中磁盘
+const isDiskSelected = (diskName: string): boolean => {
+  return selectedDevice.value?.name === diskName && selectedDevice.value?.type === 'disk'
+}
+
+// 判断是否选中分区
+const isPartSelected = (partName: string): boolean => {
+  return selectedDevice.value?.name === partName && selectedDevice.value?.type === 'part'
+}
+
+// 选择池设备（单选）
+const selectPoolDevice = (deviceName: string) => {
+  if (selectedPoolDevice.value === deviceName) {
+    // 如果已选中则取消选择
+    selectedPoolDevice.value = null
+  } else {
+    // 选择新的设备
+    selectedPoolDevice.value = deviceName
+  }
+}
+
+// 判断是否选中池设备
+const isPoolDeviceSelected = (deviceName: string): boolean => {
+  return selectedPoolDevice.value === deviceName
 }
 
 onMounted(() => {
@@ -373,6 +469,8 @@ onMounted(() => {
   margin-bottom: 0.75rem;
   background: var(--bg-secondary, #f9fafb);
   transition: all 0.2s;
+  cursor: pointer;
+  user-select: none;
 }
 
 .device-item:last-child {
@@ -382,6 +480,16 @@ onMounted(() => {
 .device-item:hover {
   border-color: #a855f7;
   background: #faf5ff;
+}
+
+.device-item.selected {
+  border-color: #a855f7;
+  background: #f3e8ff;
+  box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+}
+
+.device-item.selected .device-icon {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
 }
 
 .device-icon {
@@ -536,5 +644,44 @@ onMounted(() => {
 
 .partition-item {
   border-left: 3px solid #10b981;
+}
+
+/* 选中状态样式 */
+.disk-item {
+  cursor: pointer;
+  user-select: none;
+}
+
+.disk-item.selected {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.disk-item.partition-item.selected {
+  border-color: #10b981;
+  background: #ecfdf5;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.disk-item.selected .disk-icon {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.disk-item.partition-item.selected .disk-icon.partition-icon {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.check-indicator {
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  padding-left: 0.5rem;
+}
+
+.disk-item.partition-item.selected .check-indicator {
+  color: #10b981;
 }
 </style>
