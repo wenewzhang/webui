@@ -376,6 +376,16 @@ const handleReplace = async () => {
         } else {
           replaceError.value = errorMsg
         }
+      } else if (errorMsg.includes('is part of exported pool')) {
+        // Extract device and pool name from error message
+        // Format: "... /dev/disk/by-id/xxx is part of exported pool 'poolname'"
+        const match = errorMsg.match(/(\S+) is part of exported pool '([^']+)'/)
+        if (match) {
+          const [, device, poolName] = match
+          replaceError.value = t('pool.replaceDeviceInExportedPool', { device, poolName })
+        } else {
+          replaceError.value = errorMsg
+        }
       } else {
         replaceError.value = errorMsg || t('error.unknown')
       }

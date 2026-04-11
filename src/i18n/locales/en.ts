@@ -258,6 +258,7 @@ export default {
     replace: 'Replace',
     replaceSuccess: 'Replace successful',
     replaceDeviceTooSmall: "Cannot replace '{oldDevice}' with '{newDevice}': device is too small",
+    replaceDeviceInExportedPool: "Device '{device}' is part of exported pool '{poolName}'. Use force option to override.",
   },
   // Error Messages
   error: {
