@@ -205,6 +205,20 @@
       <p v-if="replaceSuccess" class="replace-success">{{ replaceSuccess }}</p>
     </div>
   </div>
+  <!-- Toast 提示框 -->
+  <Teleport to="body">
+    <Transition name="toast">
+      <div v-if="showToast" class="toast-overlay">
+        <div class="toast-content">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span class="toast-message">{{ toastMessage }}</span>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -244,6 +258,28 @@ const replaceSuccess = ref('')
 const detaching = ref(false)
 const detachError = ref('')
 const detachSuccess = ref('')
+
+// Toast 相关状态
+const showToast = ref(false)
+const toastMessage = ref('')
+let toastTimer: ReturnType<typeof setTimeout> | null = null
+
+// 显示 Toast
+const showSuccessToast = (message: string) => {
+  toastMessage.value = message
+  showToast.value = true
+  
+  // 清除之前的定时器
+  if (toastTimer) {
+    clearTimeout(toastTimer)
+  }
+  
+  // 3秒后自动隐藏
+  toastTimer = setTimeout(() => {
+    showToast.value = false
+    toastMessage.value = ''
+  }, 6000)
+}
 
 // 计算是否可以执行 Replace
 const canReplace = computed(() => {
@@ -443,6 +479,9 @@ const handleDetach = async (deviceName: string) => {
     
     if (response.success) {
       detachSuccess.value = t('pool.detachSuccess') || 'Detach successful'
+      // 显示成功 toast
+      const displayDeviceName = deviceName2
+      showSuccessToast(`Successfully detached device '${displayDeviceName}' from pool ${poolName.value}`)
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
@@ -923,5 +962,50 @@ const handleDetach = async (deviceName: string) => {
 .detach-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Toast 样式 */
+.toast-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+  font-weight: 500;
+  max-width: 90vw;
+  word-break: break-word;
+}
+
+.toast-message {
+  line-height: 1.5;
+}
+
+/* Toast 动画 */
+.toast-enter-active,
+.toast-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
 }
 </style>
