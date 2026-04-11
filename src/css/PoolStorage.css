@@ -168,6 +168,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  padding-bottom: 6px;
 }
 
 .pool-card-name {
