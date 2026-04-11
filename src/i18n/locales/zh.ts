@@ -47,6 +47,7 @@ export default {
     retry: '重试',
     advanced: '高级',
     checkpoint: '检查点',
+    device: '设备',
     creating: '创建中...',
   },
   // 登录页面
@@ -209,6 +210,9 @@ export default {
     checkpoint: '检查点',
     checkpointDescription: '管理存储池的检查点和快照',
     noCheckpoints: '暂无检查点',
+    devices: '设备',
+    devicesDescription: '查看存储池的设备列表',
+    noDevices: '暂无设备信息',
     rollbackFailed: '回滚失败',
     poolLabel: '存储池',
     propertyLabel: '属性',

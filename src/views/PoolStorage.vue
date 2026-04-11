@@ -97,6 +97,16 @@
                 </svg>
                 {{ $t('common.checkpoint') }}
               </button>
+              <button 
+                class="devices-btn-small" 
+                @click.stop="goToDevices(pool.name)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"/>
+                  <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+                {{ $t('common.device') }}
+              </button>
             </div>
           </div>
         </div>
@@ -435,6 +445,11 @@ const goToAdvancedSetting = (poolName: string) => {
 // 跳转到检查点页面
 const goToCheckpoint = (poolName: string) => {
   router.push({ name: 'PoolChkpoint', query: { pool: poolName } })
+}
+
+// 跳转到设备页面
+const goToDevices = (poolName: string) => {
+  router.push({ name: 'PoolDevices', query: { pool: poolName } })
 }
 
 // 跳转到创建存储池页面

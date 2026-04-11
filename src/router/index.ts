@@ -69,6 +69,12 @@ const router = createRouter({
               meta: { title: 'Pool Checkpoint' },
             },
             {
+              path: 'pool/devices',
+              name: 'PoolDevices',
+              component: () => import('@/views/PoolDevices.vue'),
+              meta: { title: 'Pool Devices' },
+            },
+            {
               path: 'idle',
               name: 'StorageIdle',
               component: () => import('@/views/StorageView.vue'),

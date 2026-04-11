@@ -47,6 +47,7 @@ export default {
     retry: 'Retry',
     advanced: 'Advanced',
     checkpoint: 'Checkpoint',
+    device: 'Device',
     creating: 'Creating...',
   },
   // Login Page
@@ -209,6 +210,9 @@ export default {
     checkpoint: 'Checkpoint',
     checkpointDescription: 'Manage pool checkpoints and snapshots',
     noCheckpoints: 'No checkpoints',
+    devices: 'Devices',
+    devicesDescription: 'View pool device list',
+    noDevices: 'No device information',
     rollbackFailed: 'Rollback Failed',
     poolLabel: 'Pool',
     propertyLabel: 'Property',

@@ -245,6 +245,17 @@ export interface RollbackCheckpointResponse {
   error: string | null
 }
 
+export interface PoolDevice {
+  name: string
+  size: string
+}
+
+export interface PoolDevicesResponse {
+  success: boolean
+  data: PoolDevice[]
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -346,5 +357,8 @@ export const storageApi = {
   },
   rollbackCheckpoint(poolName: string): Promise<RollbackCheckpointResponse> {
     return apiClient.post('/chk/rollback', { poolname: poolName }).then(res => res.data)
+  },
+  getPoolDevices(poolName: string): Promise<PoolDevicesResponse> {
+    return apiClient.get('/zfs/get_pool_devices', { params: { poolname: poolName } }).then(res => res.data)
   },
 }
