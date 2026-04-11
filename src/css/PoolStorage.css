@@ -160,6 +160,10 @@
   flex: 1;
 }
 
+.pool-title-button {
+  flex: 1;
+}
+
 .pool-title-row {
   display: flex;
   align-items: center;

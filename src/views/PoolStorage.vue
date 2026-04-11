@@ -60,10 +60,12 @@
           </div>
           <div class="pool-title-section">
             <h3 class="pool-card-name">{{ pool.name }}</h3>
-            <div class="pool-title-row">
               <span class="pool-health-badge" :class="getHealthClass(pool.health)">
                 {{ pool.health }}
               </span>
+          </div>
+          <div class="pool-title-button">
+            <div class="pool-title-row">
               <button 
                 class="export-pool-btn-small" 
                 @click.stop="showExportConfirm(pool.name)"
@@ -87,6 +89,8 @@
                 </svg>
                 {{ $t('common.advanced') }}
               </button>
+            </div>
+            <div class="pool-title-row">
               <button 
                 class="checkpoint-btn-small" 
                 @click.stop="goToCheckpoint(pool.name)"
