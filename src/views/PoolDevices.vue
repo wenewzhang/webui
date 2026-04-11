@@ -61,6 +61,23 @@
             <div class="device-name">{{ device.name }}</div>
             <div class="device-size">{{ device.size }}</div>
           </div>
+          <button 
+            @click.stop="handleDetach(device.name)" 
+            class="detach-btn"
+            :disabled="detaching"
+          >
+            <svg v-if="detaching && selectedPoolDevice === device.name" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spinning">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+              <path d="M16 16h5v5"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            {{ $t('pool.detach') || 'Detach' }}
+          </button>
           <div v-if="isPoolDeviceSelected(device.name)" class="check-indicator">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"/>
@@ -195,7 +212,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { storageApi, type PoolDevice, type FreeDisk, type FreePart } from '@/api/storage'
-import type { DeviceReplaceResponse } from '@/api/storage'
+import type { DeviceReplaceResponse, DetachDeviceResponse } from '@/api/storage'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -222,6 +239,11 @@ const selectedPoolDevice = ref<string | null>(null)
 const replacing = ref(false)
 const replaceError = ref('')
 const replaceSuccess = ref('')
+
+// Detach 相关状态
+const detaching = ref(false)
+const detachError = ref('')
+const detachSuccess = ref('')
 
 // 计算是否可以执行 Replace
 const canReplace = computed(() => {
@@ -398,6 +420,44 @@ const handleReplace = async () => {
     if (replaceSuccess.value) {
       setTimeout(() => {
         replaceSuccess.value = ''
+      }, 3000)
+    }
+  }
+}
+
+// 执行 Detach 操作
+const handleDetach = async (deviceName: string) => {
+  if (detaching.value) return
+  
+  detaching.value = true
+  detachError.value = ''
+  detachSuccess.value = ''
+  selectedPoolDevice.value = deviceName
+  const deviceName2 = deviceName!.split('/').pop() || deviceName!
+
+  try {
+    const response: DetachDeviceResponse = await storageApi.detachDevice(
+      poolName.value,
+      deviceName2
+    )
+    
+    if (response.success) {
+      detachSuccess.value = t('pool.detachSuccess') || 'Detach successful'
+      // 刷新设备列表
+      await fetchDevices()
+      await fetchFreeDisksAndParts()
+    } else {
+      detachError.value = response.error || t('error.unknown')
+    }
+  } catch (err: any) {
+    detachError.value = err.message || t('error.networkError')
+  } finally {
+    detaching.value = false
+    selectedPoolDevice.value = null
+    // 3秒后清除成功消息
+    if (detachSuccess.value) {
+      setTimeout(() => {
+        detachSuccess.value = ''
       }, 3000)
     }
   }
@@ -838,5 +898,30 @@ const handleReplace = async () => {
   color: #16a34a;
   font-size: 0.875rem;
   margin: 0;
+}
+
+.detach-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 0.5rem;
+}
+
+.detach-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+.detach-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 </style>
