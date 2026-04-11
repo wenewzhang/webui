@@ -209,12 +209,17 @@
   <Teleport to="body">
     <Transition name="toast">
       <div v-if="showToast" class="toast-overlay">
-        <div class="toast-content">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div class="toast-content" :class="{ 'toast-error': toastType === 'error', 'toast-success': toastType === 'success' }">
+          <svg v-if="toastType === 'success'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
             <polyline points="22 4 12 14.01 9 11.01"/>
           </svg>
-          <span class="toast-message">{{ toastMessage }}</span>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          <span class="toast-message" style="white-space: pre-line">{{ toastMessage }}</span>
         </div>
       </div>
     </Transition>
@@ -262,11 +267,13 @@ const detachSuccess = ref('')
 // Toast 相关状态
 const showToast = ref(false)
 const toastMessage = ref('')
+const toastType = ref<'success' | 'error'>('success')
 let toastTimer: ReturnType<typeof setTimeout> | null = null
 
 // 显示 Toast
-const showSuccessToast = (message: string) => {
+const showToastMessage = (message: string, type: 'success' | 'error' = 'success') => {
   toastMessage.value = message
+  toastType.value = type
   showToast.value = true
   
   // 清除之前的定时器
@@ -481,15 +488,20 @@ const handleDetach = async (deviceName: string) => {
       detachSuccess.value = t('pool.detachSuccess') || 'Detach successful'
       // 显示成功 toast
       const displayDeviceName = deviceName2
-      showSuccessToast(`Successfully detached device '${displayDeviceName}' from pool ${poolName.value}`)
+      showToastMessage(`Successfully detached device '${displayDeviceName}' from pool ${poolName.value}`, 'success')
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
     } else {
       detachError.value = response.error || t('error.unknown')
+      // 显示错误 toast
+      const errorMsg = response.error || 'Unknown error'
+      showToastMessage(`Failed to detach device from pool '${poolName.value}'\n${errorMsg}`, 'error')
     }
   } catch (err: any) {
     detachError.value = err.message || t('error.networkError')
+    // 显示网络错误 toast
+    showToastMessage(`Failed to detach device from pool '${poolName.value}'\n${err.message || 'Network error'}`, 'error')
   } finally {
     detaching.value = false
     selectedPoolDevice.value = null
@@ -983,14 +995,21 @@ const handleDetach = async (deviceName: string) => {
   align-items: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  color: white;
   border-radius: 0.75rem;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   font-size: 1rem;
   font-weight: 500;
   max-width: 90vw;
   word-break: break-word;
+  color: white;
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
 .toast-message {
