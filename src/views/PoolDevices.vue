@@ -220,8 +220,6 @@
           {{ attaching ? $t('common.processing') : $t('pool.attach') }}
         </button>
       </div>
-      <p v-if="replaceError" class="replace-error">{{ replaceError }}</p>
-      <p v-if="replaceSuccess" class="replace-success">{{ replaceSuccess }}</p>
     </div>
   </div>
   <!-- Toast 提示框 -->
@@ -275,8 +273,6 @@ const selectedPoolDevice = ref<string | null>(null)
 
 // Replace 相关状态
 const replacing = ref(false)
-const replaceError = ref('')
-const replaceSuccess = ref('')
 
 // Detach 相关状态
 const detaching = ref(false)
@@ -435,8 +431,6 @@ const handleReplace = async () => {
   if (!canReplace.value) return
   
   replacing.value = true
-  replaceError.value = ''
-  replaceSuccess.value = ''
   
   try {
     // Extract the part after "/" from the old device name (e.g., "mirror-0/ata-xxx" -> "ata-xxx")
@@ -448,7 +442,8 @@ const handleReplace = async () => {
     )
     
     if (response.success) {
-      replaceSuccess.value = t('pool.replaceSuccess')
+      // 显示成功 toast
+      showToastMessage(t('pool.replaceSuccess'), 'success')
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
@@ -458,15 +453,16 @@ const handleReplace = async () => {
     } else {
       // Handle specific error messages with i18n
       const errorMsg = response.error || ''
+      let toastErrorMsg = ''
       if (errorMsg.includes('device is too small')) {
         // Extract old and new device names from error message
         // Format: "cannot replace {oldDevice} with {newDevice}: device is too small"
         const match = errorMsg.match(/cannot replace (.+?) with (.+?): device is too small/)
         if (match) {
           const [, oldDev, newDev] = match
-          replaceError.value = t('pool.replaceDeviceTooSmall', { oldDevice: oldDev, newDevice: newDev })
+          toastErrorMsg = t('pool.replaceDeviceTooSmall', { oldDevice: oldDev, newDevice: newDev })
         } else {
-          replaceError.value = errorMsg
+          toastErrorMsg = errorMsg
         }
       } else if (errorMsg.includes('is part of exported pool')) {
         // Extract device and pool name from error message
@@ -474,24 +470,19 @@ const handleReplace = async () => {
         const match = errorMsg.match(/(\S+) is part of exported pool '([^']+)'/)
         if (match) {
           const [, device, poolName] = match
-          replaceError.value = t('pool.replaceDeviceInExportedPool', { device, poolName })
+          toastErrorMsg = t('pool.replaceDeviceInExportedPool', { device, poolName })
         } else {
-          replaceError.value = errorMsg
+          toastErrorMsg = errorMsg
         }
       } else {
-        replaceError.value = errorMsg || t('error.unknown')
+        toastErrorMsg = errorMsg || t('error.unknown')
       }
+      showToastMessage(`${t('pool.replaceFailed', { poolName: poolName.value })}\n${toastErrorMsg}`, 'error')
     }
   } catch (err: any) {
-    replaceError.value = err.message || t('error.networkError')
+    showToastMessage(`${t('pool.replaceFailed', { poolName: poolName.value })}\n${err.message || t('error.networkError')}`, 'error')
   } finally {
     replacing.value = false
-    // 3秒后清除成功消息
-    if (replaceSuccess.value) {
-      setTimeout(() => {
-        replaceSuccess.value = ''
-      }, 3000)
-    }
   }
 }
 
@@ -1007,18 +998,6 @@ const handleAttach = async () => {
   cursor: not-allowed;
   background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
   box-shadow: none;
-}
-
-.replace-error {
-  color: #dc2626;
-  font-size: 0.875rem;
-  margin: 0;
-}
-
-.replace-success {
-  color: #16a34a;
-  font-size: 0.875rem;
-  margin: 0;
 }
 
 .detach-btn {

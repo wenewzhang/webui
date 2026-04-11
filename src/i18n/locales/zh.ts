@@ -263,6 +263,7 @@ export default {
     importFailedDeviceUnavailable: "无法导入 '{poolName}'：一个或多个设备当前不可用",
     replace: '替换',
     replaceSuccess: '置换硬盘成功',
+    replaceFailed: "替换存储池 '{poolName}' 中的设备失败",
     replaceDeviceTooSmall: "无法将 '{oldDevice}' 替换为 '{newDevice}'：设备容量太小",
     replaceDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{poolName}'，请使用强制选项覆盖。",
   },

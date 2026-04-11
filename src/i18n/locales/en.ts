@@ -263,6 +263,7 @@ export default {
     importFailedDeviceUnavailable: "Cannot import '{poolName}': one or more devices is currently unavailable",
     replace: 'Replace',
     replaceSuccess: 'Replace successful',
+    replaceFailed: "Failed to replace device in pool '{poolName}'",
     replaceDeviceTooSmall: "Cannot replace '{oldDevice}' with '{newDevice}': device is too small",
     replaceDeviceInExportedPool: "Device '{device}' is part of exported pool '{poolName}'. Use force option to override.",
   },
