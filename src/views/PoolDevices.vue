@@ -356,7 +356,7 @@ const handleReplace = async () => {
     )
     
     if (response.success) {
-      replaceSuccess.value = response.message || t('pool.replaceSuccess')
+      replaceSuccess.value = t('pool.replaceSuccess')
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
