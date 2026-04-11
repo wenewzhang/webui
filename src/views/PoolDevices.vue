@@ -180,27 +180,46 @@
       </div>
     </div>
 
-    <!-- Replace 按钮区域 -->
+    <!-- Replace 和 Attach 按钮区域 -->
     <div class="replace-section">
-      <button 
-        @click="handleReplace" 
-        class="replace-btn"
-        :disabled="!canReplace || replacing"
-      >
-        <svg v-if="replacing" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spinning">
-          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-          <path d="M3 3v5h5"/>
-          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
-          <path d="M16 16h5v5"/>
-        </svg>
-        <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
-          <circle cx="12" cy="10" r="3"/>
-          <path d="M9 17l3-3 3 3"/>
-          <path d="M12 14v7"/>
-        </svg>
-        {{ replacing ? $t('common.processing') : $t('pool.replace') }}
-      </button>
+      <div class="action-buttons-row">
+        <button 
+          @click="handleReplace" 
+          class="replace-btn"
+          :disabled="!canReplace || replacing"
+        >
+          <svg v-if="replacing" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spinning">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+            <path d="M16 16h5v5"/>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+            <circle cx="12" cy="10" r="3"/>
+            <path d="M9 17l3-3 3 3"/>
+            <path d="M12 14v7"/>
+          </svg>
+          {{ replacing ? $t('common.processing') : $t('pool.replace') }}
+        </button>
+        <button 
+          @click="handleAttach" 
+          class="attach-btn-large"
+          :disabled="!canAttach || attaching"
+        >
+          <svg v-if="attaching" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spinning">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+            <path d="M16 16h5v5"/>
+          </svg>
+          <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          {{ attaching ? $t('common.processing') : $t('pool.attach') }}
+        </button>
+      </div>
       <p v-if="replaceError" class="replace-error">{{ replaceError }}</p>
       <p v-if="replaceSuccess" class="replace-success">{{ replaceSuccess }}</p>
     </div>
@@ -231,7 +250,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { storageApi, type PoolDevice, type FreeDisk, type FreePart } from '@/api/storage'
-import type { DeviceReplaceResponse, DetachDeviceResponse } from '@/api/storage'
+import type { DeviceReplaceResponse, DetachDeviceResponse, AttachDeviceResponse } from '@/api/storage'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -264,6 +283,9 @@ const detaching = ref(false)
 const detachError = ref('')
 const detachSuccess = ref('')
 
+// Attach 相关状态
+const attaching = ref(false)
+
 // Toast 相关状态
 const showToast = ref(false)
 const toastMessage = ref('')
@@ -290,6 +312,11 @@ const showToastMessage = (message: string, type: 'success' | 'error' = 'success'
 
 // 计算是否可以执行 Replace
 const canReplace = computed(() => {
+  return selectedPoolDevice.value !== null && selectedDevice.value !== null
+})
+
+// 计算是否可以执行 Attach
+const canAttach = computed(() => {
   return selectedPoolDevice.value !== null && selectedDevice.value !== null
 })
 
@@ -511,6 +538,45 @@ const handleDetach = async (deviceName: string) => {
         detachSuccess.value = ''
       }, 3000)
     }
+  }
+}
+
+// 执行 Attach 操作
+const handleAttach = async () => {
+  if (!canAttach.value) return
+  
+  attaching.value = true
+  
+  try {
+    // Extract the part after "/" from the device name (e.g., "mirror-0/ata-xxx" -> "ata-xxx")
+    const device = selectedPoolDevice.value!.split('/').pop() || selectedPoolDevice.value!
+    const newDevice = selectedDevice.value!.name
+    
+    const response: AttachDeviceResponse = await storageApi.attachDevice(
+      poolName.value,
+      device,
+      newDevice
+    )
+    
+    if (response.success) {
+      // 显示成功 toast
+      showToastMessage(`Successfully attached device '${newDevice}' to '${device}' in pool ${poolName.value}`, 'success')
+      // 刷新设备列表
+      await fetchDevices()
+      await fetchFreeDisksAndParts()
+      // 清空选择
+      selectedPoolDevice.value = null
+      selectedDevice.value = null
+    } else {
+      // 显示错误 toast
+      const errorMsg = response.error || 'Unknown error'
+      showToastMessage(`Failed to attach device to pool '${poolName.value}'\n${errorMsg}`, 'error')
+    }
+  } catch (err: any) {
+    // 显示网络错误 toast
+    showToastMessage(`Failed to attach device to pool '${poolName.value}'\n${err.message || 'Network error'}`, 'error')
+  } finally {
+    attaching.value = false
   }
 }
 </script>
@@ -974,6 +1040,42 @@ const handleDetach = async (deviceName: string) => {
 .detach-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.action-buttons-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.attach-btn-large {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.attach-btn-large:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+  transform: translateY(-1px);
+}
+
+.attach-btn-large:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  box-shadow: none;
 }
 
 /* Toast 样式 */
