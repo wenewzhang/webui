@@ -522,7 +522,11 @@ const handleDetach = async (deviceName: string) => {
     } else {
       detachError.value = response.error || t('error.unknown')
       // 显示错误 toast
-      const errorMsg = response.error || 'Unknown error'
+      let errorMsg = response.error || 'Unknown error'
+      // 处理特定错误消息的 i18n
+      if (errorMsg.includes('only applicable to mirror and replacing vdevs')) {
+        errorMsg = t('pool.detachOnlyMirrorOrReplacing')
+      }
       showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }
   } catch (err: any) {

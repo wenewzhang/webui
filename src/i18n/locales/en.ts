@@ -219,6 +219,7 @@ export default {
     attach: 'Attach',
     detachFailed: "Failed to detach device from pool '{poolName}'",
     attachFailed: "Failed to attach device to pool '{poolName}'",
+    detachOnlyMirrorOrReplacing: "Only applicable to mirror and replacing vdevs",
     rollbackFailed: 'Rollback Failed',
     poolLabel: 'Pool',
     propertyLabel: 'Property',

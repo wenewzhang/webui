@@ -219,6 +219,7 @@ export default {
     attach: '附加',
     detachFailed: "从存储池 '{poolName}' 分离设备失败",
     attachFailed: "附加设备到存储池 '{poolName}' 失败",
+    detachOnlyMirrorOrReplacing: "仅适用于镜像和正在替换的 vdev",
     rollbackFailed: '回滚失败',
     poolLabel: '存储池',
     propertyLabel: '属性',
