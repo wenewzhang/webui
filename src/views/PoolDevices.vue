@@ -162,14 +162,40 @@
         </div>
       </div>
     </div>
+
+    <!-- Replace 按钮区域 -->
+    <div class="replace-section">
+      <button 
+        @click="handleReplace" 
+        class="replace-btn"
+        :disabled="!canReplace || replacing"
+      >
+        <svg v-if="replacing" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="spinning">
+          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+          <path d="M16 16h5v5"/>
+        </svg>
+        <svg v-else xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+          <circle cx="12" cy="10" r="3"/>
+          <path d="M9 17l3-3 3 3"/>
+          <path d="M12 14v7"/>
+        </svg>
+        {{ replacing ? $t('common.processing') || '处理中...' : $t('pool.replace') || 'Replace' }}
+      </button>
+      <p v-if="replaceError" class="replace-error">{{ replaceError }}</p>
+      <p v-if="replaceSuccess" class="replace-success">{{ replaceSuccess }}</p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { storageApi, type PoolDevice, type FreeDisk, type FreePart } from '@/api/storage'
+import type { DeviceReplaceResponse } from '@/api/storage'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -191,6 +217,16 @@ const selectedDevice = ref<{ name: string; type: 'disk' | 'part' } | null>(null)
 
 // 选中的池设备（只能选择一个）
 const selectedPoolDevice = ref<string | null>(null)
+
+// Replace 相关状态
+const replacing = ref(false)
+const replaceError = ref('')
+const replaceSuccess = ref('')
+
+// 计算是否可以执行 Replace
+const canReplace = computed(() => {
+  return selectedPoolDevice.value !== null && selectedDevice.value !== null
+})
 
 const goBack = () => {
   router.push({ name: 'StoragePool' })
@@ -301,6 +337,47 @@ onMounted(() => {
   fetchDevices()
   fetchFreeDisksAndParts()
 })
+
+// 执行 Replace 操作
+const handleReplace = async () => {
+  if (!canReplace.value) return
+  
+  replacing.value = true
+  replaceError.value = ''
+  replaceSuccess.value = ''
+  
+  try {
+    // Extract the part after "/" from the old device name (e.g., "mirror-0/ata-xxx" -> "ata-xxx")
+    const oldDevice = selectedPoolDevice.value!.split('/').pop() || selectedPoolDevice.value!
+    const response: DeviceReplaceResponse = await storageApi.deviceReplace(
+      poolName.value,
+      oldDevice,
+      selectedDevice.value!.name
+    )
+    
+    if (response.success) {
+      replaceSuccess.value = response.message || t('pool.replaceSuccess') || 'Replace successful'
+      // 刷新设备列表
+      await fetchDevices()
+      await fetchFreeDisksAndParts()
+      // 清空选择
+      selectedPoolDevice.value = null
+      selectedDevice.value = null
+    } else {
+      replaceError.value = response.error || t('error.unknown')
+    }
+  } catch (err: any) {
+    replaceError.value = err.message || t('error.networkError')
+  } finally {
+    replacing.value = false
+    // 3秒后清除成功消息
+    if (replaceSuccess.value) {
+      setTimeout(() => {
+        replaceSuccess.value = ''
+      }, 3000)
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -683,5 +760,59 @@ onMounted(() => {
 
 .disk-item.partition-item.selected .check-indicator {
   color: #10b981;
+}
+
+/* Replace 按钮区域样式 */
+.replace-section {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: var(--bg-card, white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color, #e5e7eb);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.replace-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.replace-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+  transform: translateY(-1px);
+}
+
+.replace-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+  box-shadow: none;
+}
+
+.replace-error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.replace-success {
+  color: #16a34a;
+  font-size: 0.875rem;
+  margin: 0;
 }
 </style>

@@ -256,6 +256,12 @@ export interface PoolDevicesResponse {
   error: string | null
 }
 
+export interface DeviceReplaceResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const storageApi = {
   getDisks(): Promise<DisksResponse> {
     return apiClient.get('/get_disks').then(res => res.data)
@@ -360,5 +366,12 @@ export const storageApi = {
   },
   getPoolDevices(poolName: string): Promise<PoolDevicesResponse> {
     return apiClient.get('/zfs/get_pool_devices', { params: { poolname: poolName } }).then(res => res.data)
+  },
+  deviceReplace(poolName: string, oldDevice: string, newDevice: string): Promise<DeviceReplaceResponse> {
+    return apiClient.post('/zfs/device_replace', {
+      poolname: poolName,
+      old_device: oldDevice,
+      new_device: newDevice
+    }).then(res => res.data)
   },
 }
