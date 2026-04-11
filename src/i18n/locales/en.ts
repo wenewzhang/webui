@@ -49,6 +49,7 @@ export default {
     checkpoint: 'Checkpoint',
     device: 'Device',
     creating: 'Creating...',
+    processing: 'Processing...',
   },
   // Login Page
   login: {
@@ -254,6 +255,9 @@ export default {
     devicesUnavailable: "One or more devices is currently unavailable",
     devicesTooSmall: "One or more devices is less than the minimum size (64M)",
     importFailedDeviceUnavailable: "Cannot import '{poolName}': one or more devices is currently unavailable",
+    replace: 'Replace',
+    replaceSuccess: 'Replace successful',
+    replaceDeviceTooSmall: "Cannot replace '{oldDevice}' with '{newDevice}': device is too small",
   },
   // Error Messages
   error: {

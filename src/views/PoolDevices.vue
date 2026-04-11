@@ -182,7 +182,7 @@
           <path d="M9 17l3-3 3 3"/>
           <path d="M12 14v7"/>
         </svg>
-        {{ replacing ? $t('common.processing') || '处理中...' : $t('pool.replace') || 'Replace' }}
+        {{ replacing ? $t('common.processing') : $t('pool.replace') }}
       </button>
       <p v-if="replaceError" class="replace-error">{{ replaceError }}</p>
       <p v-if="replaceSuccess" class="replace-success">{{ replaceSuccess }}</p>
@@ -356,7 +356,7 @@ const handleReplace = async () => {
     )
     
     if (response.success) {
-      replaceSuccess.value = response.message || t('pool.replaceSuccess') || 'Replace successful'
+      replaceSuccess.value = response.message || t('pool.replaceSuccess')
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
@@ -364,7 +364,21 @@ const handleReplace = async () => {
       selectedPoolDevice.value = null
       selectedDevice.value = null
     } else {
-      replaceError.value = response.error || t('error.unknown')
+      // Handle specific error messages with i18n
+      const errorMsg = response.error || ''
+      if (errorMsg.includes('device is too small')) {
+        // Extract old and new device names from error message
+        // Format: "cannot replace {oldDevice} with {newDevice}: device is too small"
+        const match = errorMsg.match(/cannot replace (.+?) with (.+?): device is too small/)
+        if (match) {
+          const [, oldDev, newDev] = match
+          replaceError.value = t('pool.replaceDeviceTooSmall', { oldDevice: oldDev, newDevice: newDev })
+        } else {
+          replaceError.value = errorMsg
+        }
+      } else {
+        replaceError.value = errorMsg || t('error.unknown')
+      }
     }
   } catch (err: any) {
     replaceError.value = err.message || t('error.networkError')

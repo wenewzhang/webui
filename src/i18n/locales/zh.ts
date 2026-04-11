@@ -49,6 +49,7 @@ export default {
     checkpoint: '检查点',
     device: '设备',
     creating: '创建中...',
+    processing: '处理中...',
   },
   // 登录页面
   login: {
@@ -254,6 +255,9 @@ export default {
     devicesUnavailable: "一个或多个设备当前不可用",
     devicesTooSmall: "一个或多个设备小于最小容量（64M）",
     importFailedDeviceUnavailable: "无法导入 '{poolName}'：一个或多个设备当前不可用",
+    replace: '替换',
+    replaceSuccess: '替换成功',
+    replaceDeviceTooSmall: "无法将 '{oldDevice}' 替换为 '{newDevice}'：设备容量太小",
   },
   // 错误信息
   error: {
