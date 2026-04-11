@@ -55,6 +55,71 @@
         </div>
       </div>
     </div>
+
+    <!-- 可用磁盘 -->
+    <div class="free-disks-section">
+      <div class="section-header">
+        <h3 class="section-title">{{ $t('pool.availableDisks') || '可用磁盘' }}</h3>
+        <button @click="fetchFreeDisksAndParts" class="refresh-btn-small" :disabled="freeDiskLoading">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="{ 'spinning': freeDiskLoading }">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+            <path d="M16 16h5v5"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="disks-list">
+        <div v-if="freeDiskLoading" class="loading-state">
+          <div class="spinner"></div>
+          <p>{{ $t('common.loading') }}</p>
+        </div>
+        <div v-else-if="freeDiskError" class="error-state">
+          <p class="error-message">{{ freeDiskError }}</p>
+          <button @click="fetchFreeDisksAndParts" class="retry-btn">{{ $t('common.retry') }}</button>
+        </div>
+        <div v-else-if="freeDisks.length === 0 && freeParts.length === 0" class="empty-state">
+          <p>{{ $t('pool.noFreeDisks') || '没有可用的磁盘或分区' }}</p>
+        </div>
+        <div v-else class="disks-content">
+          <!-- 可用磁盘 -->
+          <div v-for="disk in freeDisks" :key="disk.name" class="disk-item">
+            <div class="disk-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                <path d="M12 12 2.1 10.5"/>
+                <path d="M12 12v10"/>
+              </svg>
+            </div>
+            <div class="disk-info">
+              <div class="disk-name">{{ disk.name }}</div>
+              <div class="disk-details">
+                <span class="disk-size">{{ disk.size }}</span>
+                <span class="disk-type">{{ disk.type }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 可用分区 -->
+          <div v-for="part in freeParts" :key="part.name" class="disk-item partition-item">
+            <div class="disk-icon partition-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="4" y="3" width="16" height="18" rx="2" ry="2"/>
+                <line x1="8" y1="3" x2="8" y2="21"/>
+              </svg>
+            </div>
+            <div class="disk-info">
+              <div class="disk-name">{{ part.name }}</div>
+              <div class="disk-details">
+                <span class="disk-size">{{ part.size }}</span>
+                <span class="disk-type">{{ part.type }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,7 +127,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { storageApi, type PoolDevice } from '@/api/storage'
+import { storageApi, type PoolDevice, type FreeDisk, type FreePart } from '@/api/storage'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -72,6 +137,12 @@ const poolName = ref('')
 const loading = ref(false)
 const devices = ref<PoolDevice[]>([])
 const error = ref('')
+
+// 可用磁盘和分区
+const freeDisks = ref<FreeDisk[]>([])
+const freeParts = ref<FreePart[]>([])
+const freeDiskLoading = ref(false)
+const freeDiskError = ref('')
 
 const goBack = () => {
   router.push({ name: 'StoragePool' })
@@ -100,9 +171,39 @@ const fetchDevices = async () => {
   }
 }
 
+// 获取可用磁盘和分区
+const fetchFreeDisksAndParts = async () => {
+  freeDiskLoading.value = true
+  freeDiskError.value = ''
+  
+  try {
+    const [disksResponse, partsResponse] = await Promise.all([
+      storageApi.getFreeDisks(),
+      storageApi.getFreeParts()
+    ])
+    
+    if (disksResponse.success) {
+      freeDisks.value = disksResponse.data
+    } else {
+      freeDiskError.value = disksResponse.error || t('error.unknown')
+    }
+    
+    if (partsResponse.success) {
+      freeParts.value = partsResponse.data
+    } else {
+      freeDiskError.value = partsResponse.error || t('error.unknown')
+    }
+  } catch (err: any) {
+    freeDiskError.value = err.message || t('error.networkError')
+  } finally {
+    freeDiskLoading.value = false
+  }
+}
+
 onMounted(() => {
   poolName.value = route.query.pool as string || ''
   fetchDevices()
+  fetchFreeDisksAndParts()
 })
 </script>
 
@@ -311,5 +412,129 @@ onMounted(() => {
   color: var(--text-secondary, #6b7280);
   font-size: 0.875rem;
   margin-top: 0.25rem;
+}
+
+/* 可用磁盘部分样式 */
+.free-disks-section {
+  margin-top: 1.5rem;
+  background: var(--bg-card, white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color, #e5e7eb);
+  padding: 1.25rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin: 0;
+}
+
+.refresh-btn-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;
+  background: var(--bg-secondary, #f3f4f6);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-secondary, #6b7280);
+}
+
+.refresh-btn-small:hover:not(:disabled) {
+  background: var(--bg-hover, #e5e7eb);
+  color: var(--text-primary, #1f2937);
+}
+
+.refresh-btn-small:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.disks-list {
+  min-height: 100px;
+}
+
+.disks-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.disk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  background: var(--bg-secondary, #f9fafb);
+  transition: all 0.2s;
+}
+
+.disk-item:hover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.disk-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.partition-icon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.disk-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.disk-name {
+  font-weight: 500;
+  color: var(--text-primary, #1f2937);
+  font-size: 0.875rem;
+  word-break: break-all;
+}
+
+.disk-details {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.disk-size {
+  color: var(--text-secondary, #6b7280);
+  font-size: 0.8125rem;
+}
+
+.disk-type {
+  color: var(--text-tertiary, #9ca3af);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  padding: 0.125rem 0.375rem;
+  background: var(--bg-tertiary, #e5e7eb);
+  border-radius: 0.25rem;
+}
+
+.partition-item {
+  border-left: 3px solid #10b981;
 }
 </style>
