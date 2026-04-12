@@ -271,6 +271,7 @@ export default {
     replaceDeviceTooSmall: "无法将 '{oldDevice}' 替换为 '{newDevice}'：设备容量太小",
     replaceDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{poolName}'，请使用强制选项覆盖。",
     attachDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{exportedPoolName}'，请使用 '-f' 选项覆盖。",
+    attachOnlyToMirrorsAndTopLevelDisks: "无法将 '{newDevice}' 附加到 '{targetDevice}'：只能附加到镜像和顶级磁盘",
   },
   // 错误信息
   error: {

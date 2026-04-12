@@ -271,6 +271,7 @@ export default {
     replaceDeviceTooSmall: "Cannot replace '{oldDevice}' with '{newDevice}': device is too small",
     replaceDeviceInExportedPool: "Device '{device}' is part of exported pool '{poolName}'. Use force option to override.",
     attachDeviceInExportedPool: "Device '{device}' is part of exported pool '{exportedPoolName}'. Use '-f' to override.",
+    attachOnlyToMirrorsAndTopLevelDisks: "Cannot attach '{newDevice}' to '{targetDevice}': can only attach to mirrors and top-level disks",
   },
   // Error Messages
   error: {
