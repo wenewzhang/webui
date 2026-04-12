@@ -532,6 +532,8 @@ const handleDetach = async (deviceName: string) => {
       // 处理特定错误消息的 i18n
       if (errorMsg.includes('only applicable to mirror and replacing vdevs')) {
         errorMsg = t('pool.detachOnlyMirrorOrReplacing')
+      } else if (errorMsg.includes('no valid replicas')) {
+        errorMsg = t('pool.detachNoValidReplicas')
       }
       showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }
@@ -583,6 +585,13 @@ const handleAttach = async () => {
       // 处理特定错误消息的 i18n
       if (errorMsg.includes('is in use and contains a unknown filesystem') || errorMsg.includes('is in use and contains an unknown filesystem')) {
         errorMsg = t('pool.deviceInUseWithUnknownFilesystem')
+      } else if (errorMsg.includes('is part of exported pool')) {
+        // Extract device and pool name from error message
+        const match = errorMsg.match(/(\S+) is part of exported pool '([^']+)'/)
+        if (match) {
+          const [, device, exportedPoolName] = match
+          errorMsg = t('pool.attachDeviceInExportedPool', { device, exportedPoolName })
+        }
       }
       showToastMessage(`${t('pool.attachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }

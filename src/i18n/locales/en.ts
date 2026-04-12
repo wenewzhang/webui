@@ -222,6 +222,7 @@ export default {
     attachSuccess: "Successfully attached device '{newDevice}' to '{device}' in pool {poolName}",
     detachSuccess: "Successfully detached device '{deviceName}' from pool {poolName}",
     detachOnlyMirrorOrReplacing: "Only applicable to mirror and replacing vdevs",
+    detachNoValidReplicas: "Cannot detach: no valid replicas remain after detach",
     deviceInUseWithUnknownFilesystem: "Device is in use and contains an unknown filesystem",
     rollbackFailed: 'Rollback Failed',
     poolLabel: 'Pool',
@@ -269,6 +270,7 @@ export default {
     replaceFailed: "Failed to replace device in pool '{poolName}'",
     replaceDeviceTooSmall: "Cannot replace '{oldDevice}' with '{newDevice}': device is too small",
     replaceDeviceInExportedPool: "Device '{device}' is part of exported pool '{poolName}'. Use force option to override.",
+    attachDeviceInExportedPool: "Device '{device}' is part of exported pool '{exportedPoolName}'. Use '-f' to override.",
   },
   // Error Messages
   error: {

@@ -222,6 +222,7 @@ export default {
     attachSuccess: "成功将设备 '{newDevice}' 附加到存储池 {poolName} 的 '{device}'",
     detachSuccess: "成功将设备 '{deviceName}' 从存储池 {poolName} 分离",
     detachOnlyMirrorOrReplacing: "仅适用于镜像和正在替换的 vdev",
+    detachNoValidReplicas: "无法分离：分离后将没有有效的副本",
     deviceInUseWithUnknownFilesystem: "设备正在使用中且包含未知文件系统",
     rollbackFailed: '回滚失败',
     poolLabel: '存储池',
@@ -269,6 +270,7 @@ export default {
     replaceFailed: "替换存储池 '{poolName}' 中的设备失败",
     replaceDeviceTooSmall: "无法将 '{oldDevice}' 替换为 '{newDevice}'：设备容量太小",
     replaceDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{poolName}'，请使用强制选项覆盖。",
+    attachDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{exportedPoolName}'，请使用 '-f' 选项覆盖。",
   },
   // 错误信息
   error: {
