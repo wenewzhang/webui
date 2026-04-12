@@ -237,6 +237,12 @@
             <line x1="9" y1="9" x2="15" y2="15"/>
           </svg>
           <span class="toast-message" style="white-space: pre-line">{{ toastMessage }}</span>
+          <button class="toast-close-btn" @click="hideToast">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
       </div>
     </Transition>
@@ -299,11 +305,20 @@ const showToastMessage = (message: string, type: 'success' | 'error' = 'success'
     clearTimeout(toastTimer)
   }
   
-  // 3秒后自动隐藏
+  // 6秒后自动隐藏
   toastTimer = setTimeout(() => {
-    showToast.value = false
-    toastMessage.value = ''
+    hideToast()
   }, 6000)
+}
+
+// 隐藏 Toast
+const hideToast = () => {
+  showToast.value = false
+  toastMessage.value = ''
+  if (toastTimer) {
+    clearTimeout(toastTimer)
+    toastTimer = null
+  }
 }
 
 // 计算是否可以执行 Replace
@@ -1103,6 +1118,24 @@ const handleAttach = async () => {
 
 .toast-message {
   line-height: 1.5;
+}
+
+.toast-close-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+}
+
+.toast-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Toast 动画 */
