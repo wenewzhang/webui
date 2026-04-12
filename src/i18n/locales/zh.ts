@@ -279,7 +279,7 @@ export default {
     unauthorized: '未授权，请重新登录',
     forbidden: '没有权限执行该操作',
     notFound: '请求的资源不存在',
-    timeout: '请求超时，请稍后重试',
+    timeout: '请求超时（{timeout}秒），请稍后重试',
     unknown: '发生未知错误',
     requestFailed: '请求失败，状态码：{status}',
   },

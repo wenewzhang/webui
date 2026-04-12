@@ -3,9 +3,11 @@ import { useUserStore } from '@/stores/user'
 import i18n from '@/i18n'
 
 // 创建 axios 实例
+const API_TIMEOUT = 10000
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'https://localhost:8443',
-  timeout: 10000,
+  timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -47,6 +49,9 @@ apiClient.interceptors.response.use(
     // i18n 化错误消息
     if (error.response?.status) {
       error.message = i18n.global.t('error.requestFailed', { status: error.response.status })
+    } else if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
+      // 超时错误
+      error.message = i18n.global.t('error.timeout', { timeout: API_TIMEOUT / 1000 })
     }
     return Promise.reject(error)
   }

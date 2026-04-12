@@ -279,7 +279,7 @@ export default {
     unauthorized: 'Unauthorized, please login again',
     forbidden: 'No permission to access this resource',
     notFound: 'Requested resource not found',
-    timeout: 'Request timeout, please try again later',
+    timeout: 'Request timeout ({timeout}s), please try again later',
     unknown: 'An unknown error occurred',
     requestFailed: 'Request failed with status code {status}',
   },
