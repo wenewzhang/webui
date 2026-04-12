@@ -506,7 +506,7 @@ const handleDetach = async (deviceName: string) => {
       detachSuccess.value = t('pool.detachSuccess') || 'Detach successful'
       // 显示成功 toast
       const displayDeviceName = deviceName2
-      showToastMessage(`Successfully detached device '${displayDeviceName}' from pool ${poolName.value}`, 'success')
+      showToastMessage(t('pool.detachSuccess', { deviceName: displayDeviceName, poolName: poolName.value }), 'success')
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
@@ -555,7 +555,7 @@ const handleAttach = async () => {
     
     if (response.success) {
       // 显示成功 toast
-      showToastMessage(`Successfully attached device '${newDevice}' to '${device}' in pool ${poolName.value}`, 'success')
+      showToastMessage(t('pool.attachSuccess', { newDevice, device, poolName: poolName.value }), 'success')
       // 刷新设备列表
       await fetchDevices()
       await fetchFreeDisksAndParts()
@@ -564,7 +564,11 @@ const handleAttach = async () => {
       selectedDevice.value = null
     } else {
       // 显示错误 toast
-      const errorMsg = response.error || 'Unknown error'
+      let errorMsg = response.error || 'Unknown error'
+      // 处理特定错误消息的 i18n
+      if (errorMsg.includes('is in use and contains a unknown filesystem') || errorMsg.includes('is in use and contains an unknown filesystem')) {
+        errorMsg = t('pool.deviceInUseWithUnknownFilesystem')
+      }
       showToastMessage(`${t('pool.attachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }
   } catch (err: any) {
