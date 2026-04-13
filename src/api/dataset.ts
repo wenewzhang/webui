@@ -32,6 +32,12 @@ export interface PromoteDatasetResponse {
   error: string | null
 }
 
+export interface BootfsResponse {
+  success: boolean
+  data: string
+  error: string | null
+}
+
 export const datasetApi = {
   getDatasets(): Promise<DatasetsResponse> {
     return apiClient.get('/zfs/datasets').then(res => res.data)
@@ -44,5 +50,8 @@ export const datasetApi = {
   },
   promoteDataset(datasetName: string): Promise<PromoteDatasetResponse> {
     return apiClient.post('/zfs/prompt', { dataset: datasetName }).then(res => res.data)
+  },
+  getBootfs(): Promise<BootfsResponse> {
+    return apiClient.get('/zfs/bootfs').then(res => res.data)
   },
 }

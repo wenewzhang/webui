@@ -117,6 +117,9 @@
                     @click="handleStart(dataset)"
                     class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                   >
+                    <svg v-if="dataset.name === bootfsDataset" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
                     {{ $t('dataset.start') }}
                   </button>
                 </div>
@@ -199,6 +202,9 @@ const cloneTargetDataset = ref<Dataset | null>(null)
 const showPromoteModal = ref(false)
 const promoteTargetDataset = ref<Dataset | null>(null)
 
+// Bootfs 相关状态
+const bootfsDataset = ref<string>('')
+
 // Toast 相关状态
 const showToast = ref(false)
 const toastMessage = ref('')
@@ -220,11 +226,18 @@ const fetchDatasets = async () => {
   loading.value = true
   error.value = null
   try {
-    const res = await datasetApi.getDatasets()
-    if (res.success) {
-      datasets.value = res.data
+    const [datasetsRes, bootfsRes] = await Promise.all([
+      datasetApi.getDatasets(),
+      datasetApi.getBootfs()
+    ])
+    if (datasetsRes.success) {
+      datasets.value = datasetsRes.data
     } else {
-      error.value = res.error || 'Failed to fetch datasets'
+      error.value = datasetsRes.error || 'Failed to fetch datasets'
+    }
+    console.log(bootfsRes.data?.bootfs)
+    if (bootfsRes.success) {
+      bootfsDataset.value = bootfsRes.data?.bootfs
     }
   } catch (err: any) {
     error.value = err.response?.data?.error || 'Failed to fetch datasets'
