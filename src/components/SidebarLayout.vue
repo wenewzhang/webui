@@ -149,7 +149,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, ref } from 'vue'
+import { computed, h, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import LanguageSwitcher from './LanguageSwitcher.vue'
@@ -161,6 +161,13 @@ const userStore = useUserStore()
 // 侧边栏展开/收缩状态
 const isCollapsed = ref(false)
 const openSubmenus = ref<string[]>([])
+
+// 初始化时，如果当前路由在 /storage 下，自动展开存储器菜单
+onMounted(() => {
+  if (route.path.startsWith('/storage')) {
+    openSubmenus.value.push('/storage')
+  }
+})
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
