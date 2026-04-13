@@ -581,7 +581,6 @@ const confirmExport = async () => {
       const match = response.message?.match(/'([^']+)'/)
       const poolName = match ? match[1] : ''
       // const poolName = response.message.match(/pool '([^']+)'/)?.[1]
-      console.log(poolName)
       exportError.value = t('pool.exportFailed', { poolName })
       // Check for specific error messages and use i18n translations
       if (response.error?.includes('pool or dataset is busy')) {
@@ -591,8 +590,6 @@ const confirmExport = async () => {
       }
     }
   } catch (err: any) {
-    console.log('catch')
-    console.log(err)
     // 从 err.response.data 获取服务器返回的错误信息
     const errorData = err.response?.data
     if (errorData?.message?.includes('Permission denied') || err.message?.includes('Permission denied')) {

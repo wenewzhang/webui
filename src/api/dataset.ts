@@ -38,6 +38,12 @@ export interface BootfsResponse {
   error: string | null
 }
 
+export interface CreateDatasetResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const datasetApi = {
   getDatasets(): Promise<DatasetsResponse> {
     return apiClient.get('/zfs/datasets').then(res => res.data)
@@ -53,5 +59,8 @@ export const datasetApi = {
   },
   getBootfs(): Promise<BootfsResponse> {
     return apiClient.get('/zfs/bootfs').then(res => res.data)
+  },
+  createDataset(oldDataset: string, newName: string): Promise<CreateDatasetResponse> {
+    return apiClient.post('/zfs/create_dataset', { old_dataset: oldDataset, new_name: newName }).then(res => res.data)
   },
 }

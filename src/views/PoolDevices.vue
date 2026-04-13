@@ -560,7 +560,6 @@ const handleAttach = async () => {
           errorMsg = t('pool.attachDeviceInExportedPool', { device, exportedPoolName })
         }
       } else if (errorMsg.includes('can only attach to mirrors and top-level disks')) {
-        console.log('mirror')
         // Extract new device and target device from error message
         // Format: "cannot attach {newDevice} to {targetDevice}: can only attach to mirrors and top-level disks"
         const match = errorMsg.match(/cannot attach (\S+) to (\S+):/)

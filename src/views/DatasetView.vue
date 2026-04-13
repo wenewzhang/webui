@@ -108,6 +108,12 @@
                     {{ $t('dataset.clone') }}
                   </button>
                   <button
+                    @click="handleCreate(dataset)"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-orange-700 bg-orange-100 hover:bg-orange-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                  >
+                    {{ $t('dataset.create') }}
+                  </button>
+                  <button
                     @click="handlePromote(dataset)"
                     class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                   >
@@ -174,6 +180,19 @@
       @confirm="confirmPromote"
       @cancel="cancelPromote"
     />
+
+    <!-- 创建 Dataset Modal -->
+    <InputModal
+      v-if="createTargetDataset"
+      :show="showCreateModal"
+      :title="$t('dataset.createConfirmTitle')"
+      :message="$t('dataset.createConfirmMessage', { name: createTargetDataset.name })"
+      :placeholder="$t('dataset.createPlaceholder')"
+      :confirm-text="$t('common.confirm')"
+      :cancel-text="$t('common.cancel')"
+      @confirm="confirmCreate"
+      @cancel="cancelCreate"
+    />
   </div>
 </template>
 
@@ -198,6 +217,10 @@ const selectedDataset = ref<Dataset | null>(null)
 // 克隆相关状态
 const showCloneModal = ref(false)
 const cloneTargetDataset = ref<Dataset | null>(null)
+
+// 创建相关状态
+const showCreateModal = ref(false)
+const createTargetDataset = ref<Dataset | null>(null)
 
 // 提升相关状态
 const showPromoteModal = ref(false)
@@ -236,7 +259,6 @@ const fetchDatasets = async () => {
     } else {
       error.value = datasetsRes.error || 'Failed to fetch datasets'
     }
-    console.log(bootfsRes.data?.bootfs)
     if (bootfsRes.success) {
       bootfsDataset.value = bootfsRes.data?.bootfs
     }
@@ -253,7 +275,6 @@ const handleDelete = (dataset: Dataset) => {
 }
 
 const mapDeleteError = (apiError: string | null | undefined): string => {
-  console.log(apiError)
   if (!apiError) return t('dataset.deleteFailed')
   const lower = apiError.toLowerCase()
   if (lower.includes('snapshot has dependent clones') || lower.includes("use '-R' to destroy")) {
@@ -273,7 +294,7 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
 }
 
 const isPool = (name: string): boolean => {
-  return !name.includes('/')
+  return !name.includes('/') && !name.includes('@')
 }
 
 const confirmDelete = async () => {
@@ -339,6 +360,36 @@ const confirmClone = async (newName: string) => {
 const cancelClone = () => {
   showCloneModal.value = false
   cloneTargetDataset.value = null
+}
+
+const handleCreate = (dataset: Dataset) => {
+  createTargetDataset.value = dataset
+  showCreateModal.value = true
+}
+
+const confirmCreate = async (newName: string) => {
+  if (!createTargetDataset.value) return
+  
+  showCreateModal.value = false
+  
+  try {
+    const res = await datasetApi.createDataset(createTargetDataset.value.name, newName)
+    if (res.success) {
+      showToastMessage(t('dataset.createSuccess', { name: createTargetDataset.value.name, newName }), 'success')
+      await fetchDatasets()
+    } else {
+      showToastMessage(t('dataset.createFailed') + ': ' + (res.error || ''), 'error')
+    }
+  } catch (err: any) {
+    showToastMessage(t('dataset.createFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+  } finally {
+    createTargetDataset.value = null
+  }
+}
+
+const cancelCreate = () => {
+  showCreateModal.value = false
+  createTargetDataset.value = null
 }
 
 const mapPromoteError = (apiError: string | null | undefined): string => {
