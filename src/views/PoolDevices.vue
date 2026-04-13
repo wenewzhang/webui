@@ -223,30 +223,12 @@
     </div>
   </div>
   <!-- Toast 提示框 -->
-  <Teleport to="body">
-    <Transition name="toast">
-      <div v-if="showToast" class="toast-overlay">
-        <div class="toast-content" :class="{ 'toast-error': toastType === 'error', 'toast-success': toastType === 'success' }">
-          <svg v-if="toastType === 'success'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-            <polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="15" y1="9" x2="9" y2="15"/>
-            <line x1="9" y1="9" x2="15" y2="15"/>
-          </svg>
-          <span class="toast-message" style="white-space: pre-line">{{ toastMessage }}</span>
-          <button class="toast-close-btn" @click="hideToast">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </Transition>
-  </Teleport>
+  <Toast
+    v-model:show="showToast"
+    :message="toastMessage"
+    :type="toastType"
+    @hide="onToastHide"
+  />
 </template>
 
 <script setup lang="ts">
@@ -255,6 +237,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { storageApi, type PoolDevice, type FreeDisk, type FreePart } from '@/api/storage'
 import type { DeviceReplaceResponse, DetachDeviceResponse, AttachDeviceResponse } from '@/api/storage'
+import Toast from '@/components/Toast.vue'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -292,33 +275,17 @@ const attaching = ref(false)
 const showToast = ref(false)
 const toastMessage = ref('')
 const toastType = ref<'success' | 'error'>('success')
-let toastTimer: ReturnType<typeof setTimeout> | null = null
 
 // 显示 Toast
 const showToastMessage = (message: string, type: 'success' | 'error' = 'success') => {
   toastMessage.value = message
   toastType.value = type
   showToast.value = true
-  
-  // 清除之前的定时器
-  if (toastTimer) {
-    clearTimeout(toastTimer)
-  }
-  
-  // 6秒后自动隐藏
-  toastTimer = setTimeout(() => {
-    hideToast()
-  }, 6000)
 }
 
-// 隐藏 Toast
-const hideToast = () => {
-  showToast.value = false
+// Toast 隐藏回调
+const onToastHide = () => {
   toastMessage.value = ''
-  if (toastTimer) {
-    clearTimeout(toastTimer)
-    toastTimer = null
-  }
 }
 
 // 计算是否可以执行 Replace
@@ -1098,73 +1065,5 @@ const handleAttach = async () => {
   box-shadow: none;
 }
 
-/* Toast 样式 */
-.toast-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  background-color: rgba(0, 0, 0, 0.3);
-}
 
-.toast-content {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  font-size: 1rem;
-  font-weight: 500;
-  max-width: 90vw;
-  word-break: break-word;
-  color: white;
-}
-
-.toast-success {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-}
-
-.toast-error {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-}
-
-.toast-message {
-  line-height: 1.5;
-}
-
-.toast-close-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  margin-left: 0.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: white;
-}
-
-.toast-close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* Toast 动画 */
-.toast-enter-active,
-.toast-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.toast-enter-from,
-.toast-leave-to {
-  opacity: 0;
-  transform: scale(0.9);
-}
 </style>
