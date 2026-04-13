@@ -121,6 +121,7 @@ export default {
     promoteConfirmMessage: "确定要提升数据集 '{name}' 吗？这将使其独立于原始数据集。",
     promoteSuccess: "数据集 '{name}' 提升成功",
     promoteFailed: '提升数据集失败',
+    promoteErrorNotCloned: '无法提升 "{name}"：不是克隆的文件系统',
   },
   // 存储器页面
   storagePage: {

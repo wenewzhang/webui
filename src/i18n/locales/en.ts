@@ -121,6 +121,7 @@ export default {
     promoteConfirmMessage: "Are you sure you want to promote dataset '{name}'? This will make it independent of its origin.",
     promoteSuccess: "Dataset '{name}' promoted successfully",
     promoteFailed: 'Failed to promote dataset',
+    promoteErrorNotCloned: 'Cannot promote "{name}": not a cloned filesystem',
   },
   // Storage Page
   storagePage: {

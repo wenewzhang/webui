@@ -326,6 +326,18 @@ const cancelClone = () => {
   cloneTargetDataset.value = null
 }
 
+const mapPromoteError = (apiError: string | null | undefined): string => {
+  if (!apiError) return t('dataset.promoteFailed')
+  const lower = apiError.toLowerCase()
+  if (lower.includes('not a cloned filesystem')) {
+    // 提取数据集名称
+    const match = apiError.match(/cannot promote '(.+?)':/)
+    const datasetName = match ? match[1] : ''
+    return t('dataset.promoteErrorNotCloned', { name: datasetName })
+  }
+  return apiError
+}
+
 const handlePromote = (dataset: Dataset) => {
   promoteTargetDataset.value = dataset
   showPromoteModal.value = true
@@ -342,10 +354,10 @@ const confirmPromote = async () => {
       showToastMessage(t('dataset.promoteSuccess', { name: promoteTargetDataset.value.name }), 'success')
       await fetchDatasets()
     } else {
-      showToastMessage(t('dataset.promoteFailed') + ': ' + (res.error || ''), 'error')
+      showToastMessage(mapPromoteError(res.error), 'error')
     }
   } catch (err: any) {
-    showToastMessage(t('dataset.promoteFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+    showToastMessage(mapPromoteError(err.response?.data?.error), 'error')
   } finally {
     promoteTargetDataset.value = null
   }
