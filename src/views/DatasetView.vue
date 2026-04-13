@@ -111,6 +111,14 @@
       @confirm="confirmDelete"
       @cancel="cancelDelete"
     />
+
+    <!-- Toast 提示框 -->
+    <Toast
+      v-model:show="showToast"
+      :message="toastMessage"
+      :type="toastType"
+      @hide="onToastHide"
+    />
   </div>
 </template>
 
@@ -120,6 +128,7 @@ import { useI18n } from 'vue-i18n'
 import { datasetApi } from '@/api/dataset'
 import type { Dataset } from '@/api/dataset'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import Toast from '@/components/Toast.vue'
 
 const { t } = useI18n()
 
@@ -128,6 +137,23 @@ const error = ref<string | null>(null)
 const datasets = ref<Dataset[]>([])
 const showDeleteModal = ref(false)
 const selectedDataset = ref<Dataset | null>(null)
+
+// Toast 相关状态
+const showToast = ref(false)
+const toastMessage = ref('')
+const toastType = ref<'success' | 'error'>('success')
+
+// 显示 Toast
+const showToastMessage = (message: string, type: 'success' | 'error' = 'success') => {
+  toastMessage.value = message
+  toastType.value = type
+  showToast.value = true
+}
+
+// Toast 隐藏回调
+const onToastHide = () => {
+  toastMessage.value = ''
+}
 
 const fetchDatasets = async () => {
   loading.value = true
@@ -159,13 +185,13 @@ const confirmDelete = async () => {
   try {
     const res = await datasetApi.deleteDataset(selectedDataset.value.name)
     if (res.success) {
-      alert(t('dataset.deleteSuccess', { name: selectedDataset.value.name }))
+      showToastMessage(t('dataset.deleteSuccess', { name: selectedDataset.value.name }), 'success')
       await fetchDatasets()
     } else {
-      alert(t('dataset.deleteFailed') + ': ' + (res.error || ''))
+      showToastMessage(t('dataset.deleteFailed') + ': ' + (res.error || ''), 'error')
     }
   } catch (err: any) {
-    alert(t('dataset.deleteFailed') + ': ' + (err.response?.data?.error || err.message))
+    showToastMessage(t('dataset.deleteFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
   } finally {
     selectedDataset.value = null
   }
