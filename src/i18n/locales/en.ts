@@ -116,6 +116,10 @@ export default {
     refreshDatasets: 'Refresh Datasets',
     refreshDatasetsSuccess: 'Datasets refreshed successfully',
     refreshDatasetsFailed: 'Failed to refresh datasets',
+    promoteConfirmTitle: 'Promote Dataset',
+    promoteConfirmMessage: "Are you sure you want to promote dataset '{name}'? This will make it independent of its origin.",
+    promoteSuccess: "Dataset '{name}' promoted successfully",
+    promoteFailed: 'Failed to promote dataset',
   },
   // Storage Page
   storagePage: {

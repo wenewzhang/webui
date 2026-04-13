@@ -159,6 +159,18 @@
       @confirm="confirmClone"
       @cancel="cancelClone"
     />
+
+    <!-- 提升确认 Modal -->
+    <ConfirmModal
+      v-if="promoteTargetDataset"
+      :show="showPromoteModal"
+      :title="$t('dataset.promoteConfirmTitle')"
+      :message="$t('dataset.promoteConfirmMessage', { name: promoteTargetDataset.name })"
+      :confirm-text="$t('common.confirm')"
+      :cancel-text="$t('common.cancel')"
+      @confirm="confirmPromote"
+      @cancel="cancelPromote"
+    />
   </div>
 </template>
 
@@ -182,6 +194,10 @@ const selectedDataset = ref<Dataset | null>(null)
 // 克隆相关状态
 const showCloneModal = ref(false)
 const cloneTargetDataset = ref<Dataset | null>(null)
+
+// 提升相关状态
+const showPromoteModal = ref(false)
+const promoteTargetDataset = ref<Dataset | null>(null)
 
 // Toast 相关状态
 const showToast = ref(false)
@@ -278,8 +294,33 @@ const cancelClone = () => {
 }
 
 const handlePromote = (dataset: Dataset) => {
-  console.log('Promote dataset:', dataset.name)
-  // TODO: Implement promote functionality
+  promoteTargetDataset.value = dataset
+  showPromoteModal.value = true
+}
+
+const confirmPromote = async () => {
+  if (!promoteTargetDataset.value) return
+  
+  showPromoteModal.value = false
+  
+  try {
+    const res = await datasetApi.promoteDataset(promoteTargetDataset.value.name)
+    if (res.success) {
+      showToastMessage(t('dataset.promoteSuccess', { name: promoteTargetDataset.value.name }), 'success')
+      await fetchDatasets()
+    } else {
+      showToastMessage(t('dataset.promoteFailed') + ': ' + (res.error || ''), 'error')
+    }
+  } catch (err: any) {
+    showToastMessage(t('dataset.promoteFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+  } finally {
+    promoteTargetDataset.value = null
+  }
+}
+
+const cancelPromote = () => {
+  showPromoteModal.value = false
+  promoteTargetDataset.value = null
 }
 
 const handleStart = (dataset: Dataset) => {

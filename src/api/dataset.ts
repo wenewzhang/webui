@@ -26,6 +26,12 @@ export interface CloneDatasetResponse {
   error: string | null
 }
 
+export interface PromoteDatasetResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const datasetApi = {
   getDatasets(): Promise<DatasetsResponse> {
     return apiClient.get('/zfs/datasets').then(res => res.data)
@@ -35,5 +41,8 @@ export const datasetApi = {
   },
   cloneDataset(newName: string, dataset: string): Promise<CloneDatasetResponse> {
     return apiClient.post('/zfs/clone', { new_name: newName, dataset }).then(res => res.data)
+  },
+  promoteDataset(datasetName: string): Promise<PromoteDatasetResponse> {
+    return apiClient.post('/zfs/prompt', { dataset: datasetName }).then(res => res.data)
   },
 }

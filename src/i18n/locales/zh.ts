@@ -116,6 +116,10 @@ export default {
     refreshDatasets: '刷新数据集',
     refreshDatasetsSuccess: '数据集刷新成功',
     refreshDatasetsFailed: '刷新数据集失败',
+    promoteConfirmTitle: '提升数据集',
+    promoteConfirmMessage: "确定要提升数据集 '{name}' 吗？这将使其独立于原始数据集。",
+    promoteSuccess: "数据集 '{name}' 提升成功",
+    promoteFailed: '提升数据集失败',
   },
   // 存储器页面
   storagePage: {
