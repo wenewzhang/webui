@@ -68,6 +68,12 @@ export interface ExportPoolResponse {
   error: string | null
 }
 
+export interface DestroyPoolResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export type OfflinePool = string
 
 export interface OfflinePoolsResponse {
@@ -292,6 +298,9 @@ export const storageApi = {
   },
   exportPool(poolName: string): Promise<ExportPoolResponse> {
     return apiClient.post('/zfs/export_pool', { poolname: poolName }).then(res => res.data)
+  },
+  destroyPool(poolName: string): Promise<DestroyPoolResponse> {
+    return apiClient.post('/destroy_pool', { pool_name: poolName }).then(res => res.data)
   },
   getOfflinePools(): Promise<OfflinePoolsResponse> {
     return apiClient.get('/zfs/offline_pools').then(res => res.data)

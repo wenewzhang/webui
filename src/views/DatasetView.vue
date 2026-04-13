@@ -134,8 +134,8 @@
     <ConfirmModal
       v-if="selectedDataset"
       :show="showDeleteModal"
-      :title="$t('dataset.deleteConfirmTitle')"
-      :message="$t('dataset.deleteConfirm', { name: selectedDataset.name })"
+      :title="isPool(selectedDataset.name) ? $t('dataset.deletePoolConfirmTitle') : $t('dataset.deleteConfirmTitle')"
+      :message="$t(isPool(selectedDataset.name) ? 'dataset.deletePoolConfirm' : 'dataset.deleteConfirm', { name: selectedDataset.name })"
       :confirm-text="$t('common.confirm')"
       :cancel-text="$t('common.cancel')"
       @confirm="confirmDelete"
@@ -181,6 +181,7 @@
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { datasetApi } from '@/api/dataset'
+import { storageApi } from '@/api/storage'
 import type { Dataset } from '@/api/dataset'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import Toast from '@/components/Toast.vue'
@@ -271,15 +272,29 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
   return apiError
 }
 
+const isPool = (name: string): boolean => {
+  return !name.includes('/')
+}
+
 const confirmDelete = async () => {
   if (!selectedDataset.value) return
   
   showDeleteModal.value = false
   
+  const name = selectedDataset.value.name
+  
   try {
-    const res = await datasetApi.deleteDataset(selectedDataset.value.name)
+    let res
+    if (isPool(name)) {
+      // 是 pool，调用 destroy_pool
+      res = await storageApi.destroyPool(name)
+    } else {
+      // 是 dataset，调用 destroy
+      res = await datasetApi.deleteDataset(name)
+    }
+    
     if (res.success) {
-      showToastMessage(t('dataset.deleteSuccess', { name: selectedDataset.value.name }), 'success')
+      showToastMessage(t('dataset.deleteSuccess', { name }), 'success')
       await fetchDatasets()
     } else {
       showToastMessage(mapDeleteError(res.error), 'error')

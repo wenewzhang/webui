@@ -106,6 +106,8 @@ export default {
     start: 'Start',
     deleteConfirmTitle: 'Confirm Delete Dataset',
     deleteConfirm: "Are you sure you want to delete dataset '{name}'? This action cannot be undone.",
+    deletePoolConfirmTitle: 'Confirm Delete Pool',
+    deletePoolConfirm: "Are you sure you want to delete pool '{name}'? This action cannot be undone.",
     deleteSuccess: "Dataset '{name}' deleted successfully",
     deleteFailed: 'Failed to delete dataset',
     deleteErrorDependentClones: 'Cannot destroy snapshot "{snapshot}" because it has dependent clones.\nUse "-R" option to destroy the following datasets:\n{datasets}',
