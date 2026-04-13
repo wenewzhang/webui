@@ -238,6 +238,26 @@ const handleDelete = (dataset: Dataset) => {
   showDeleteModal.value = true
 }
 
+const mapDeleteError = (apiError: string | null | undefined): string => {
+  console.log(apiError)
+  if (!apiError) return t('dataset.deleteFailed')
+  const lower = apiError.toLowerCase()
+  if (lower.includes('snapshot has dependent clones') || lower.includes("use '-R' to destroy")) {
+    // 提取快照名称和依赖的数据集
+    const snapshotMatch = apiError.match(/cannot destroy '(.+?)':/)
+    const dependentMatch = apiError.match(/destroy the following datasets:\n(.+)/s)
+    
+    const snapshotName = snapshotMatch ? snapshotMatch[1] : ''
+    const dependentDatasets = dependentMatch ? dependentMatch[1].trim() : ''
+    
+    return t('dataset.deleteErrorDependentClones', { 
+      snapshot: snapshotName,
+      datasets: dependentDatasets 
+    })
+  }
+  return apiError
+}
+
 const confirmDelete = async () => {
   if (!selectedDataset.value) return
   
@@ -249,10 +269,10 @@ const confirmDelete = async () => {
       showToastMessage(t('dataset.deleteSuccess', { name: selectedDataset.value.name }), 'success')
       await fetchDatasets()
     } else {
-      showToastMessage(t('dataset.deleteFailed') + ': ' + (res.error || ''), 'error')
+      showToastMessage(mapDeleteError(res.error), 'error')
     }
   } catch (err: any) {
-    showToastMessage(t('dataset.deleteFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+    showToastMessage(mapDeleteError(err.response?.data?.error), 'error')
   } finally {
     selectedDataset.value = null
   }

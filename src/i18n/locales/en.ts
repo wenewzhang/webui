@@ -108,6 +108,7 @@ export default {
     deleteConfirm: "Are you sure you want to delete dataset '{name}'? This action cannot be undone.",
     deleteSuccess: "Dataset '{name}' deleted successfully",
     deleteFailed: 'Failed to delete dataset',
+    deleteErrorDependentClones: 'Cannot destroy snapshot "{snapshot}" because it has dependent clones.\nUse "-R" option to destroy the following datasets:\n{datasets}',
     cloneConfirmTitle: 'Clone Dataset',
     cloneConfirmMessage: "Enter new name for clone of '{name}':",
     clonePlaceholder: 'Enter new dataset name',
