@@ -1,6 +1,33 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ $t('nav.storageDataset') }}</h2>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold text-gray-900">{{ $t('nav.storageDataset') }}</h2>
+      <button
+        @click="fetchDatasets"
+        :disabled="loading"
+        class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          :class="{ 'animate-spin': loading }"
+          class="mr-1.5"
+        >
+          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+          <path d="M16 16h5v5"/>
+        </svg>
+        {{ $t('common.refresh') }}
+      </button>
+    </div>
     
     <!-- 加载状态 -->
     <div v-if="loading" class="text-gray-600">
