@@ -110,6 +110,8 @@ export default {
     invalidPartitionSize: "Invalid partition size",
     createPartitionSuccess: "Partition created successfully",
     createPartitionFailed: "Failed to create partition",
+    partitionOpenError: "Failed to open device for reading: {error}",
+    partitionTableWriteError: "Failed to write partition table: {error}",
     clearLabel: "Clear Label",
     clearLabelTitle: "Clear Partition Label",
     selectPartition: "Select Partition",

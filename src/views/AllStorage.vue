@@ -400,17 +400,34 @@ const submitPartition = async () => {
         fetchDisks()
       }, 1500)
     } else {
-      partitionError.value = res.error || t('storagePage.createPartitionFailed')
+      partitionError.value = mapPartitionError(res.error)
     }
   } catch (err: any) {
     const errorMsg = err.response?.data?.error
     if (errorMsg.includes('Only admin users can perform this operation') )  {
       partitionError.value = t('pool.permissionDenied')
       // exportErrorDetail.value = ''
-    } else partitionError.value = err.response?.data?.error || t('storagePage.createPartitionFailed')
+    } else {
+      partitionError.value = mapPartitionError(err.response?.data?.error)
+    }
   } finally {
     creatingPartition.value = false
   }
+}
+
+const mapPartitionError = (apiError: string | null | undefined): string => {
+  if (!apiError) return t('storagePage.createPartitionFailed')
+  const lower = apiError.toLowerCase()
+  if (lower.includes('only admin users can perform this operation')) {
+    return t('pool.permissionDenied')
+  }
+  if (lower.includes('problem opening') && lower.includes('for reading')) {
+    return t('storagePage.partitionOpenError', { error: apiError })
+  }
+  if (lower.includes('unable to save backup partition table') || lower.includes('error was reported when writing the partition table')) {
+    return t('storagePage.partitionTableWriteError', { error: apiError })
+  }
+  return apiError
 }
 
 const mapDeleteError = (apiError: string | null | undefined): string => {

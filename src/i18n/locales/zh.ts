@@ -110,6 +110,8 @@ export default {
     invalidPartitionSize: "无效的分区大小",
     createPartitionSuccess: "分区创建成功",
     createPartitionFailed: "分区创建失败",
+    partitionOpenError: "无法打开设备进行读取：{error}",
+    partitionTableWriteError: "写入分区表失败：{error}",
     clearLabel: "清除标签",
     clearLabelTitle: "清除分区标签",
     selectPartition: "选择分区",
