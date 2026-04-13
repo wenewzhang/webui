@@ -88,9 +88,18 @@ export default {
     storage: 'Storage',
     storageAll: 'All',
     storagePool: 'Pool',
-    storageIdle: 'Idle',
+    storageDataset: 'Datasets',
     samba: 'Samba',
     apps: 'Apps',
+  },
+  // Dataset Page
+  dataset: {
+    noDatasets: 'No datasets found',
+    name: 'Name',
+    used: 'Used',
+    available: 'Available',
+    referenced: 'Referenced',
+    mountpoint: 'Mount Point',
   },
   // Storage Page
   storagePage: {

@@ -88,9 +88,18 @@ export default {
     storage: '存储器',
     storageAll: '全部',
     storagePool: '存储池',
-    storageIdle: '空闲',
+    storageDataset: '数据集',
     samba: 'Samba',
     apps: '应用',
+  },
+  // 数据集页面
+  dataset: {
+    noDatasets: '暂无数据集',
+    name: '名称',
+    used: '已用',
+    available: '可用',
+    referenced: '引用',
+    mountpoint: '挂载点',
   },
   // 存储器页面
   storagePage: {
