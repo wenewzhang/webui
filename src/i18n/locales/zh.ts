@@ -104,6 +104,7 @@ export default {
     clone: '克隆',
     promote: '提升',
     start: '启动',
+    deleteConfirmTitle: '确认删除数据集',
     deleteConfirm: "确定要删除数据集 '{name}' 吗？此操作不可撤销。",
     deleteSuccess: "数据集 '{name}' 删除成功",
     deleteFailed: '删除数据集失败',

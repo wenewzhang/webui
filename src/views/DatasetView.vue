@@ -99,6 +99,18 @@
         </table>
       </div>
     </div>
+
+    <!-- 删除确认 Modal -->
+    <ConfirmModal
+      v-if="selectedDataset"
+      :show="showDeleteModal"
+      :title="$t('dataset.deleteConfirmTitle')"
+      :message="$t('dataset.deleteConfirm', { name: selectedDataset.name })"
+      :confirm-text="$t('common.confirm')"
+      :cancel-text="$t('common.cancel')"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </div>
 </template>
 
@@ -107,12 +119,15 @@ import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { datasetApi } from '@/api/dataset'
 import type { Dataset } from '@/api/dataset'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { t } = useI18n()
 
 const loading = ref(true)
 const error = ref<string | null>(null)
 const datasets = ref<Dataset[]>([])
+const showDeleteModal = ref(false)
+const selectedDataset = ref<Dataset | null>(null)
 
 const fetchDatasets = async () => {
   loading.value = true
@@ -131,21 +146,34 @@ const fetchDatasets = async () => {
   }
 }
 
-const handleDelete = async (dataset: Dataset) => {
-  const confirmed = window.confirm(t('dataset.deleteConfirm', { name: dataset.name }))
-  if (!confirmed) return
+const handleDelete = (dataset: Dataset) => {
+  selectedDataset.value = dataset
+  showDeleteModal.value = true
+}
+
+const confirmDelete = async () => {
+  if (!selectedDataset.value) return
+  
+  showDeleteModal.value = false
   
   try {
-    const res = await datasetApi.deleteDataset(dataset.name)
+    const res = await datasetApi.deleteDataset(selectedDataset.value.name)
     if (res.success) {
-      alert(t('dataset.deleteSuccess', { name: dataset.name }))
+      alert(t('dataset.deleteSuccess', { name: selectedDataset.value.name }))
       await fetchDatasets()
     } else {
       alert(t('dataset.deleteFailed') + ': ' + (res.error || ''))
     }
   } catch (err: any) {
     alert(t('dataset.deleteFailed') + ': ' + (err.response?.data?.error || err.message))
+  } finally {
+    selectedDataset.value = null
   }
+}
+
+const cancelDelete = () => {
+  showDeleteModal.value = false
+  selectedDataset.value = null
 }
 
 const handleClone = (dataset: Dataset) => {

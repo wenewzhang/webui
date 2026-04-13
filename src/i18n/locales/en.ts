@@ -104,6 +104,7 @@ export default {
     clone: 'Clone',
     promote: 'Promote',
     start: 'Start',
+    deleteConfirmTitle: 'Confirm Delete Dataset',
     deleteConfirm: "Are you sure you want to delete dataset '{name}'? This action cannot be undone.",
     deleteSuccess: "Dataset '{name}' deleted successfully",
     deleteFailed: 'Failed to delete dataset',
