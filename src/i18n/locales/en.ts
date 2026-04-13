@@ -108,6 +108,14 @@ export default {
     deleteConfirm: "Are you sure you want to delete dataset '{name}'? This action cannot be undone.",
     deleteSuccess: "Dataset '{name}' deleted successfully",
     deleteFailed: 'Failed to delete dataset',
+    cloneConfirmTitle: 'Clone Dataset',
+    cloneConfirmMessage: "Enter new name for clone of '{name}':",
+    clonePlaceholder: 'Enter new dataset name',
+    cloneSuccess: "Dataset '{name}' cloned successfully to '{newName}'",
+    cloneFailed: 'Failed to clone dataset',
+    refreshDatasets: 'Refresh Datasets',
+    refreshDatasetsSuccess: 'Datasets refreshed successfully',
+    refreshDatasetsFailed: 'Failed to refresh datasets',
   },
   // Storage Page
   storagePage: {

@@ -119,6 +119,19 @@
       :type="toastType"
       @hide="onToastHide"
     />
+
+    <!-- 克隆输入 Modal -->
+    <InputModal
+      v-if="cloneTargetDataset"
+      :show="showCloneModal"
+      :title="$t('dataset.cloneConfirmTitle')"
+      :message="$t('dataset.cloneConfirmMessage', { name: cloneTargetDataset.name })"
+      :placeholder="$t('dataset.clonePlaceholder')"
+      :confirm-text="$t('common.confirm')"
+      :cancel-text="$t('common.cancel')"
+      @confirm="confirmClone"
+      @cancel="cancelClone"
+    />
   </div>
 </template>
 
@@ -129,6 +142,7 @@ import { datasetApi } from '@/api/dataset'
 import type { Dataset } from '@/api/dataset'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import Toast from '@/components/Toast.vue'
+import InputModal from '@/components/InputModal.vue'
 
 const { t } = useI18n()
 
@@ -137,6 +151,10 @@ const error = ref<string | null>(null)
 const datasets = ref<Dataset[]>([])
 const showDeleteModal = ref(false)
 const selectedDataset = ref<Dataset | null>(null)
+
+// 克隆相关状态
+const showCloneModal = ref(false)
+const cloneTargetDataset = ref<Dataset | null>(null)
 
 // Toast 相关状态
 const showToast = ref(false)
@@ -203,8 +221,33 @@ const cancelDelete = () => {
 }
 
 const handleClone = (dataset: Dataset) => {
-  console.log('Clone dataset:', dataset.name)
-  // TODO: Implement clone functionality
+  cloneTargetDataset.value = dataset
+  showCloneModal.value = true
+}
+
+const confirmClone = async (newName: string) => {
+  if (!cloneTargetDataset.value) return
+  
+  showCloneModal.value = false
+  
+  try {
+    const res = await datasetApi.cloneDataset(newName, cloneTargetDataset.value.name)
+    if (res.success) {
+      showToastMessage(t('dataset.cloneSuccess', { name: cloneTargetDataset.value.name, newName }), 'success')
+      await fetchDatasets()
+    } else {
+      showToastMessage(t('dataset.cloneFailed') + ': ' + (res.error || ''), 'error')
+    }
+  } catch (err: any) {
+    showToastMessage(t('dataset.cloneFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+  } finally {
+    cloneTargetDataset.value = null
+  }
+}
+
+const cancelClone = () => {
+  showCloneModal.value = false
+  cloneTargetDataset.value = null
 }
 
 const handlePromote = (dataset: Dataset) => {

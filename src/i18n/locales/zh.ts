@@ -108,6 +108,14 @@ export default {
     deleteConfirm: "确定要删除数据集 '{name}' 吗？此操作不可撤销。",
     deleteSuccess: "数据集 '{name}' 删除成功",
     deleteFailed: '删除数据集失败',
+    cloneConfirmTitle: '克隆数据集',
+    cloneConfirmMessage: "为 '{name}' 的克隆输入新名称：",
+    clonePlaceholder: '请输入新的数据集名称',
+    cloneSuccess: "数据集 '{name}' 成功克隆为 '{newName}'",
+    cloneFailed: '克隆数据集失败',
+    refreshDatasets: '刷新数据集',
+    refreshDatasetsSuccess: '数据集刷新成功',
+    refreshDatasetsFailed: '刷新数据集失败',
   },
   // 存储器页面
   storagePage: {
