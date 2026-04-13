@@ -434,9 +434,19 @@ const cancelPromote = () => {
   promoteTargetDataset.value = null
 }
 
-const handleStart = (dataset: Dataset) => {
-  console.log('Start dataset:', dataset.name)
-  // TODO: Implement start functionality
+const handleStart = async (dataset: Dataset) => {
+  const pool = dataset.name.split('/')[0]
+  try {
+    const res = await datasetApi.setBootfs(dataset.name, pool)
+    if (res.success) {
+      showToastMessage(t('dataset.startSuccess'), 'success')
+      await fetchDatasets()
+    } else {
+      showToastMessage(res.error || t('dataset.startError'), 'error')
+    }
+  } catch (err: any) {
+    showToastMessage(err.response?.data?.error || t('dataset.startError'), 'error')
+  }
 }
 
 onMounted(fetchDatasets)

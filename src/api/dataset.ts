@@ -63,4 +63,7 @@ export const datasetApi = {
   createDataset(oldDataset: string, newName: string): Promise<CreateDatasetResponse> {
     return apiClient.post('/zfs/create_dataset', { old_dataset: oldDataset, new_name: newName }).then(res => res.data)
   },
+  setBootfs(dataset: string, pool: string): Promise<BootfsResponse> {
+    return apiClient.post('/zfs/set_bootfs', { dataset, pool }).then(res => res.data)
+  },
 }

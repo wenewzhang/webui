@@ -130,6 +130,8 @@ export default {
     promoteSuccess: "数据集 '{name}' 提升成功",
     promoteFailed: '提升数据集失败',
     promoteErrorNotCloned: '无法提升 "{name}"：不是克隆的文件系统',
+    startSuccess: '启动数据集成功',
+    startError: '启动数据集失败',
   },
   // 存储器页面
   storagePage: {
