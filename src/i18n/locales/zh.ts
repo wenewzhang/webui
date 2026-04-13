@@ -100,6 +100,13 @@ export default {
     available: '可用',
     referenced: '引用',
     mountpoint: '挂载点',
+    delete: '删除',
+    clone: '克隆',
+    promote: '提升',
+    start: '启动',
+    deleteConfirm: "确定要删除数据集 '{name}' 吗？此操作不可撤销。",
+    deleteSuccess: "数据集 '{name}' 删除成功",
+    deleteFailed: '删除数据集失败',
   },
   // 存储器页面
   storagePage: {

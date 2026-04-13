@@ -44,6 +44,9 @@
               <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 {{ $t('dataset.mountpoint') }}
               </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                {{ $t('common.operation') }}
+              </th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -63,6 +66,34 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ dataset.mountpoint || '-' }}
               </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex space-x-2">
+                  <button
+                    @click="handleDelete(dataset)"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                  >
+                    {{ $t('dataset.delete') }}
+                  </button>
+                  <button
+                    @click="handleClone(dataset)"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    {{ $t('dataset.clone') }}
+                  </button>
+                  <button
+                    @click="handlePromote(dataset)"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  >
+                    {{ $t('dataset.promote') }}
+                  </button>
+                  <button
+                    @click="handleStart(dataset)"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-purple-700 bg-purple-100 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                  >
+                    {{ $t('dataset.start') }}
+                  </button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -73,8 +104,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { datasetApi } from '@/api/dataset'
 import type { Dataset } from '@/api/dataset'
+
+const { t } = useI18n()
 
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -95,6 +129,38 @@ const fetchDatasets = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleDelete = async (dataset: Dataset) => {
+  const confirmed = window.confirm(t('dataset.deleteConfirm', { name: dataset.name }))
+  if (!confirmed) return
+  
+  try {
+    const res = await datasetApi.deleteDataset(dataset.name)
+    if (res.success) {
+      alert(t('dataset.deleteSuccess', { name: dataset.name }))
+      await fetchDatasets()
+    } else {
+      alert(t('dataset.deleteFailed') + ': ' + (res.error || ''))
+    }
+  } catch (err: any) {
+    alert(t('dataset.deleteFailed') + ': ' + (err.response?.data?.error || err.message))
+  }
+}
+
+const handleClone = (dataset: Dataset) => {
+  console.log('Clone dataset:', dataset.name)
+  // TODO: Implement clone functionality
+}
+
+const handlePromote = (dataset: Dataset) => {
+  console.log('Promote dataset:', dataset.name)
+  // TODO: Implement promote functionality
+}
+
+const handleStart = (dataset: Dataset) => {
+  console.log('Start dataset:', dataset.name)
+  // TODO: Implement start functionality
 }
 
 onMounted(fetchDatasets)
