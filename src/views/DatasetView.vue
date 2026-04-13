@@ -55,10 +55,10 @@
                 {{ dataset.used }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ dataset.available }}
+                {{ dataset.avail }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ dataset.referenced }}
+                {{ dataset.refer }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ dataset.mountpoint || '-' }}

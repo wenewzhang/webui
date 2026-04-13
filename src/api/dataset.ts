@@ -3,8 +3,8 @@ import apiClient from './axios'
 export interface Dataset {
   name: string
   used: string
-  available: string
-  referenced: string
+  avail: string
+  refer: string
   mountpoint: string | null
 }
 
