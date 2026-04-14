@@ -1588,7 +1588,8 @@ onMounted(() => {
 .success-toast {
   position: fixed;
   top: 24px;
-  right: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -1646,7 +1647,8 @@ onMounted(() => {
 .error-toast {
   position: fixed;
   top: 24px;
-  right: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: flex-start;
   gap: 12px;
