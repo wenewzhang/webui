@@ -234,6 +234,8 @@ export default {
     diskRequired: '请至少选择一块磁盘',
     primarycache: '主缓存 - 控制ARC缓存类型，all=缓存所有数据，metadata=仅缓存元数据，none=不缓存',
     quota: '存储限额 - 设置存储池最大可用容量（如: 10G, 1T, none=无限制）',
+    reservation: '预留空间 - 为存储池预留的容量（如: 10G, 1T, none=无预留）',
+    autoexpand: '自动扩展 - 当底层设备扩容时自动扩展池容量，on=启用，off=关闭',
     recordsize: '记录大小 - 数据块的默认大小，大文件建议1M，小文件建议16K/64K',
     atime: '访问时间 - 是否更新文件的最后访问时间，off=关闭以提升性能',
     relatime: '相对访问时间 - 仅在文件修改后才更新访问时间，on=启用可减少磁盘写入',

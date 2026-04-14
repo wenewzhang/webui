@@ -234,6 +234,8 @@ export default {
     diskRequired: 'Please select at least one disk',
     primarycache: 'Primary Cache - Controls ARC cache type, all=cache all data, metadata=cache metadata only, none=no caching',
     quota: 'Quota - Set maximum available capacity for the pool (e.g., 10G, 1T, none=unlimited)',
+    reservation: 'Reservation - Reserved capacity for the pool (e.g., 10G, 1T, none=no reservation)',
+    autoexpand: 'Auto Expand - Automatically expand pool capacity when underlying devices grow, on=enabled, off=disabled',
     recordsize: 'Record Size - Default size of data blocks, 1M recommended for large files, 16K/64K for small files',
     atime: 'Access Time - Whether to update file last access time, off=disabled for better performance',
     relatime: 'Relative Access Time - Only update access time after file modification, on=enabled to reduce disk writes',

@@ -226,6 +226,12 @@ export interface SetPoolChecksumResponse {
   error: string | null
 }
 
+export interface SetPoolAutoexpandResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export interface Checkpoint {
   pool: string
   property: string
@@ -381,6 +387,9 @@ export const storageApi = {
   },
   setPoolChecksum(poolName: string, value: string): Promise<SetPoolChecksumResponse> {
     return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, checksum: value }).then(res => res.data)
+  },
+  setPoolAutoexpand(poolName: string, value: string): Promise<SetPoolAutoexpandResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, autoexpand: value }).then(res => res.data)
   },
   getCheckpoints(poolName: string): Promise<CheckpointsResponse> {
     return apiClient.get('/chk/checkpoint', { params: { poolname: poolName } }).then(res => res.data)

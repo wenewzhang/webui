@@ -33,7 +33,7 @@
       </div>
       
       <div class="settings-grid">
-        <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync', 'checksum'].includes(key) }">
+        <div v-for="(value, key) in advancedData" :key="key" class="setting-card" :class="{ 'editable': ['primarycache', 'quota', 'reservation', 'autoexpand', 'mountpoint', 'recordsize', 'atime', 'relatime', 'readonly', 'aclmode', 'acltype', 'aclinherit', 'canmount', 'logbias', 'compression', 'sync', 'checksum'].includes(key) }">
           <div class="setting-label">{{ $t('pool.' + key) }}</div>
           <!-- primarycache 可编辑下拉框 -->
           <div v-if="key === 'primarycache'" class="setting-edit">
@@ -83,6 +83,63 @@
               @click="saveQuota" 
               class="save-btn"
               :disabled="saving || quotaInput === originalQuota"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? $t('common.saving') : $t('common.save') }}
+            </button>
+          </div>
+          <!-- reservation 可编辑输入 -->
+          <div v-else-if="key === 'reservation'" class="setting-edit">
+            <div class="quota-input-group">
+              <input 
+                v-model="reservationValue" 
+                type="text"
+                class="setting-input"
+                :disabled="saving"
+                placeholder="如: 10G, 1T, none"
+              />
+              <select 
+                v-model="reservationUnit" 
+                class="setting-select unit-select"
+                :disabled="saving || reservationValue === 'none' || reservationValue === ''"
+              >
+                <option value="G">G</option>
+                <option value="T">T</option>
+              </select>
+            </div>
+            <button 
+              @click="saveReservation" 
+              class="save-btn"
+              :disabled="saving || reservationInput === originalReservation"
+            >
+              <span v-if="saving" class="spinner-small"></span>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                <polyline points="17 21 17 13 7 13 7 21"/>
+                <polyline points="7 3 7 8 15 8"/>
+              </svg>
+              {{ saving ? $t('common.saving') : $t('common.save') }}
+            </button>
+          </div>
+          <!-- autoexpand 可编辑下拉框 -->
+          <div v-else-if="key === 'autoexpand'" class="setting-edit">
+            <select 
+              v-model="autoexpandValue" 
+              class="setting-select"
+              :disabled="saving"
+            >
+              <option value="on">on</option>
+              <option value="off">off</option>
+            </select>
+            <button 
+              @click="saveAutoexpand" 
+              class="save-btn"
+              :disabled="saving || autoexpandValue === originalAutoexpand"
             >
               <span v-if="saving" class="spinner-small"></span>
               <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -523,6 +580,15 @@ const quotaValue = ref('')
 const quotaUnit = ref('G')
 const originalQuota = ref('')
 
+// reservation 编辑相关
+const reservationValue = ref('')
+const reservationUnit = ref('G')
+const originalReservation = ref('')
+
+// autoexpand 编辑相关
+const autoexpandValue = ref('off')
+const originalAutoexpand = ref('off')
+
 // mountpoint 编辑相关
 const mountpointValue = ref('')
 const originalMountpoint = ref('')
@@ -587,6 +653,14 @@ const quotaInput = computed(() => {
   return quotaValue.value + quotaUnit.value
 })
 
+// reservation 完整输入值（数值+单位）
+const reservationInput = computed(() => {
+  if (reservationValue.value === 'none' || reservationValue.value === '') {
+    return reservationValue.value
+  }
+  return reservationValue.value + reservationUnit.value
+})
+
 // 获取高级设置数据
 const fetchAdvancedSettings = async () => {
   loading.value = true
@@ -616,6 +690,27 @@ const fetchAdvancedSettings = async () => {
             quotaValue.value = quota
           }
         }
+      }
+      // 初始化 reservation 值
+      if (response.data.reservation) {
+        const reservation = response.data.reservation
+        originalReservation.value = reservation
+        if (reservation === 'none') {
+          reservationValue.value = 'none'
+        } else {
+          const match = reservation.match(/^(\d+)([GT])$/)
+          if (match) {
+            reservationValue.value = match[1]
+            reservationUnit.value = match[2]
+          } else {
+            reservationValue.value = reservation
+          }
+        }
+      }
+      // 初始化 autoexpand 值
+      if (response.data.autoexpand) {
+        autoexpandValue.value = response.data.autoexpand
+        originalAutoexpand.value = response.data.autoexpand
       }
       // 初始化 mountpoint 值
       if (response.data.mountpoint) {
@@ -755,6 +850,77 @@ const saveQuota = async () => {
       }, 3000)
     } else {
       saveError.value = response.error || 'Failed to save quota'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 验证 reservation 输入
+const validateReservation = (value: string): boolean => {
+  if (value === 'none' || value === '') {
+    return true
+  }
+  const num = parseInt(value)
+  return !isNaN(num) && num >= 1 && num <= 999
+}
+
+// 保存 reservation 设置
+const saveReservation = async () => {
+  if (!poolName.value) return
+  
+  // 验证输入
+  if (!validateReservation(reservationValue.value)) {
+    saveError.value = 'Reservation must be 1-999G, 1-999T, or none'
+    return
+  }
+  
+  const finalReservation = reservationInput.value
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolReservation(poolName.value, finalReservation)
+    if (response.success) {
+      originalReservation.value = finalReservation
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save reservation'
+    }
+  } catch (err: any) {
+    saveError.value = err.message || 'Network error'
+  } finally {
+    saving.value = false
+  }
+}
+
+// 保存 autoexpand 设置
+const saveAutoexpand = async () => {
+  if (!poolName.value || !autoexpandValue.value) return
+  
+  saving.value = true
+  saveError.value = ''
+  saveSuccess.value = false
+  
+  try {
+    const response = await storageApi.setPoolAutoexpand(poolName.value, autoexpandValue.value)
+    if (response.success) {
+      originalAutoexpand.value = autoexpandValue.value
+      saveSuccess.value = true
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        saveSuccess.value = false
+      }, 3000)
+    } else {
+      saveError.value = response.error || 'Failed to save autoexpand'
     }
   } catch (err: any) {
     saveError.value = err.message || 'Network error'
