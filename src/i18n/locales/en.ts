@@ -91,6 +91,9 @@ export default {
     storageDataset: 'Datasets',
     samba: 'Samba',
     apps: 'Apps',
+    system: 'System',
+    restart: 'Restart',
+    shutdown: 'Shutdown',
   },
   // Dataset Page
   dataset: {
@@ -320,6 +323,15 @@ export default {
     replaceDeviceInExportedPool: "Device '{device}' is part of exported pool '{poolName}'. Use force option to override.",
     attachDeviceInExportedPool: "Device '{device}' is part of exported pool '{exportedPoolName}'. Use '-f' to override.",
     attachOnlyToMirrorsAndTopLevelDisks: "Cannot attach '{newDevice}' to '{targetDevice}': can only attach to mirrors and top-level disks",
+  },
+  // System Page
+  system: {
+    restart: 'Restart',
+    shutdown: 'Shutdown',
+    restartTitle: 'Restart System',
+    shutdownTitle: 'Shutdown System',
+    restartConfirm: 'Are you sure you want to restart the system? This action will take effect immediately.',
+    shutdownConfirm: 'Are you sure you want to shutdown the system? This action will take effect immediately.',
   },
   // Error Messages
   error: {

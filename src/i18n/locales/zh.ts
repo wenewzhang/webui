@@ -91,6 +91,9 @@ export default {
     storageDataset: '数据集',
     samba: 'Samba',
     apps: '应用',
+    system: '系统',
+    restart: '重启',
+    shutdown: '关机',
   },
   // 数据集页面
   dataset: {
@@ -320,6 +323,15 @@ export default {
     replaceDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{poolName}'，请使用强制选项覆盖。",
     attachDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{exportedPoolName}'，请使用 '-f' 选项覆盖。",
     attachOnlyToMirrorsAndTopLevelDisks: "无法将 '{newDevice}' 附加到 '{targetDevice}'：只能附加到镜像和顶级磁盘",
+  },
+  // 系统页面
+  system: {
+    restart: '重启',
+    shutdown: '关机',
+    restartTitle: '重启系统',
+    shutdownTitle: '关闭系统',
+    restartConfirm: '确定要重启系统吗？此操作将立即生效。',
+    shutdownConfirm: '确定要关闭系统吗？此操作将立即生效。',
   },
   // 错误信息
   error: {

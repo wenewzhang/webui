@@ -100,6 +100,18 @@ const router = createRouter({
           component: () => import('@/views/AppsView.vue'),
           meta: { title: 'Apps' },
         },
+        {
+          path: 'system/restart',
+          name: 'SystemRestart',
+          component: () => import('@/views/SystemView.vue'),
+          meta: { title: 'System Restart' },
+        },
+        {
+          path: 'system/shutdown',
+          name: 'SystemShutdown',
+          component: () => import('@/views/SystemView.vue'),
+          meta: { title: 'System Shutdown' },
+        },
       ],
     },
   ],
