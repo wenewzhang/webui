@@ -93,6 +93,7 @@ export default {
     apps: '应用',
     system: '系统',
     restart: '重启',
+    restartForce: '强制重启',
     shutdown: '关机',
   },
   // 数据集页面
@@ -329,9 +330,12 @@ export default {
     restart: '重启',
     shutdown: '关机',
     restartTitle: '重启系统',
+    restartForceTitle: '强制重启系统',
     shutdownTitle: '关闭系统',
     restartConfirm: '确定要重启系统吗？此操作将立即生效。',
+    restartForceConfirm: '确定要强制重启系统吗？此操作将立即生效。',
     shutdownConfirm: '确定要关闭系统吗？此操作将立即生效。',
+    confirmLabel: '我确认执行此操作',
   },
   // 错误信息
   error: {

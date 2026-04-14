@@ -93,6 +93,7 @@ export default {
     apps: 'Apps',
     system: 'System',
     restart: 'Restart',
+    restartForce: 'Force Restart',
     shutdown: 'Shutdown',
   },
   // Dataset Page
@@ -329,9 +330,12 @@ export default {
     restart: 'Restart',
     shutdown: 'Shutdown',
     restartTitle: 'Restart System',
+    restartForceTitle: 'Force Restart System',
     shutdownTitle: 'Shutdown System',
     restartConfirm: 'Are you sure you want to restart the system? This action will take effect immediately.',
+    restartForceConfirm: 'Are you sure you want to force restart the system? This action will take effect immediately.',
     shutdownConfirm: 'Are you sure you want to shutdown the system? This action will take effect immediately.',
+    confirmLabel: 'I confirm to proceed with this action',
   },
   // Error Messages
   error: {

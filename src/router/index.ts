@@ -112,6 +112,12 @@ const router = createRouter({
           component: () => import('@/views/SystemView.vue'),
           meta: { title: 'System Shutdown' },
         },
+        {
+          path: 'system/reboot_force',
+          name: 'SystemRebootForce',
+          component: () => import('@/views/SystemView.vue'),
+          meta: { title: 'System Force Restart' },
+        },
       ],
     },
   ],

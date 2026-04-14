@@ -9,6 +9,9 @@ export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
   },
+  reboot_force(): Promise<SystemActionResponse> {
+    return apiClient.post('/system/reboot_force').then((res) => res.data)
+  },
   shutdown(): Promise<SystemActionResponse> {
     return apiClient.post('/system/shutdown').then((res) => res.data)
   },
