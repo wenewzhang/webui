@@ -336,6 +336,15 @@ const cancelDelete = () => {
   selectedDataset.value = null
 }
 
+const mapCloneError = (apiError: string | null | undefined): string => {
+  if (!apiError) return t('dataset.cloneFailed')
+  const lower = apiError.toLowerCase()
+  if (lower.includes('new name must contain only alphanumeric characters, underscores, hyphens, or dots')) {
+    return t('dataset.cloneErrorInvalidName')
+  }
+  return apiError
+}
+
 const handleClone = (dataset: Dataset) => {
   cloneTargetDataset.value = dataset
   showCloneModal.value = true
@@ -352,10 +361,10 @@ const confirmClone = async (newName: string) => {
       showToastMessage(t('dataset.cloneSuccess', { name: cloneTargetDataset.value.name, newName }), 'success')
       await fetchDatasets()
     } else {
-      showToastMessage(t('dataset.cloneFailed') + ': ' + (res.error || ''), 'error')
+      showToastMessage(t('dataset.cloneFailed') + ': ' + mapCloneError(res.error), 'error')
     }
   } catch (err: any) {
-    showToastMessage(t('dataset.cloneFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+    showToastMessage(t('dataset.cloneFailed') + ': ' + mapCloneError(err.response?.data?.error), 'error')
   } finally {
     cloneTargetDataset.value = null
   }
@@ -371,6 +380,15 @@ const handleCreate = (dataset: Dataset) => {
   showCreateModal.value = true
 }
 
+const mapCreateError = (apiError: string | null | undefined): string => {
+  if (!apiError) return t('dataset.createFailed')
+  const lower = apiError.toLowerCase()
+  if (lower.includes('new name must contain only alphanumeric characters, underscores, hyphens, or dots')) {
+    return t('dataset.createErrorInvalidName')
+  }
+  return apiError
+}
+
 const confirmCreate = async (newName: string) => {
   if (!createTargetDataset.value) return
   
@@ -382,10 +400,10 @@ const confirmCreate = async (newName: string) => {
       showToastMessage(t('dataset.createSuccess', { name: createTargetDataset.value.name, newName }), 'success')
       await fetchDatasets()
     } else {
-      showToastMessage(t('dataset.createFailed') + ': ' + (res.error || ''), 'error')
+      showToastMessage(t('dataset.createFailed') + ': ' + mapCreateError(res.error), 'error')
     }
   } catch (err: any) {
-    showToastMessage(t('dataset.createFailed') + ': ' + (err.response?.data?.error || err.message), 'error')
+    showToastMessage(t('dataset.createFailed') + ': ' + mapCreateError(err.response?.data?.error), 'error')
   } finally {
     createTargetDataset.value = null
   }
