@@ -313,6 +313,9 @@ export default {
     fetchOfflinePoolsFailed: 'Failed to get offline pools',
     poolDatasetBusy: 'Cannot unmount: pool or dataset is busy',
     permissionDenied: 'Permission denied: only admin users can perform this operation',
+    restarting: 'Restarting...',
+    forceRestarting: 'Force restarting...',
+    shuttingDown: 'Shutting down...',
     devicesRequired: "Only {provided} devices provided, but {required} required",
     devicesUnavailable: "One or more devices is currently unavailable",
     devicesTooSmall: "One or more devices is less than the minimum size (64M)",
@@ -336,6 +339,7 @@ export default {
     restartForceConfirm: 'Are you sure you want to force restart the system? This action will take effect immediately.',
     shutdownConfirm: 'Are you sure you want to shutdown the system? This action will take effect immediately.',
     confirmLabel: 'I confirm to proceed with this action',
+    permissionDenied: 'Permission denied: only admin users can perform this operation',
   },
   // Error Messages
   error: {

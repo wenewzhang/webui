@@ -66,10 +66,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { systemApi } from '@/api/system'
 import Toast from '@/components/Toast.vue'
 
 const route = useRoute()
+const { t } = useI18n()
 const isRestart = computed(() => route.path.includes('/restart') && !route.path.includes('/reboot_force'))
 const isForceRestart = computed(() => route.path.includes('/reboot_force'))
 
@@ -122,14 +124,19 @@ const handleAction = async () => {
     }
     if (res.success) {
       toastType.value = 'success'
-      toastMessage.value = isForceRestart.value ? 'Force restarting...' : isRestart.value ? 'Restarting...' : 'Shutting down...'
+      toastMessage.value = isForceRestart.value ? t('system.forceRestarting') : isRestart.value ? t('system.restarting') : t('system.shuttingDown')
     } else {
       toastType.value = 'error'
-      toastMessage.value = res.message || 'Action failed'
+      toastMessage.value = res.message?.toLowerCase().includes('permission denied')
+        ? t('system.permissionDenied')
+        : (res.message || t('error.unknown'))
     }
   } catch (err: any) {
     toastType.value = 'error'
-    toastMessage.value = err.message || 'Action failed'
+    const msg = err.response?.data?.message || err.message || ''
+    toastMessage.value = msg.toLowerCase().includes('permission denied')
+      ? t('system.permissionDenied')
+      : (msg || t('error.unknown'))
   } finally {
     loading.value = false
     showToast.value = true

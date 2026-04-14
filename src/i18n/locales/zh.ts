@@ -313,6 +313,9 @@ export default {
     fetchOfflinePoolsFailed: '获取离线存储池失败',
     poolDatasetBusy: '无法卸载：存储池或数据集正忙',
     permissionDenied: '权限不足：只有管理员才能执行此操作',
+    restarting: '正在重启...',
+    forceRestarting: '正在强制重启...',
+    shuttingDown: '正在关机...',
     devicesRequired: "只提供了 {provided} 个设备，但需要 {required} 个",
     devicesUnavailable: "一个或多个设备当前不可用",
     devicesTooSmall: "一个或多个设备小于最小容量（64M）",
@@ -336,6 +339,7 @@ export default {
     restartForceConfirm: '确定要强制重启系统吗？此操作将立即生效。',
     shutdownConfirm: '确定要关闭系统吗？此操作将立即生效。',
     confirmLabel: '我确认执行此操作',
+    permissionDenied: '权限不足：只有管理员才能执行此操作',
   },
   // 错误信息
   error: {
