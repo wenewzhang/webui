@@ -124,6 +124,7 @@ export default {
     createSuccess: "Dataset '{newName}' created successfully under '{name}'",
     createFailed: 'Failed to create dataset',
     createErrorInvalidName: 'New name must contain only alphanumeric characters, underscores, hyphens, or dots',
+    advanced: 'Advanced',
     refreshDatasets: 'Refresh Datasets',
     refreshDatasetsSuccess: 'Datasets refreshed successfully',
     refreshDatasetsFailed: 'Failed to refresh datasets',

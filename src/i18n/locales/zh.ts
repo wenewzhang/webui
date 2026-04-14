@@ -124,6 +124,7 @@ export default {
     createSuccess: "数据集 '{newName}' 在 '{name}' 下创建成功",
     createFailed: '创建数据集失败',
     createErrorInvalidName: '新名称只能包含字母、数字、下划线、连字符或点',
+    advanced: '高级',
     refreshDatasets: '刷新数据集',
     refreshDatasetsSuccess: '数据集刷新成功',
     refreshDatasetsFailed: '刷新数据集失败',

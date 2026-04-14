@@ -80,6 +80,12 @@ const router = createRouter({
               component: () => import('@/views/DatasetView.vue'),
               meta: { title: 'Storage - Datasets' },
             },
+            {
+              path: 'dataset/advanced',
+              name: 'DatasetAdvancedSetting',
+              component: () => import('@/views/DatasetAdvancedSetting.vue'),
+              meta: { title: 'Dataset Advanced Settings' },
+            },
           ],
         },
         {

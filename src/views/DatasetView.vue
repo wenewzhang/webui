@@ -132,6 +132,13 @@
                     </svg>
                     {{ $t('dataset.start') }}
                   </button>
+                  <button
+                    @click="handleAdvanced(dataset)"
+                    :disabled="!dataset.name.includes('/') || dataset.name.includes('@')"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {{ $t('dataset.advanced') }}
+                  </button>
                 </div>
               </td>
             </tr>
@@ -202,6 +209,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { datasetApi } from '@/api/dataset'
 import { storageApi } from '@/api/storage'
@@ -210,6 +218,7 @@ import ConfirmModal from '@/components/ConfirmModal.vue'
 import Toast from '@/components/Toast.vue'
 import InputModal from '@/components/InputModal.vue'
 
+const router = useRouter()
 const { t } = useI18n()
 
 const loading = ref(true)
@@ -469,6 +478,10 @@ const handleStart = async (dataset: Dataset) => {
   } catch (err: any) {
     showToastMessage(err.response?.data?.error || t('dataset.startError'), 'error')
   }
+}
+
+const handleAdvanced = (dataset: Dataset) => {
+  router.push({ path: '/storage/dataset/advanced', query: { dataset: dataset.name } })
 }
 
 onMounted(fetchDatasets)

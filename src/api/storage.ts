@@ -142,6 +142,12 @@ export interface SetPoolQuotaResponse {
   error: string | null
 }
 
+export interface SetPoolReservationResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export interface SetPoolMountpointResponse {
   success: boolean
   message?: string
@@ -333,6 +339,9 @@ export const storageApi = {
   },
   setPoolQuota(poolName: string, value: string): Promise<SetPoolQuotaResponse> {
     return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, quota: value }).then(res => res.data)
+  },
+  setPoolReservation(poolName: string, value: string): Promise<SetPoolReservationResponse> {
+    return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, reservation: value }).then(res => res.data)
   },
   setPoolMountpoint(poolName: string, value: string): Promise<SetPoolMountpointResponse> {
     return apiClient.post('/zfs/pool_advanced_setting', { dataset: poolName, mountpoint: value }).then(res => res.data)
