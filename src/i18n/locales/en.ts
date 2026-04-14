@@ -132,8 +132,8 @@ export default {
     promoteSuccess: "Dataset '{name}' promoted successfully",
     promoteFailed: 'Failed to promote dataset',
     promoteErrorNotCloned: 'Cannot promote "{name}": not a cloned filesystem',
-    startSuccess: 'Dataset started successfully',
-    startError: 'Failed to start dataset',
+    startSuccess: 'Default boot dataset set successfully',
+    startError: 'Failed to set default boot dataset',
   },
   // Storage Page
   storagePage: {
