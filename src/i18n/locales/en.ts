@@ -325,6 +325,21 @@ export default {
     attachDeviceInExportedPool: "Device '{device}' is part of exported pool '{exportedPoolName}'. Use '-f' to override.",
     attachOnlyToMirrorsAndTopLevelDisks: "Cannot attach '{newDevice}' to '{targetDevice}': can only attach to mirrors and top-level disks",
   },
+  // Samba Page
+  samba: {
+    dirShares: 'Directory Shares',
+    zfsShares: 'ZFS Shares',
+    name: 'Name',
+    path: 'Path',
+    comment: 'Comment',
+    dataset: 'Dataset',
+    mountpoint: 'Mount Point',
+    noDirShares: 'No directory shares',
+    noZfsShares: 'No ZFS shares',
+    type: 'Type',
+    loadDirSharesFailed: 'Failed to load directory shares',
+    loadZfsSharesFailed: 'Failed to load ZFS shares',
+  },
   // System Page
   system: {
     restart: 'Restart',

@@ -325,6 +325,21 @@ export default {
     attachDeviceInExportedPool: "设备 '{device}' 属于已导出的存储池 '{exportedPoolName}'，请使用 '-f' 选项覆盖。",
     attachOnlyToMirrorsAndTopLevelDisks: "无法将 '{newDevice}' 附加到 '{targetDevice}'：只能附加到镜像和顶级磁盘",
   },
+  // Samba 页面
+  samba: {
+    dirShares: '目录共享',
+    zfsShares: 'ZFS 共享',
+    name: '名称',
+    path: '路径',
+    comment: '注释',
+    dataset: '数据集',
+    mountpoint: '挂载点',
+    noDirShares: '暂无目录共享',
+    noZfsShares: '暂无 ZFS 共享',
+    type: '类型',
+    loadDirSharesFailed: '加载目录共享失败',
+    loadZfsSharesFailed: '加载 ZFS 共享失败',
+  },
   // 系统页面
   system: {
     restart: '重启',
