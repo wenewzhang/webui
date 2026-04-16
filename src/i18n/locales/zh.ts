@@ -346,6 +346,7 @@ export default {
     closeZfsShareConfirm: "确定要关闭数据集 '{dataset}' 的 ZFS 共享吗？",
     closeZfsShareFailed: '关闭 ZFS 共享失败',
     confirmEdit: '确认修改',
+    updateZfsShareSuccess: '修改 ZFS 共享成功',
     updateZfsShareFailed: '修改 ZFS 共享失败',
   },
   // 系统页面

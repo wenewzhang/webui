@@ -134,7 +134,7 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'saved'): void
+  (e: 'saved', success: boolean, message?: string): void
 }>()
 
 const loading = ref(false)
@@ -224,12 +224,14 @@ const onConfirm = async () => {
       shareInfo.value.guest_permission || ''
     )
     if (res.success) {
-      emit('saved')
+      emit('saved', true, t('samba.updateZfsShareSuccess'))
     } else {
-      error.value = res.error || t('samba.updateZfsShareFailed')
+      const errMsg = res.error || t('samba.updateZfsShareFailed')
+      emit('saved', false, errMsg)
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    const errMsg = err.message || t('error.unknown')
+    emit('saved', false, errMsg)
   } finally {
     saving.value = false
   }

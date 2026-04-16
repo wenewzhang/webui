@@ -346,6 +346,7 @@ export default {
     closeZfsShareConfirm: "Are you sure you want to close the ZFS share for dataset '{dataset}'?",
     closeZfsShareFailed: 'Failed to close ZFS share',
     confirmEdit: 'Confirm Edit',
+    updateZfsShareSuccess: 'ZFS share updated successfully',
     updateZfsShareFailed: 'Failed to update ZFS share',
   },
   // System Page

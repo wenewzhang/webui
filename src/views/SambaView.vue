@@ -1,5 +1,13 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
+    <!-- Toast -->
+    <Toast
+      :show="toast.show"
+      :message="toast.message"
+      :type="toast.type"
+      @update:show="toast.show = $event"
+    />
+
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-bold text-gray-900">{{ $t('nav.samba') }}</h2>
       <button
@@ -147,10 +155,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { sambaApi, type DirShare, type ZfsShare } from '@/api/samba'
 import SambaZFSshare from './SambaZFSshare.vue'
+import Toast from '@/components/Toast.vue'
 
 const { t } = useI18n()
 
@@ -161,6 +170,11 @@ const zfsShares = ref<ZfsShare[]>([])
 const showZfsShareModal = ref(false)
 const selectedZfsShare = ref<ZfsShare | null>(null)
 const closingShare = ref('')
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success' as 'success' | 'error'
+})
 
 const fetchShares = async () => {
   loading.value = true
@@ -217,8 +231,16 @@ const handleCloseZfsShare = async (share: ZfsShare) => {
   }
 }
 
-const handleZfsShareSaved = () => {
+const handleZfsShareSaved = (success: boolean, message?: string) => {
   showZfsShareModal.value = false
+  if (success) {
+    toast.message = message || t('samba.updateZfsShareSuccess')
+    toast.type = 'success'
+  } else {
+    toast.message = message || t('error.unknown')
+    toast.type = 'error'
+  }
+  toast.show = true
   fetchShares()
 }
 
