@@ -63,7 +63,7 @@ export const sambaApi = {
     return apiClient.get(`/zfs/zfs_share_info?dataset=${encodeURIComponent(dataset)}`).then(res => res.data)
   },
   closeZfsShare(dataset: string): Promise<CloseZfsShareResponse> {
-    return apiClient.post('/smb/close_zfs_share', { dataset }).then(res => res.data)
+    return apiClient.post('/zfs/close_zfs_share', { dataset }).then(res => res.data)
   },
   listUsers(): Promise<ListSambaUsersResponse> {
     return apiClient.post('/smb/list_users').then(res => res.data)

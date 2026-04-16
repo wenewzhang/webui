@@ -151,6 +151,17 @@
       @close="showZfsShareModal = false"
       @saved="handleZfsShareSaved"
     />
+
+    <!-- Confirm Modal -->
+    <ConfirmModal
+      :show="showConfirmModal"
+      :title="$t('common.confirm')"
+      :message="t('samba.closeZfsShareConfirm', { dataset: confirmModalShare?.dataset || '' })"
+      :confirm-text="$t('common.confirm')"
+      :cancel-text="$t('common.cancel')"
+      @confirm="handleConfirmClose"
+      @cancel="handleCancelClose"
+    />
   </div>
 </template>
 
@@ -160,6 +171,7 @@ import { useI18n } from 'vue-i18n'
 import { sambaApi, type DirShare, type ZfsShare } from '@/api/samba'
 import SambaZFSshare from './SambaZFSshare.vue'
 import Toast from '@/components/Toast.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { t } = useI18n()
 
@@ -170,6 +182,8 @@ const zfsShares = ref<ZfsShare[]>([])
 const showZfsShareModal = ref(false)
 const selectedZfsShare = ref<ZfsShare | null>(null)
 const closingShare = ref('')
+const showConfirmModal = ref(false)
+const confirmModalShare = ref<ZfsShare | null>(null)
 const toast = reactive({
   show: false,
   message: '',
@@ -212,13 +226,17 @@ const handleEditZfsShare = (share: ZfsShare) => {
   showZfsShareModal.value = true
 }
 
-const handleCloseZfsShare = async (share: ZfsShare) => {
-  if (!confirm(t('samba.closeZfsShareConfirm', { dataset: share.dataset }))) {
-    return
-  }
-  closingShare.value = share.dataset
+const handleCloseZfsShare = (share: ZfsShare) => {
+  confirmModalShare.value = share
+  showConfirmModal.value = true
+}
+
+const handleConfirmClose = async () => {
+  if (!confirmModalShare.value) return
+  showConfirmModal.value = false
+  closingShare.value = confirmModalShare.value.dataset
   try {
-    const res = await sambaApi.closeZfsShare(share.dataset)
+    const res = await sambaApi.closeZfsShare(confirmModalShare.value.dataset)
     if (res.success) {
       await fetchShares()
     } else {
@@ -228,7 +246,13 @@ const handleCloseZfsShare = async (share: ZfsShare) => {
     error.value = err.message || t('error.unknown')
   } finally {
     closingShare.value = ''
+    confirmModalShare.value = null
   }
+}
+
+const handleCancelClose = () => {
+  showConfirmModal.value = false
+  confirmModalShare.value = null
 }
 
 const handleZfsShareSaved = (success: boolean, message?: string) => {
