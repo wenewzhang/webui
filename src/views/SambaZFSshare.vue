@@ -50,7 +50,22 @@
                               {{ key }}
                             </td>
                             <td class="px-4 py-2 text-sm text-gray-700 break-all">
-                              {{ formatValue(value) }}
+                              <template v-if="key === 'owner'">
+                                <select
+                                  v-if="users.length"
+                                  v-model="shareInfo[key]"
+                                  class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                  <option v-for="user in users" :key="user.username" :value="user.username">
+                                    {{ user.username }}
+                                  </option>
+                                </select>
+                                <span v-else-if="usersLoading" class="text-gray-400">{{ $t('common.loading') }}</span>
+                                <span v-else>{{ formatValue(value) }}</span>
+                              </template>
+                              <template v-else>
+                                {{ formatValue(value) }}
+                              </template>
                             </td>
                           </tr>
                         </tbody>
@@ -103,6 +118,8 @@ const emit = defineEmits<{
 const loading = ref(false)
 const error = ref('')
 const shareInfo = ref<Record<string, any> | null>(null)
+const users = ref<{ username: string }[]>([])
+const usersLoading = ref(false)
 
 const flattenedInfo = computed(() => {
   if (!shareInfo.value) return {}
@@ -154,6 +171,20 @@ const fetchShareInfo = async () => {
   }
 }
 
+const fetchUsers = async () => {
+  usersLoading.value = true
+  try {
+    const res = await sambaApi.listUsers()
+    if (res.success) {
+      users.value = res.users || []
+    }
+  } catch (err: any) {
+    // 静默失败，降级为纯文本展示
+  } finally {
+    usersLoading.value = false
+  }
+}
+
 const onClose = () => {
   emit('close')
 }
@@ -161,6 +192,7 @@ const onClose = () => {
 watch(() => props.show, (newVal) => {
   if (newVal) {
     fetchShareInfo()
+    fetchUsers()
   }
 })
 </script>

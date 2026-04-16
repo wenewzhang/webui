@@ -35,6 +35,17 @@ export interface CloseZfsShareResponse {
   error: string | null
 }
 
+export interface SambaUser {
+  username: string
+}
+
+export interface ListSambaUsersResponse {
+  success: boolean
+  users: SambaUser[]
+  message?: string
+  error: string | null
+}
+
 export const sambaApi = {
   listDirShares(): Promise<ListDirSharesResponse> {
     return apiClient.get('/smb/list_dir_shares').then(res => res.data)
@@ -47,5 +58,8 @@ export const sambaApi = {
   },
   closeZfsShare(dataset: string): Promise<CloseZfsShareResponse> {
     return apiClient.post('/smb/close_zfs_share', { dataset }).then(res => res.data)
+  },
+  listUsers(): Promise<ListSambaUsersResponse> {
+    return apiClient.post('/smb/list_users').then(res => res.data)
   },
 }
