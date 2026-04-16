@@ -348,6 +348,11 @@ export default {
     confirmEdit: 'Confirm Edit',
     updateZfsShareSuccess: 'ZFS share updated successfully',
     updateZfsShareFailed: 'Failed to update ZFS share',
+    owner: 'Owner',
+    permission: 'Owner Permission',
+    guest_permission: 'Guest Permission',
+    permissionWrite: 'Write',
+    permissionReadonly: 'Readonly',
   },
   // System Page
   system: {

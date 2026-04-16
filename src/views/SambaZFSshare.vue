@@ -47,7 +47,7 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                           <tr v-for="(value, key) in flattenedInfo" :key="key" class="hover:bg-gray-50">
                             <td class="px-4 py-2 text-sm font-medium text-gray-900 w-1/3 bg-gray-50">
-                              {{ key }}
+                              {{ $t(`samba.${key}`) }}
                             </td>
                             <td class="px-4 py-2 text-sm text-gray-700 break-all">
                               <template v-if="key === 'owner'">
@@ -68,8 +68,8 @@
                                   v-model="shareInfo[key]"
                                   class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                 >
-                                  <option value="write">write</option>
-                                  <option value="readonly">readonly</option>
+                                  <option value="write">{{ $t('samba.permissionWrite') }}</option>
+                                  <option value="readonly">{{ $t('samba.permissionReadonly') }}</option>
                                 </select>
                               </template>
                               <template v-else>
