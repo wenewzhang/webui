@@ -339,6 +339,11 @@ export default {
     type: 'Type',
     loadDirSharesFailed: 'Failed to load directory shares',
     loadZfsSharesFailed: 'Failed to load ZFS shares',
+    zfsShareInfoTitle: "ZFS Share Info - {dataset}",
+    noZfsShareInfo: 'No share information available',
+    loadZfsShareInfoFailed: 'Failed to load ZFS share info',
+    closeZfsShareConfirm: "Are you sure you want to close the ZFS share for dataset '{dataset}'?",
+    closeZfsShareFailed: 'Failed to close ZFS share',
   },
   // System Page
   system: {

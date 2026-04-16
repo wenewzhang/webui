@@ -339,6 +339,11 @@ export default {
     type: '类型',
     loadDirSharesFailed: '加载目录共享失败',
     loadZfsSharesFailed: '加载 ZFS 共享失败',
+    zfsShareInfoTitle: "ZFS 共享信息 - {dataset}",
+    noZfsShareInfo: '暂无共享信息',
+    loadZfsShareInfoFailed: '加载 ZFS 共享信息失败',
+    closeZfsShareConfirm: "确定要关闭数据集 '{dataset}' 的 ZFS 共享吗？",
+    closeZfsShareFailed: '关闭 ZFS 共享失败',
   },
   // 系统页面
   system: {

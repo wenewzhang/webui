@@ -87,6 +87,9 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   {{ $t('samba.dataset') }}
                 </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {{ $t('common.operation') }}
+                </th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -97,12 +100,48 @@
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {{ share.dataset }}
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <div class="flex space-x-2">
+                    <button
+                      @click="handleEditZfsShare(share)"
+                      class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                      {{ $t('common.edit') }}
+                    </button>
+                    <button
+                      @click="handleCloseZfsShare(share)"
+                      :disabled="closingShare === share.dataset"
+                      class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg v-if="closingShare !== share.dataset" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                      </svg>
+                      <svg v-else class="animate-spin h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ closingShare === share.dataset ? $t('common.processing') : $t('common.close') }}
+                    </button>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
+
+    <!-- ZFS Share Info Modal -->
+    <SambaZFSshare
+      :show="showZfsShareModal"
+      :dataset="selectedZfsShare?.dataset || ''"
+      @close="showZfsShareModal = false"
+    />
   </div>
 </template>
 
@@ -110,6 +149,7 @@
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { sambaApi, type DirShare, type ZfsShare } from '@/api/samba'
+import SambaZFSshare from './SambaZFSshare.vue'
 
 const { t } = useI18n()
 
@@ -117,6 +157,9 @@ const loading = ref(false)
 const error = ref('')
 const dirShares = ref<DirShare[]>([])
 const zfsShares = ref<ZfsShare[]>([])
+const showZfsShareModal = ref(false)
+const selectedZfsShare = ref<ZfsShare | null>(null)
+const closingShare = ref('')
 
 const fetchShares = async () => {
   loading.value = true
@@ -147,6 +190,30 @@ const fetchShares = async () => {
 
 const handleRefresh = () => {
   fetchShares()
+}
+
+const handleEditZfsShare = (share: ZfsShare) => {
+  selectedZfsShare.value = share
+  showZfsShareModal.value = true
+}
+
+const handleCloseZfsShare = async (share: ZfsShare) => {
+  if (!confirm(t('samba.closeZfsShareConfirm', { dataset: share.dataset }))) {
+    return
+  }
+  closingShare.value = share.dataset
+  try {
+    const res = await sambaApi.closeZfsShare(share.dataset)
+    if (res.success) {
+      await fetchShares()
+    } else {
+      error.value = res.error || t('samba.closeZfsShareFailed')
+    }
+  } catch (err: any) {
+    error.value = err.message || t('error.unknown')
+  } finally {
+    closingShare.value = ''
+  }
 }
 
 onMounted(() => {
