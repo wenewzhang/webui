@@ -141,6 +141,7 @@
       :show="showZfsShareModal"
       :dataset="selectedZfsShare?.dataset || ''"
       @close="showZfsShareModal = false"
+      @saved="handleZfsShareSaved"
     />
   </div>
 </template>
@@ -214,6 +215,11 @@ const handleCloseZfsShare = async (share: ZfsShare) => {
   } finally {
     closingShare.value = ''
   }
+}
+
+const handleZfsShareSaved = () => {
+  showZfsShareModal.value = false
+  fetchShares()
 }
 
 onMounted(() => {

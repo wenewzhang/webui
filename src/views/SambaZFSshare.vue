@@ -63,6 +63,15 @@
                                 <span v-else-if="usersLoading" class="text-gray-400">{{ $t('common.loading') }}</span>
                                 <span v-else>{{ formatValue(value) }}</span>
                               </template>
+                              <template v-else-if="key === 'permission' || key === 'guest_permission'">
+                                <select
+                                  v-model="shareInfo[key]"
+                                  class="w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                  <option value="write">write</option>
+                                  <option value="readonly">readonly</option>
+                                </select>
+                              </template>
                               <template v-else>
                                 {{ formatValue(value) }}
                               </template>
@@ -82,6 +91,18 @@
             </div>
             <!-- 按钮区域 -->
             <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="button"
+                @click="onConfirm"
+                :disabled="saving"
+                class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg v-if="saving" class="animate-spin h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {{ saving ? $t('common.saving') : $t('samba.confirmEdit') }}
+              </button>
               <button
                 type="button"
                 @click="onClose"
@@ -113,6 +134,7 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'close'): void
+  (e: 'saved'): void
 }>()
 
 const loading = ref(false)
@@ -120,6 +142,7 @@ const error = ref('')
 const shareInfo = ref<Record<string, any> | null>(null)
 const users = ref<{ username: string }[]>([])
 const usersLoading = ref(false)
+const saving = ref(false)
 
 const flattenedInfo = computed(() => {
   if (!shareInfo.value) return {}
@@ -187,6 +210,29 @@ const fetchUsers = async () => {
 
 const onClose = () => {
   emit('close')
+}
+
+const onConfirm = async () => {
+  if (!shareInfo.value || !props.dataset) return
+  saving.value = true
+  error.value = ''
+  try {
+    const res = await sambaApi.updateZfsShare(
+      props.dataset,
+      shareInfo.value.owner || '',
+      shareInfo.value.permission || '',
+      shareInfo.value.guest_permission || ''
+    )
+    if (res.success) {
+      emit('saved')
+    } else {
+      error.value = res.error || t('samba.updateZfsShareFailed')
+    }
+  } catch (err: any) {
+    error.value = err.message || t('error.unknown')
+  } finally {
+    saving.value = false
+  }
 }
 
 watch(() => props.show, (newVal) => {

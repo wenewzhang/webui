@@ -46,6 +46,12 @@ export interface ListSambaUsersResponse {
   error: string | null
 }
 
+export interface UpdateZfsShareResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export const sambaApi = {
   listDirShares(): Promise<ListDirSharesResponse> {
     return apiClient.get('/smb/list_dir_shares').then(res => res.data)
@@ -61,5 +67,8 @@ export const sambaApi = {
   },
   listUsers(): Promise<ListSambaUsersResponse> {
     return apiClient.post('/smb/list_users').then(res => res.data)
+  },
+  updateZfsShare(dataset: string, owner: string, permission: string, guest_permission: string): Promise<UpdateZfsShareResponse> {
+    return apiClient.post('/smb/update_zfs_share', { dataset, owner, permission, guest_permission }).then(res => res.data)
   },
 }
