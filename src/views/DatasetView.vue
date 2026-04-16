@@ -297,13 +297,13 @@ const fetchDatasets = async () => {
     if (datasetsRes.success) {
       datasets.value = datasetsRes.data
     } else {
-      error.value = datasetsRes.error || 'Failed to fetch datasets'
+      error.value = datasetsRes.error || t('dataset.fetchFailed')
     }
     if (bootfsRes.success) {
       bootfsDataset.value = bootfsRes.data?.bootfs
     }
   } catch (err: any) {
-    error.value = err.response?.data?.error || 'Failed to fetch datasets'
+    error.value = err.response?.data?.error || t('dataset.fetchFailed')
   } finally {
     loading.value = false
   }

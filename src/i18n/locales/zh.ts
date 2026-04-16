@@ -139,6 +139,7 @@ export default {
     promoteErrorNotCloned: '无法提升 "{name}"：不是克隆的文件系统',
     startSuccess: '默认启动数据集设置成功',
     startError: '默认启动数据集设置失败 ',
+    fetchFailed: '获取数据集失败',
   },
   // 存储器页面
   storagePage: {

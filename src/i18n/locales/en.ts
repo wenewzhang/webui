@@ -139,6 +139,7 @@ export default {
     promoteErrorNotCloned: 'Cannot promote "{name}": not a cloned filesystem',
     startSuccess: 'Default boot dataset set successfully',
     startError: 'Failed to set default boot dataset',
+    fetchFailed: 'Failed to fetch datasets',
   },
   // Storage Page
   storagePage: {
