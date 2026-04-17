@@ -353,6 +353,7 @@ export default {
     guest_permission: 'Guest Permission',
     permissionWrite: 'Write',
     permissionReadonly: 'Readonly',
+    quota: 'Quota',
   },
   // System Page
   system: {

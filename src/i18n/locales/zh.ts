@@ -353,6 +353,7 @@ export default {
     guest_permission: '客人权限',
     permissionWrite: '读写',
     permissionReadonly: '只读',
+    quota: '配额',
   },
   // 系统页面
   system: {

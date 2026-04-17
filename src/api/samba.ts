@@ -10,6 +10,7 @@ export interface ZfsShare {
   owner: string
   permission: string
   guest_permission: string
+  quota: string
 }
 
 export interface ListDirSharesResponse {
