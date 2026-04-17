@@ -52,6 +52,12 @@ export interface UpdateZfsShareResponse {
   error: string | null
 }
 
+export interface SambaDatasetsResponse {
+  success: boolean
+  data: { name: string; mountpoint: string }[]
+  error: string | null
+}
+
 export const sambaApi = {
   listDirShares(): Promise<ListDirSharesResponse> {
     return apiClient.get('/smb/list_dir_shares').then(res => res.data)
@@ -70,5 +76,11 @@ export const sambaApi = {
   },
   updateZfsShare(dataset: string, owner: string, permission: string, guest_permission: string): Promise<UpdateZfsShareResponse> {
     return apiClient.post('/smb/update_zfs_share', { dataset, owner, permission, guest_permission }).then(res => res.data)
+  },
+  listSambaDatasets(): Promise<SambaDatasetsResponse> {
+    return apiClient.get('/zfs/samba_datasets').then(res => res.data)
+  },
+  createZfsShare(shareName: string, datasetName: string, quota: string, sambaUser: string): Promise<UpdateZfsShareResponse> {
+    return apiClient.post('/smb/create_zfs_share', { share_name: shareName, dataset_name: datasetName, quota, samba_user: sambaUser }).then(res => res.data)
   },
 }

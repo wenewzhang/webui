@@ -84,6 +84,7 @@
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-medium text-gray-900">{{ $t('samba.zfsShares') }}</h3>
           <button
+            @click="router.push('/samba/zfs/create')"
             class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
@@ -179,12 +180,14 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { sambaApi, type DirShare, type ZfsShare } from '@/api/samba'
 import SambaZFSshare from './SambaZFSshare.vue'
 import Toast from '@/components/Toast.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const loading = ref(false)
 const error = ref('')
