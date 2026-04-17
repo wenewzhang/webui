@@ -82,6 +82,25 @@ export default {
     zh: '简体中文',
     en: 'English',
   },
+  // Route Titles
+  route: {
+    users: 'Users',
+    storageAll: 'Storage - All',
+    storagePool: 'Storage - Pool',
+    createPool: 'Create Pool',
+    poolDetails: 'Pool Details',
+    poolAdvancedSettings: 'Pool Advanced Settings',
+    poolCheckpoint: 'Pool Checkpoint',
+    poolDevices: 'Pool Devices',
+    storageDatasets: 'Storage - Datasets',
+    datasetAdvancedSettings: 'Dataset Advanced Settings',
+    samba: 'Samba',
+    createZfsSambaShare: 'Create ZFS Samba Share',
+    apps: 'Apps',
+    systemRestart: 'System Restart',
+    systemShutdown: 'System Shutdown',
+    systemForceRestart: 'System Force Restart',
+  },
   // Navigation
   nav: {
     users: 'Users',

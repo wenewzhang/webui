@@ -82,6 +82,25 @@ export default {
     zh: '简体中文',
     en: 'English',
   },
+  // 页面标题
+  route: {
+    users: '用户',
+    storageAll: '存储器 - 全部',
+    storagePool: '存储器 - 存储池',
+    createPool: '创建存储池',
+    poolDetails: '存储池详情',
+    poolAdvancedSettings: '存储池高级设置',
+    poolCheckpoint: '存储池检查点',
+    poolDevices: '存储池设备',
+    storageDatasets: '存储器 - 数据集',
+    datasetAdvancedSettings: '数据集高级设置',
+    samba: 'Samba',
+    createZfsSambaShare: '创建 ZFS Samba 共享',
+    apps: '应用',
+    systemRestart: '系统重启',
+    systemShutdown: '系统关机',
+    systemForceRestart: '系统强制重启',
+  },
   // 导航菜单
   nav: {
     users: '用户',

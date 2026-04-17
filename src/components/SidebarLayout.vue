@@ -123,7 +123,7 @@
       <!-- 顶部栏 -->
       <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 sticky top-0 z-20">
         <h1 class="text-lg font-semibold text-gray-900">
-          {{ pageTitle }}
+          {{ pageTitle ? $t(pageTitle) : '' }}
         </h1>
         <div class="flex items-center space-x-4">
           <LanguageSwitcher />
@@ -249,8 +249,7 @@ const menuItems = [
 const isActive = (path: string) => route.path === path || route.path.startsWith(path + '/')
 
 const pageTitle = computed(() => {
-  const current = menuItems.find(item => isActive(item.path))
-  return current ? route.meta.title || current.name : ''
+  return (route.meta.title as string) || ''
 })
 
 const handleLogout = async () => {
