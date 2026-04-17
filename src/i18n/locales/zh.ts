@@ -189,6 +189,7 @@ export default {
     clearLabelSuccess: "标签清除成功",
     clearLabelFailed: "标签清除失败",
     clearLabelFailedFor: "清除分区 '{partitionName}' 的标签失败，ZFS标签可能不存在",
+    clearLabelMemberOfPool: "无法清除标签，因为该磁盘是存储池 '{pool}' 的活动成员。请先将该磁盘下线。",
   },
   // 用户页面
   users: {

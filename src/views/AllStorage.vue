@@ -343,6 +343,10 @@ const submitClearLabel = async () => {
       // 处理 "failed to clear label for xxx" 错误消息
       if (res.error && res.error.includes('failed to clear label for')) {
         clearLabelError.value = t('storagePage.clearLabelFailedFor', { partitionName: selectedPartition.value })
+      } else if (res.error && res.error.includes('is a member')) {
+        const poolMatch = res.error.match(/of pool "(.+)"/)
+        const poolName = poolMatch ? poolMatch[1] : ''
+        clearLabelError.value = t('storagePage.clearLabelMemberOfPool', { pool: poolName })
       } else {
         clearLabelError.value = res.error || t('storagePage.clearLabelFailed')
       }
@@ -352,6 +356,10 @@ const submitClearLabel = async () => {
     // 处理 "failed to clear label for xxx" 错误消息
     if (errorMsg && errorMsg.includes('failed to clear label for')) {
       clearLabelError.value = t('storagePage.clearLabelFailedFor', { partitionName: selectedPartition.value })
+    } else if (errorMsg && errorMsg.includes('is a member')) {
+      const poolMatch = errorMsg.match(/of pool "(.+)"/)
+      const poolName = poolMatch ? poolMatch[1] : ''
+      clearLabelError.value = t('storagePage.clearLabelMemberOfPool', { pool: poolName })
     } else if (errorMsg.includes('Only admin users can perform this operation') )  {
       clearLabelError.value = t('pool.permissionDenied')
       // exportErrorDetail.value = ''

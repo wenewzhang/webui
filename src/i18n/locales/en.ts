@@ -189,6 +189,7 @@ export default {
     clearLabelSuccess: "Label cleared successfully",
     clearLabelFailed: "Failed to clear label",
     clearLabelFailedFor: "Failed to clear label for partition '{partitionName}', ZFS label may not exist",
+    clearLabelMemberOfPool: "Cannot clear label because the disk is a member (ACTIVE) of pool '{pool}'. Offline the disk first.",
   },
   // Users Page
   users: {
