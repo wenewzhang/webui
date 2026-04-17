@@ -7,6 +7,9 @@ export interface DirShare {
 
 export interface ZfsShare {
   dataset: string
+  owner: string
+  permission: string
+  guest_permission: string
 }
 
 export interface ListDirSharesResponse {
