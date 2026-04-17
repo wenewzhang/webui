@@ -73,6 +73,23 @@
                     {{ share.type }}
                   </span>
                 </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <button
+                    @click="handleCloseDirShare(share)"
+                    :disabled="closingDirShare === share.name"
+                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg v-if="closingDirShare !== share.name" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                      <line x1="18" y1="6" x2="6" y2="18"/>
+                      <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    <svg v-else class="animate-spin h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {{ closingDirShare === share.name ? $t('common.processing') : $t('common.close') }}
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -186,17 +203,17 @@
     <ConfirmModal
       :show="showConfirmModal"
       :title="$t('common.confirm')"
-      :message="t('samba.closeZfsShareConfirm', { dataset: confirmModalShare?.dataset || '' })"
+      :message="confirmModalMessage"
       :confirm-text="$t('common.confirm')"
       :cancel-text="$t('common.cancel')"
-      @confirm="handleConfirmClose"
+      @confirm="handleConfirm"
       @cancel="handleCancelClose"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { sambaApi, type DirShare, type ZfsShare } from '@/api/samba'
@@ -214,8 +231,10 @@ const zfsShares = ref<ZfsShare[]>([])
 const showZfsShareModal = ref(false)
 const selectedZfsShare = ref<ZfsShare | null>(null)
 const closingShare = ref('')
+const closingDirShare = ref('')
 const showConfirmModal = ref(false)
 const confirmModalShare = ref<ZfsShare | null>(null)
+const confirmModalDirShare = ref<DirShare | null>(null)
 const toast = reactive({
   show: false,
   message: '',
@@ -258,6 +277,30 @@ const handleEditZfsShare = (share: ZfsShare) => {
   showZfsShareModal.value = true
 }
 
+const handleCloseDirShare = (share: DirShare) => {
+  confirmModalDirShare.value = share
+  showConfirmModal.value = true
+}
+
+const handleConfirmCloseDirShare = async () => {
+  if (!confirmModalDirShare.value) return
+  showConfirmModal.value = false
+  closingDirShare.value = confirmModalDirShare.value.name
+  try {
+    const res = await sambaApi.closeDirShare(confirmModalDirShare.value.name)
+    if (res.success) {
+      await fetchShares()
+    } else {
+      error.value = res.error || t('samba.closeDirShareFailed')
+    }
+  } catch (err: any) {
+    error.value = err.message || t('error.unknown')
+  } finally {
+    closingDirShare.value = ''
+    confirmModalDirShare.value = null
+  }
+}
+
 const handleCloseZfsShare = (share: ZfsShare) => {
   confirmModalShare.value = share
   showConfirmModal.value = true
@@ -285,6 +328,25 @@ const handleConfirmClose = async () => {
 const handleCancelClose = () => {
   showConfirmModal.value = false
   confirmModalShare.value = null
+  confirmModalDirShare.value = null
+}
+
+const confirmModalMessage = computed(() => {
+  if (confirmModalDirShare.value) {
+    return t('samba.closeDirShareConfirm', { name: confirmModalDirShare.value.name })
+  }
+  if (confirmModalShare.value) {
+    return t('samba.closeZfsShareConfirm', { dataset: confirmModalShare.value.dataset })
+  }
+  return ''
+})
+
+const handleConfirm = () => {
+  if (confirmModalDirShare.value) {
+    handleConfirmCloseDirShare()
+  } else if (confirmModalShare.value) {
+    handleConfirmClose()
+  }
 }
 
 const handleZfsShareSaved = (success: boolean, message?: string) => {

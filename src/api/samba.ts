@@ -66,6 +66,9 @@ export const sambaApi = {
   listDirShares(): Promise<ListDirSharesResponse> {
     return apiClient.get('/smb/list_dir_shares').then(res => res.data)
   },
+  closeDirShare(share_name: string): Promise<{ success: boolean; error: string | null }> {
+    return apiClient.post('/smb/remove_dir_share', { share_name }).then(res => res.data)
+  },
   listZfsShares(): Promise<ListZfsSharesResponse> {
     return apiClient.get('/smb/list_zfs_shares').then(res => res.data)
   },
