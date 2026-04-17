@@ -134,6 +134,7 @@ export default {
     deleteSuccess: "数据集 '{name}' 删除成功",
     deleteFailed: '删除数据集失败',
     deleteErrorDependentClones: '无法删除快照 "{snapshot}"，因为它存在依赖克隆。\n使用 "-R" 选项删除以下数据集:\n{datasets}',
+    deleteErrorHasChildren: '无法删除数据集 "{dataset}"，因为它包含子数据集。\n使用 "-r" 选项删除以下内容:\n{children}',
     cloneConfirmTitle: '克隆数据集',
     cloneConfirmMessage: "为 '{name}' 的克隆输入新名称：",
     clonePlaceholder: '请输入新的数据集名称',

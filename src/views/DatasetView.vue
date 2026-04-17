@@ -318,7 +318,6 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
   if (!apiError) return t('dataset.deleteFailed')
   const lower = apiError.toLowerCase()
   if (lower.includes('snapshot has dependent clones') || lower.includes("use '-R' to destroy")) {
-    // 提取快照名称和依赖的数据集
     const snapshotMatch = apiError.match(/cannot destroy '(.+?)':/)
     const dependentMatch = apiError.match(/destroy the following datasets:\n(.+)/s)
     
@@ -328,6 +327,18 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
     return t('dataset.deleteErrorDependentClones', { 
       snapshot: snapshotName,
       datasets: dependentDatasets 
+    })
+  }
+  if (lower.includes('filesystem has children') || lower.includes("use '-r' to destroy")) {
+    const datasetMatch = apiError.match(/cannot destroy '(.+?)':/)
+    const childrenMatch = apiError.match(/destroy the following datasets:\n(.+)/s)
+    
+    const datasetName = datasetMatch ? datasetMatch[1] : ''
+    const children = childrenMatch ? childrenMatch[1].trim() : ''
+    
+    return t('dataset.deleteErrorHasChildren', { 
+      dataset: datasetName,
+      children: children 
     })
   }
   return apiError
