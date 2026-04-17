@@ -354,6 +354,12 @@ export default {
     permissionWrite: 'Write',
     permissionReadonly: 'Readonly',
     quota: 'Quota',
+    createZfsShare: 'Create ZFS Share',
+    selectDataset: 'Select Dataset',
+    selectDatasetPlaceholder: 'Please select a dataset',
+    shareName: 'Share Name',
+    shareNamePlaceholder: 'Please enter share name',
+    selectOwner: 'Select Owner',
   },
   // System Page
   system: {

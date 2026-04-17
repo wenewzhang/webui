@@ -354,6 +354,12 @@ export default {
     permissionWrite: '读写',
     permissionReadonly: '只读',
     quota: '配额',
+    createZfsShare: '创建 ZFS 共享',
+    selectDataset: '选择数据集',
+    selectDatasetPlaceholder: '请选择数据集',
+    shareName: '共享名称',
+    shareNamePlaceholder: '请输入共享名称',
+    selectOwner: '选择所有者',
   },
   // 系统页面
   system: {
