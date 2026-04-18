@@ -73,6 +73,12 @@ export interface PublicShareInfoResponse {
   error: string | null
 }
 
+export interface UpdatePublicShareResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export interface PrivateShareInfoResponse {
   success: boolean
   share_name: string
@@ -82,6 +88,12 @@ export interface PrivateShareInfoResponse {
   valid_users?: string[]
   write_list?: string[]
   message: string
+  error: string | null
+}
+
+export interface UpdatePrivateShareResponse {
+  success: boolean
+  message?: string
   error: string | null
 }
 
@@ -124,5 +136,11 @@ export const sambaApi = {
   },
   getPrivateShareInfo(share_name: string): Promise<PrivateShareInfoResponse> {
     return apiClient.post('/smb/private_share_info', { share_name }).then(res => res.data)
+  },
+  updatePublicShare(share_name: string, browseable: string, read_only: string, guest_ok: string): Promise<UpdatePublicShareResponse> {
+    return apiClient.post('/smb/update_public_share', { share_name, browseable, read_only, guest_ok }).then(res => res.data)
+  },
+  updatePrivateShare(share_name: string, browseable: string, read_only: string, valid_users: string[], write_list: string[]): Promise<UpdatePrivateShareResponse> {
+    return apiClient.post('/smb/update_private_share', { share_name, browseable, read_only, valid_users, write_list }).then(res => res.data)
   },
 }
