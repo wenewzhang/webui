@@ -395,6 +395,7 @@ export default {
     writeList: '可写用户',
     noUsers: '暂无可用用户',
     loadDatasetsFailed: '加载数据集失败',
+    createDirShareFailed: '创建目录共享失败',
   },
   // 系统页面
   system: {

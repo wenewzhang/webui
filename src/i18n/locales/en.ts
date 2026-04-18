@@ -395,6 +395,7 @@ export default {
     writeList: 'Write List',
     noUsers: 'No users available',
     loadDatasetsFailed: 'Failed to load datasets',
+    createDirShareFailed: 'Failed to create directory share',
   },
   // System Page
   system: {

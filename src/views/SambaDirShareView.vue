@@ -241,24 +241,38 @@ const handleCreate = async () => {
   saving.value = true
   error.value = ''
   try {
-    const extraConfig: Record<string, any> = {}
     if (shareType.value === 'public') {
-      extraConfig.guest_ok = guestOk.value
+      const ds = datasets.value.find(d => d.name === selectedDataset.value)
+      const mountpoint = ds?.mountpoint || ''
+      const directory = shareName.value ? `${mountpoint}/${shareName.value}` : mountpoint
+      const res = await sambaApi.createPublicShare(
+        directory,
+        browseable.value,
+        readOnly.value,
+        guestOk.value
+      )
+      if (res.success) {
+        router.push('/samba')
+      } else {
+        error.value = res.error || t('samba.createDirShareFailed')
+      }
     } else {
-      extraConfig.valid_users = validUsers.value.length > 0 ? validUsers.value : []
-      extraConfig.write_list = writeList.value.length > 0 ? writeList.value : []
+      const ds = datasets.value.find(d => d.name === selectedDataset.value)
+      const mountpoint = ds?.mountpoint || ''
+      const directory = shareName.value ? `${mountpoint}/${shareName.value}` : mountpoint
+      const res = await sambaApi.createPrivateShare(
+        directory,
+        browseable.value,
+        readOnly.value,
+        validUsers.value,
+        writeList.value
+      )
+      if (res.success) {
+        router.push('/samba')
+      } else {
+        error.value = res.error || t('samba.createDirShareFailed')
+      }
     }
-    // TODO: implement createDirShare API when available, pass extraConfig
-    console.log('Create dir share config:', {
-      dataset: selectedDataset.value,
-      shareName: shareName.value,
-      browseable: browseable.value,
-      readOnly: readOnly.value,
-      type: shareType.value,
-      ...extraConfig
-    })
-    await new Promise(resolve => setTimeout(resolve, 500))
-    router.push('/samba')
   } catch (err: any) {
     error.value = err.message || t('error.unknown')
   } finally {

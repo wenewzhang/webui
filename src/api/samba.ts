@@ -90,4 +90,10 @@ export const sambaApi = {
   createZfsShare(shareName: string, datasetName: string, quota: string, sambaUser: string): Promise<UpdateZfsShareResponse> {
     return apiClient.post('/smb/create_zfs_share', { share_name: shareName, dataset_name: datasetName, quota, samba_user: sambaUser }).then(res => res.data)
   },
+  createPublicShare(directory: string, browseable: string, readOnly: string, guestOk: string): Promise<UpdateZfsShareResponse> {
+    return apiClient.post('/smb/create_public_share', { directory, browseable, read_only: readOnly, guest_ok: guestOk }).then(res => res.data)
+  },
+  createPrivateShare(directory: string, browseable: string, readOnly: string, validUsers: string[], writeList: string[]): Promise<UpdateZfsShareResponse> {
+    return apiClient.post('/smb/create_private_share', { directory, browseable, read_only: readOnly, valid_users: validUsers, write_list: writeList }).then(res => res.data)
+  },
 }
