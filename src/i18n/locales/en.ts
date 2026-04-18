@@ -375,6 +375,8 @@ export default {
     confirmEdit: 'Confirm Edit',
     updateZfsShareSuccess: 'ZFS share updated successfully',
     updateZfsShareFailed: 'Failed to update ZFS share',
+    updateShareFailed: 'Failed to update share',
+    validUsersCannotBeEmpty: 'Valid users cannot be empty',
     owner: 'Owner',
     permission: 'Owner Permission',
     guest_permission: 'Guest Permission',

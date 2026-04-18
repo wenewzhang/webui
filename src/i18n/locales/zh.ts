@@ -375,6 +375,8 @@ export default {
     confirmEdit: '确认修改',
     updateZfsShareSuccess: '修改 ZFS 共享成功',
     updateZfsShareFailed: '修改 ZFS 共享失败',
+    updateShareFailed: '修改共享失败',
+    validUsersCannotBeEmpty: '有效用户不能为空',
     owner: '所有者',
     permission: '所有者权限',
     guest_permission: '客人权限',

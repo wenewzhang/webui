@@ -306,10 +306,17 @@ const confirmUpdate = async () => {
     if (res.success) {
       await fetchShareInfo()
     } else {
-      error.value = res.error || t('samba.updateShareFailed')
+      error.value = res.error === 'valid_users cannot be empty'
+        ? t('samba.validUsersCannotBeEmpty')
+        : res.error || t('samba.updateShareFailed')
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    const data = err.response?.data
+    if (data?.error === 'valid_users cannot be empty') {
+      error.value = t('samba.validUsersCannotBeEmpty')
+    } else {
+      error.value = data?.error || data?.message || err.message || t('error.unknown')
+    }
   } finally {
     saving.value = false
   }
