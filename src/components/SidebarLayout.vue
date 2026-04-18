@@ -219,6 +219,10 @@ const RestartForceIcon = () => h('svg', { class: 'h-4 w-4', fill: 'none', viewBo
 const ShutdownIcon = () => h('svg', { class: 'h-4 w-4', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
   h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M13 10V3L4 14h7v7l9-11h-7z' })
 ])
+const TerminalIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
+  h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M8 9l3 3-3 3m5 0h3' }),
+  h('rect', { x: '2', y: '4', width: '20', height: '16', rx: '2', 'stroke-width': '2', fill: 'none' })
+])
 
 const menuItems = [
   { name: 'users', path: '/users', icon: UsersIcon },
@@ -233,7 +237,7 @@ const menuItems = [
     ]
   },
   { name: 'samba', path: '/samba', icon: SambaIcon },
-  { name: 'apps', path: '/apps', icon: AppsIcon },
+  { name: 'apps', path: '/apps', icon: AppsIcon },  
   {
     name: 'system',
     path: '/system',
@@ -242,6 +246,7 @@ const menuItems = [
       { name: 'restart', path: '/system/restart', icon: RestartIcon },
       { name: 'restartForce', path: '/system/reboot_force', icon: RestartForceIcon },
       { name: 'shutdown', path: '/system/shutdown', icon: ShutdownIcon },
+      { name: 'terminal', path: '/terminal', icon: TerminalIcon },
     ]
   },
 ]

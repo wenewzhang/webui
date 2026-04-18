@@ -17,6 +17,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+      '/ttyd': {
+        target: 'ws://192.168.3.203:7681',
+        changeOrigin: true,
+        ws: true,
+        rewrite: (path) => path.replace(/^\/ttyd/, ''),
       }
     }
   }

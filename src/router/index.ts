@@ -124,6 +124,12 @@ const router = createRouter({
           component: () => import('@/views/SystemView.vue'),
           meta: { title: 'route.systemForceRestart' },
         },
+        {
+          path: 'terminal',
+          name: 'Terminal',
+          component: () => import('@/views/TerminalView.vue'),
+          meta: { title: 'route.terminal' },
+        },
       ],
     },
   ],
