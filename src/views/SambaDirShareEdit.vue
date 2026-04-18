@@ -70,7 +70,7 @@
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.read_only') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.readOnly') }}</label>
             <select
               v-model="editReadOnly"
               class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
@@ -83,7 +83,7 @@
 
         <!-- Public only -->
         <div v-if="shareType === 'public'" class="sm:w-1/2">
-          <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.guest_ok') }}</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.guestOk') }}</label>
           <select
             v-model="editGuestOk"
             class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
@@ -96,7 +96,7 @@
         <!-- Private only -->
         <template v-if="shareType === 'private'">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.valid_users') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.validUsers') }}</label>
             <div class="border border-gray-300 rounded-md p-3 max-h-40 overflow-y-auto">
               <div v-if="usersLoading" class="text-sm text-gray-500">{{ $t('common.loading') }}</div>
               <div v-else-if="users.length === 0" class="text-sm text-gray-500">{{ $t('samba.noUsers') }}</div>
@@ -119,7 +119,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.write_list') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('samba.writeList') }}</label>
             <div class="border border-gray-300 rounded-md p-3 max-h-40 overflow-y-auto">
               <div v-if="usersLoading" class="text-sm text-gray-500">{{ $t('common.loading') }}</div>
               <div v-else-if="users.length === 0" class="text-sm text-gray-500">{{ $t('samba.noUsers') }}</div>
@@ -264,8 +264,12 @@ const fetchShareInfo = async () => {
       if (shareType.value === 'public') {
         editGuestOk.value = info.guest_ok || 'yes'
       } else {
-        editValidUsers.value = info.valid_users || []
-        editWriteList.value = info.write_list || []
+        editValidUsers.value = Array.isArray(info.valid_users)
+          ? info.valid_users
+          : (info.valid_users ? String(info.valid_users).split(',').map(s => s.trim()).filter(Boolean) : [])
+        editWriteList.value = Array.isArray(info.write_list)
+          ? info.write_list
+          : (info.write_list ? String(info.write_list).split(',').map(s => s.trim()).filter(Boolean) : [])
       }
     } else {
       error.value = res.error || t('samba.loadShareInfoFailed')
@@ -290,12 +294,13 @@ const confirmUpdate = async () => {
         editGuestOk.value
       )
     } else {
+      const validUsernames = new Set(users.value.map(u => u.username))
       res = await sambaApi.updatePrivateShare(
         shareName.value,
         editBrowseable.value,
         editReadOnly.value,
-        editValidUsers.value,
-        editWriteList.value
+        editValidUsers.value.filter(u => validUsernames.has(u)),
+        editWriteList.value.filter(u => validUsernames.has(u))
       )
     }
     if (res.success) {
