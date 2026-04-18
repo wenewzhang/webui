@@ -8,6 +8,7 @@ export default {
     submit: '提交',
     cancel: '取消',
     confirm: '确认',
+    confirmUpdate: '确认更新',
     back: '返回',
     loading: '加载中...',
     error: '错误',
@@ -398,11 +399,14 @@ export default {
     loadDatasetsFailed: '加载数据集失败',
     createDirShareFailed: '创建目录共享失败',
     editDirShare: '编辑目录共享',
+    modifySettings: '修改设置',
     loadShareInfoFailed: '加载共享信息失败',
     noShareInfo: '暂无共享信息',
     share_name: '共享名称',
     path: '路径',
     read_only: '只读',
+    valid_users: '有效用户',
+    write_list: '可写用户',
   },
   // 系统页面
   system: {

@@ -8,6 +8,7 @@ export default {
     submit: 'Submit',
     cancel: 'Cancel',
     confirm: 'Confirm',
+    confirmUpdate: 'Confirm Update',
     back: 'Back',
     loading: 'Loading...',
     error: 'Error',
@@ -398,11 +399,14 @@ export default {
     loadDatasetsFailed: 'Failed to load datasets',
     createDirShareFailed: 'Failed to create directory share',
     editDirShare: 'Edit Directory Share',
+    modifySettings: 'Modify Settings',
     loadShareInfoFailed: 'Failed to load share info',
     noShareInfo: 'No share information available',
     share_name: 'Share Name',
     path: 'Path',
     read_only: 'Read Only',
+    valid_users: 'Valid Users',
+    write_list: 'Write List',
   },
   // System Page
   system: {

@@ -18,7 +18,7 @@
       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mr-2"
         :class="shareType === 'public' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
       >
-        {{ shareType }}
+        {{ $t(`samba.${shareType}`) }}
       </span>
       <span class="text-sm text-gray-700 font-medium">{{ shareName }}</span>
     </div>
