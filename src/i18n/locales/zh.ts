@@ -97,6 +97,7 @@ export default {
     samba: 'Samba',
     createDirSambaShare: '创建目录 Samba 共享',
     createZfsSambaShare: '创建 ZFS Samba 共享',
+    editDirSambaShare: '编辑目录 Samba 共享',
     apps: '应用',
     terminal: '终端',
     systemRestart: '系统重启',
@@ -396,6 +397,12 @@ export default {
     noUsers: '暂无可用用户',
     loadDatasetsFailed: '加载数据集失败',
     createDirShareFailed: '创建目录共享失败',
+    editDirShare: '编辑目录共享',
+    loadShareInfoFailed: '加载共享信息失败',
+    noShareInfo: '暂无共享信息',
+    share_name: '共享名称',
+    path: '路径',
+    read_only: '只读',
   },
   // 系统页面
   system: {

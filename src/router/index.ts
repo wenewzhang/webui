@@ -101,6 +101,12 @@ const router = createRouter({
           meta: { title: 'route.createDirSambaShare' },
         },
         {
+          path: 'samba/dir/edit/:name/:type',
+          name: 'SambaDirEdit',
+          component: () => import('@/views/SambaDirShareEdit.vue'),
+          meta: { title: 'route.editDirSambaShare' },
+        },
+        {
           path: 'samba/zfs/create',
           name: 'SambaZfsCreate',
           component: () => import('@/views/SambaZFSCreater.vue'),

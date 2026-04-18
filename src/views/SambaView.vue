@@ -86,11 +86,22 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button
-                    @click="handleCloseDirShare(share)"
-                    :disabled="closingDirShare === share.name"
-                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
+                  <div class="flex space-x-2">
+                    <button
+                      @click="handleEditDirShare(share)"
+                      class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                      {{ $t('common.edit') }}
+                    </button>
+                    <button
+                      @click="handleCloseDirShare(share)"
+                      :disabled="closingDirShare === share.name"
+                      class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                     <svg v-if="closingDirShare !== share.name" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
                       <line x1="18" y1="6" x2="6" y2="18"/>
                       <line x1="6" y1="6" x2="18" y2="18"/>
@@ -101,6 +112,7 @@
                     </svg>
                     {{ closingDirShare === share.name ? $t('common.processing') : $t('common.close') }}
                   </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -287,6 +299,10 @@ const handleRefresh = () => {
 const handleEditZfsShare = (share: ZfsShare) => {
   selectedZfsShare.value = share
   showZfsShareModal.value = true
+}
+
+const handleEditDirShare = (share: DirShare) => {
+  router.push(`/samba/dir/edit/${encodeURIComponent(share.name)}/${share.type}`)
 }
 
 const handleCloseDirShare = (share: DirShare) => {

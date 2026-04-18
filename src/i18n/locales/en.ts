@@ -97,6 +97,7 @@ export default {
     samba: 'Samba',
     createDirSambaShare: 'Create Directory Samba Share',
     createZfsSambaShare: 'Create ZFS Samba Share',
+    editDirSambaShare: 'Edit Directory Samba Share',
     apps: 'Apps',
     terminal: 'Terminal',
     systemRestart: 'System Restart',
@@ -396,6 +397,12 @@ export default {
     noUsers: 'No users available',
     loadDatasetsFailed: 'Failed to load datasets',
     createDirShareFailed: 'Failed to create directory share',
+    editDirShare: 'Edit Directory Share',
+    loadShareInfoFailed: 'Failed to load share info',
+    noShareInfo: 'No share information available',
+    share_name: 'Share Name',
+    path: 'Path',
+    read_only: 'Read Only',
   },
   // System Page
   system: {

@@ -62,6 +62,29 @@ export interface SambaDatasetsResponse {
   error: string | null
 }
 
+export interface PublicShareInfoResponse {
+  success: boolean
+  share_name: string
+  path: string
+  browseable: string
+  read_only: string
+  guest_ok: string
+  message: string
+  error: string | null
+}
+
+export interface PrivateShareInfoResponse {
+  success: boolean
+  share_name: string
+  path: string
+  browseable: string
+  read_only: string
+  valid_users?: string[]
+  write_list?: string[]
+  message: string
+  error: string | null
+}
+
 export const sambaApi = {
   listDirShares(): Promise<ListDirSharesResponse> {
     return apiClient.get('/smb/list_dir_shares').then(res => res.data)
@@ -95,5 +118,11 @@ export const sambaApi = {
   },
   createPrivateShare(directory: string, browseable: string, readOnly: string, validUsers: string[], writeList: string[]): Promise<UpdateZfsShareResponse> {
     return apiClient.post('/smb/create_private_share', { directory, browseable, read_only: readOnly, valid_users: validUsers, write_list: writeList }).then(res => res.data)
+  },
+  getPublicShareInfo(share_name: string): Promise<PublicShareInfoResponse> {
+    return apiClient.post('/smb/public_share_info', { share_name }).then(res => res.data)
+  },
+  getPrivateShareInfo(share_name: string): Promise<PrivateShareInfoResponse> {
+    return apiClient.post('/smb/private_share_info', { share_name }).then(res => res.data)
   },
 }
