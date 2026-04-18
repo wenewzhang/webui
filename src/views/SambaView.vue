@@ -44,7 +44,19 @@
     <div v-else class="space-y-8">
       <!-- Dir Shares -->
       <div>
+        <div class="flex items-center justify-start gap-6 mb-4">
         <h3 class="text-lg font-medium text-gray-900 mb-3">{{ $t('samba.dirShares') }}</h3>
+        <button
+            @click="router.push('/samba/dir/create')"
+            class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            {{ $t('common.create') }}
+        </button>
+      </div>
         <div v-if="dirShares.length === 0" class="text-center py-6 bg-gray-50 rounded-lg">
           <p class="text-gray-500">{{ $t('samba.noDirShares') }}</p>
         </div>
@@ -98,7 +110,7 @@
 
       <!-- ZFS Shares -->
       <div>
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-start gap-6 mb-4">
           <h3 class="text-lg font-medium text-gray-900">{{ $t('samba.zfsShares') }}</h3>
           <button
             @click="router.push('/samba/zfs/create')"
