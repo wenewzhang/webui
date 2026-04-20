@@ -100,6 +100,7 @@ export default {
     createZfsSambaShare: 'Create ZFS Samba Share',
     editDirSambaShare: 'Edit Directory Samba Share',
     apps: 'Apps',
+    dockerSearch: 'Docker Search',
     terminal: 'Terminal',
     systemRestart: 'System Restart',
     systemShutdown: 'System Shutdown',
@@ -114,6 +115,7 @@ export default {
     storageDataset: 'Datasets',
     samba: 'Samba',
     apps: 'Apps',
+    dockerSearch: 'Docker Search',
     terminal: 'Terminal',
     system: 'System',
     restart: 'Restart',
@@ -409,6 +411,16 @@ export default {
     read_only: 'Read Only',
     valid_users: 'Valid Users',
     write_list: 'Write List',
+  },
+  // Docker Search Page
+  dockerSearch: {
+    placeholder: 'Enter image name, e.g. nginx',
+    name: 'Image Name',
+    stars: 'Stars',
+    official: 'Official',
+    description: 'Description',
+    noResults: 'No results found',
+    searchFailed: 'Search failed',
   },
   // System Page
   system: {

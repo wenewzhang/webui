@@ -114,9 +114,20 @@ const router = createRouter({
         },
         {
           path: 'apps',
-          name: 'Apps',
-          component: () => import('@/views/AppsView.vue'),
-          meta: { title: 'route.apps' },
+          children: [
+            {
+              path: '',
+              name: 'Apps',
+              component: () => import('@/views/AppsView.vue'),
+              meta: { title: 'route.apps' },
+            },
+            {
+              path: 'docker-search',
+              name: 'DockerSearch',
+              component: () => import('@/views/DockerSearch.vue'),
+              meta: { title: 'route.dockerSearch' },
+            },
+          ],
         },
         {
           path: 'system/restart',

@@ -100,6 +100,7 @@ export default {
     createZfsSambaShare: '创建 ZFS Samba 共享',
     editDirSambaShare: '编辑目录 Samba 共享',
     apps: '应用',
+    dockerSearch: 'Docker 搜索',
     terminal: '终端',
     systemRestart: '系统重启',
     systemShutdown: '系统关机',
@@ -114,6 +115,7 @@ export default {
     storageDataset: '数据集',
     samba: 'Samba',
     apps: '应用',
+    dockerSearch: 'Docker 搜索',
     terminal: '终端',
     system: '系统',
     restart: '重启',
@@ -409,6 +411,16 @@ export default {
     read_only: '只读',
     valid_users: '有效用户',
     write_list: '可写用户',
+  },
+  // Docker 搜索页面
+  dockerSearch: {
+    placeholder: '请输入镜像名称，例如 nginx',
+    name: '镜像名称',
+    stars: '星标数',
+    official: '官方',
+    description: '描述',
+    noResults: '暂无搜索结果',
+    searchFailed: '搜索失败',
   },
   // 系统页面
   system: {

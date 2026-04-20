@@ -3,6 +3,8 @@ import apiClient from './axios'
 export interface DirShare {
   name: string
   type: string
+  browseable: string
+  read_only: string
 }
 
 export interface ZfsShare {
