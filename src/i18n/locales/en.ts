@@ -422,6 +422,7 @@ export default {
   dockerImages: {
     created: 'Created',
     size: 'Size',
+    deleteConfirmTitle: 'Confirm Delete Image',
     deleteConfirm: "Are you sure you want to delete image '{id}'? This action cannot be undone.",
     deleteSuccess: "Image '{id}' deleted successfully",
     deleteFailed: 'Failed to delete image',

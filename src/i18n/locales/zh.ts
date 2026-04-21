@@ -422,6 +422,7 @@ export default {
   dockerImages: {
     created: '创建时间',
     size: '大小',
+    deleteConfirmTitle: '确认删除镜像',
     deleteConfirm: "确定要删除镜像 '{id}' 吗？此操作不可撤销。",
     deleteSuccess: "镜像 '{id}' 删除成功",
     deleteFailed: '删除镜像失败',
