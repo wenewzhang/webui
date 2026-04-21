@@ -38,6 +38,11 @@ export interface DockerImagesResponse {
   images: DockerImage[]
 }
 
+export interface DockerDeleteImageResponse {
+  success: boolean
+  message?: string
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -57,6 +62,11 @@ export const dockerApi = {
   getImages(): Promise<DockerImagesResponse> {
     return apiClient
       .get('/docker/get_images')
+      .then((res) => res.data)
+  },
+  deleteImage(imageId: string): Promise<DockerDeleteImageResponse> {
+    return apiClient
+      .post('/docker/delete_image', { image_id: imageId })
       .then((res) => res.data)
   },
 }

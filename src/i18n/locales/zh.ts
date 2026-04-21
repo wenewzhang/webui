@@ -101,6 +101,9 @@ export default {
     editDirSambaShare: '编辑目录 Samba 共享',
     apps: '应用',
     dockerSearch: 'Docker 搜索',
+    dockerImages: 'Docker 镜像',
+    dockerContainers: 'Docker 容器',
+    dockerSettings: 'Docker 设置',
     terminal: '终端',
     systemRestart: '系统重启',
     systemShutdown: '系统关机',
@@ -116,6 +119,9 @@ export default {
     samba: 'Samba',
     apps: '应用',
     dockerSearch: 'Docker 搜索',
+    dockerImages: '镜像',
+    dockerContainers: '容器',
+    dockerSettings: '设置',
     terminal: '终端',
     system: '系统',
     restart: '重启',
@@ -411,6 +417,12 @@ export default {
     read_only: '只读',
     valid_users: '有效用户',
     write_list: '可写用户',
+  },
+  // Docker 镜像页面
+  dockerImages: {
+    deleteConfirm: "确定要删除镜像 '{id}' 吗？此操作不可撤销。",
+    deleteSuccess: "镜像 '{id}' 删除成功",
+    deleteFailed: '删除镜像失败',
   },
   // Docker 搜索页面
   dockerSearch: {

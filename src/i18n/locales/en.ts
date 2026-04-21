@@ -101,6 +101,9 @@ export default {
     editDirSambaShare: 'Edit Directory Samba Share',
     apps: 'Apps',
     dockerSearch: 'Docker Search',
+    dockerImages: 'Docker Images',
+    dockerContainers: 'Docker Containers',
+    dockerSettings: 'Docker Settings',
     terminal: 'Terminal',
     systemRestart: 'System Restart',
     systemShutdown: 'System Shutdown',
@@ -116,6 +119,9 @@ export default {
     samba: 'Samba',
     apps: 'Apps',
     dockerSearch: 'Docker Search',
+    dockerImages: 'Images',
+    dockerContainers: 'Containers',
+    dockerSettings: 'Settings',
     terminal: 'Terminal',
     system: 'System',
     restart: 'Restart',
@@ -411,6 +417,12 @@ export default {
     read_only: 'Read Only',
     valid_users: 'Valid Users',
     write_list: 'Write List',
+  },
+  // Docker Images Page
+  dockerImages: {
+    deleteConfirm: "Are you sure you want to delete image '{id}'? This action cannot be undone.",
+    deleteSuccess: "Image '{id}' deleted successfully",
+    deleteFailed: 'Failed to delete image',
   },
   // Docker Search Page
   dockerSearch: {

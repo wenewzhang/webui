@@ -127,6 +127,24 @@ const router = createRouter({
               component: () => import('@/views/DockerSearch.vue'),
               meta: { title: 'route.dockerSearch' },
             },
+            {
+              path: 'docker-images',
+              name: 'DockerImages',
+              component: () => import('@/views/DockerImages.vue'),
+              meta: { title: 'route.dockerImages' },
+            },
+            {
+              path: 'docker-containers',
+              name: 'DockerContainers',
+              component: () => import('@/views/DockerContainers.vue'),
+              meta: { title: 'route.dockerContainers' },
+            },
+            {
+              path: 'docker-settings',
+              name: 'DockerSettings',
+              component: () => import('@/views/DockerSettings.vue'),
+              meta: { title: 'route.dockerSettings' },
+            },
           ],
         },
         {
