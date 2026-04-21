@@ -426,10 +426,13 @@ export default {
     installSuccess: "Image '{name}' install task started",
     installFailed: "Image '{name}' install failed",
     activeTasks: 'Active Pull Tasks',
+    startingPull: 'Starting pull task...',
+    downloading: 'Downloading...',
     waitingForProgress: 'Waiting for progress update...',
     queryTaskFailed: 'Failed to query task progress',
     completed: 'Completed',
     imagePulledSuccessfully: 'Image pulled successfully',
+    imageDownloadComplete: 'Download complete',
     status: {
       Running: 'Pulling',
       Completed: 'Completed',

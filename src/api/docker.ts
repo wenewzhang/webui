@@ -27,6 +27,17 @@ export interface DockerPullTaskResponse {
   [key: string]: any
 }
 
+export interface DockerImage {
+  id: string
+  repo_tags: string[]
+}
+
+export interface DockerImagesResponse {
+  success: boolean
+  message?: string
+  images: DockerImage[]
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -41,6 +52,11 @@ export const dockerApi = {
   getPullImageTask(taskId: string): Promise<DockerPullTaskResponse> {
     return apiClient
       .get(`/docker/pull_image/task/${taskId}`)
+      .then((res) => res.data)
+  },
+  getImages(): Promise<DockerImagesResponse> {
+    return apiClient
+      .get('/docker/get_images')
       .then((res) => res.data)
   },
 }

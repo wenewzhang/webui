@@ -135,7 +135,7 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <button
                 @click="handleInstall(item.name)"
-                :disabled="installingMap[item.name]"
+                :disabled="installingMap[item.name] || isImageInstalled(item.name)"
                 class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg
@@ -173,7 +173,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
 
@@ -196,6 +196,13 @@ const error = ref('')
 const searched = ref(false)
 const installingMap = ref<Record<string, boolean>>({})
 const activeTasks = ref<PullTask[]>([])
+const localImageTags = ref<string[]>([])
+
+const isImageInstalled = (name: string): boolean => {
+  if (!name) return false
+  const lowerName = name.toLowerCase()
+  return localImageTags.value.some((tag) => tag.toLowerCase().includes(lowerName))
+}
 
 const taskStatusClass = (status: string) => {
   const map: Record<string, string> = {
@@ -235,7 +242,15 @@ const pollTaskOnce = async (task: PullTask) => {
       task.status = mytask.status || res.status || 'running'
       const progressVal = parseFloat(String(mytask.progress || 0))
       task.progress = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
-      task.detail = mytask.message || JSON.stringify(res, null, 2)
+      if (mytask.message && mytask.message.includes('Image pulled successfully')) {
+        task.detail = t('dockerSearch.imageDownloadComplete')
+      } else if (mytask.message.includes('Starting pull')) {
+        task.detail = t('dockerSearch.startingPull')
+      } else if (mytask.message.includes('Downloading')) {
+        task.detail = t('dockerSearch.downloading')
+      } else {
+        task.detail = mytask.message || JSON.stringify(res, null, 2)
+      }
       const terminalStatuses = ['completed', 'success', 'failed', 'error']
       if (terminalStatuses.includes(mytask.status) || mytask.progress >= 100) {
         stopTaskTimer(task)
@@ -305,6 +320,17 @@ const handleInstall = async (imageName: string) => {
     installingMap.value[imageName] = false
   }
 }
+
+onMounted(async () => {
+  try {
+    const res = await dockerApi.getImages()
+    if (res.success && res.images) {
+      localImageTags.value = res.images.flatMap((img) => img.repo_tags || [])
+    }
+  } catch {
+    // silently ignore local images fetch failure
+  }
+})
 
 onUnmounted(() => {
   activeTasks.value.forEach((task) => stopTaskTimer(task))
