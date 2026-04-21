@@ -421,6 +421,12 @@ export default {
     description: 'Description',
     noResults: 'No results found',
     searchFailed: 'Search failed',
+    install: 'Install',
+    installSuccess: "Image '{name}' install task started",
+    installFailed: "Image '{name}' install failed",
+    activeTasks: 'Active Pull Tasks',
+    waitingForProgress: 'Waiting for progress update...',
+    queryTaskFailed: 'Failed to query task progress',
   },
   // System Page
   system: {

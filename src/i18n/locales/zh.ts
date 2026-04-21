@@ -421,6 +421,12 @@ export default {
     description: '描述',
     noResults: '暂无搜索结果',
     searchFailed: '搜索失败',
+    install: '安装',
+    installSuccess: "镜像 '{name}' 安装任务已启动",
+    installFailed: "镜像 '{name}' 安装失败",
+    activeTasks: '进行中的拉取任务',
+    waitingForProgress: '等待进度更新...',
+    queryTaskFailed: '查询任务进度失败',
   },
   // 系统页面
   system: {
