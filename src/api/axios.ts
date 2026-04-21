@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores/user'
 import i18n from '@/i18n'
 
 // 创建 axios 实例
-const API_TIMEOUT = 10000
+const API_TIMEOUT = 20000
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'https://localhost:8443',

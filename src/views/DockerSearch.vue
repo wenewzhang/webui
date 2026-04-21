@@ -63,6 +63,18 @@
             {{ task.status }}
           </span>
         </div>
+        <div class="mb-2">
+          <div class="flex justify-between text-xs text-gray-600 mb-1">
+            <span>{{ $t('dockerSearch.progress') }}</span>
+            <span>{{ task.progress }}%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300"
+              :style="{ width: task.progress + '%' }"
+            ></div>
+          </div>
+        </div>
         <div class="text-sm text-gray-600 break-all font-mono whitespace-pre-wrap">
           {{ task.detail || $t('dockerSearch.waitingForProgress') }}
         </div>
@@ -172,6 +184,7 @@ interface PullTask {
   taskId: string
   status: string
   detail: string
+  progress: number
   timer: ReturnType<typeof setInterval> | null
 }
 
@@ -217,10 +230,15 @@ const pollTaskOnce = async (task: PullTask) => {
   try {
     const res = await dockerApi.getPullImageTask(task.taskId)
     if (res.success) {
+      console.log(res.task)
+      const mytask = res.task
       task.status = res.status || 'running'
-      task.detail = res.progress || res.message || JSON.stringify(res, null, 2)
+      const progressVal = parseFloat(String(mytask.progress || 0))
+      console.log(progressVal)
+      task.progress = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
+      task.detail = mytask.message || JSON.stringify(res, null, 2)
       const terminalStatuses = ['completed', 'success', 'failed', 'error']
-      if (terminalStatuses.includes(task.status)) {
+      if (terminalStatuses.includes(mytask.status) || mytask.progress >= 100) {
         stopTaskTimer(task)
       }
     } else {
@@ -273,6 +291,7 @@ const handleInstall = async (imageName: string) => {
         taskId: res.task_id,
         status: 'pending',
         detail: '',
+        progress: 0,
         timer: null,
       }
       activeTasks.value.push(task)
