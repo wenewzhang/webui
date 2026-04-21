@@ -30,6 +30,8 @@ export interface DockerPullTaskResponse {
 export interface DockerImage {
   id: string
   repo_tags: string[]
+  created: number
+  size: number
 }
 
 export interface DockerImagesResponse {

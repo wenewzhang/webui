@@ -58,6 +58,16 @@
             <th
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
+              Created
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Size
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
               {{ $t('common.action') }}
             </th>
           </tr>
@@ -80,6 +90,12 @@
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono">
               {{ item.id }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ formatDate(item.created) }}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {{ formatSize(item.size) }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
               <button
@@ -125,6 +141,8 @@ const { t } = useI18n()
 interface DockerImage {
   id: string
   repo_tags: string[]
+  created: number
+  size: number
 }
 
 const images = ref<DockerImage[]>([])
@@ -135,6 +153,24 @@ const deletingMap = ref<Record<string, boolean>>({})
 const showConfirmModal = ref(false)
 const pendingDeleteId = ref('')
 
+const formatDate = (timestamp: number): string => {
+  if (!timestamp) return '-'
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleString()
+}
+
+const formatSize = (bytes: number): string => {
+  if (!bytes) return '-'
+  const units = ['B', 'KB', 'MB', 'GB', 'TB']
+  let size = bytes
+  let unitIndex = 0
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024
+    unitIndex++
+  }
+  return `${size.toFixed(2)} ${units[unitIndex]}`
+}
+
 const fetchImages = async () => {
   loading.value = true
   error.value = ''
@@ -143,7 +179,12 @@ const fetchImages = async () => {
   try {
     const res = await dockerApi.getImages()
     if (res.success) {
-      images.value = res.images || []
+      images.value = (res.images || []).map((img) => ({
+        id: img.id,
+        repo_tags: img.repo_tags,
+        created: img.created,
+        size: img.size,
+      }))
     } else {
       error.value = res.message || t('dockerSearch.searchFailed')
     }
