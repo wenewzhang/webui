@@ -230,14 +230,13 @@ const startPolling = (task: PullTask) => {
   // 每5秒轮询
   task.timer = setInterval(() => {
     pollTaskOnce(task)
-  }, 5000)
+  }, 3000)
 }
 
 const pollTaskOnce = async (task: PullTask) => {
   try {
     const res = await dockerApi.getPullImageTask(task.taskId)
     if (res.success) {
-      // console.log(res.task)
       const mytask = res.task
       task.status = mytask.status || res.status || 'running'
       const progressVal = parseFloat(String(mytask.progress || 0))
@@ -310,6 +309,7 @@ const handleInstall = async (imageName: string) => {
       }
       activeTasks.value.push(task)
       startPolling(activeTasks.value[activeTasks.value.length - 1])
+      localImageTags.value.push(imageName)
       message.value = t('dockerSearch.installSuccess', { name: imageName })
     } else {
       error.value = res.message || t('dockerSearch.installFailed', { name: imageName })
