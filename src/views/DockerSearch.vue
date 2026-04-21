@@ -60,7 +60,7 @@
         <div class="flex justify-between items-center mb-2">
           <span class="font-medium text-sm text-gray-900">{{ task.imageName }}</span>
           <span class="text-xs px-2 py-1 rounded-full" :class="taskStatusClass(task.status)">
-            {{ task.status }}
+            {{ $t(`dockerSearch.status.${task.status}`) || task.status }}
           </span>
         </div>
         <div class="mb-2">
@@ -230,7 +230,7 @@ const pollTaskOnce = async (task: PullTask) => {
   try {
     const res = await dockerApi.getPullImageTask(task.taskId)
     if (res.success) {
-      console.log(res.task)
+      // console.log(res.task)
       const mytask = res.task
       task.status = mytask.status || res.status || 'running'
       const progressVal = parseFloat(String(mytask.progress || 0))

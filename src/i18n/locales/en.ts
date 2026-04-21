@@ -415,6 +415,7 @@ export default {
   // Docker Search Page
   dockerSearch: {
     placeholder: 'Enter image name, e.g. nginx',
+    progress: 'Progress',
     name: 'Image Name',
     stars: 'Stars',
     official: 'Official',
@@ -427,6 +428,15 @@ export default {
     activeTasks: 'Active Pull Tasks',
     waitingForProgress: 'Waiting for progress update...',
     queryTaskFailed: 'Failed to query task progress',
+    completed: 'Completed',
+    imagePulledSuccessfully: 'Image pulled successfully',
+    status: {
+      Running: 'Pulling',
+      Completed: 'Completed',
+      success: 'Success',
+      failed: 'Failed',
+      error: 'Error',
+    },
   },
   // System Page
   system: {

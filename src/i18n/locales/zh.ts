@@ -415,6 +415,7 @@ export default {
   // Docker 搜索页面
   dockerSearch: {
     placeholder: '请输入镜像名称，例如 nginx',
+    progress:'进度条',
     name: '镜像名称',
     stars: '星标数',
     official: '官方',
@@ -427,6 +428,15 @@ export default {
     activeTasks: '进行中的拉取任务',
     waitingForProgress: '等待进度更新...',
     queryTaskFailed: '查询任务进度失败',
+    completed: '已完成',
+    imagePulledSuccessfully: '镜像下载完成',
+    status: {  
+      Running: '拉取中',
+      Completed: '已完成',
+      success: '成功',
+      failed: '失败',
+      error: '错误',
+    },
   },
   // 系统页面
   system: {
