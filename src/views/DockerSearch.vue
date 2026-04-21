@@ -232,9 +232,8 @@ const pollTaskOnce = async (task: PullTask) => {
     if (res.success) {
       console.log(res.task)
       const mytask = res.task
-      task.status = res.status || 'running'
+      task.status = mytask.status || res.status || 'running'
       const progressVal = parseFloat(String(mytask.progress || 0))
-      console.log(progressVal)
       task.progress = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
       task.detail = mytask.message || JSON.stringify(res, null, 2)
       const terminalStatuses = ['completed', 'success', 'failed', 'error']
@@ -295,7 +294,7 @@ const handleInstall = async (imageName: string) => {
         timer: null,
       }
       activeTasks.value.push(task)
-      startPolling(task)
+      startPolling(activeTasks.value[activeTasks.value.length - 1])
       message.value = t('dockerSearch.installSuccess', { name: imageName })
     } else {
       error.value = res.message || t('dockerSearch.installFailed', { name: imageName })
