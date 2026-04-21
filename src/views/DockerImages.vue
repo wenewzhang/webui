@@ -1,5 +1,14 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
+    <ConfirmModal
+      :show="showConfirmModal"
+      :title="t('dockerImages.deleteConfirmTitle')"
+      :message="t('dockerImages.deleteConfirm', { id: pendingDeleteId })"
+      :confirm-text="t('common.confirm')"
+      :cancel-text="t('common.cancel')"
+      @confirm="onConfirmDelete"
+      @cancel="onCancelDelete"
+    />
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold text-gray-900">{{ $t('route.dockerImages') }}</h2>
       <button
@@ -109,6 +118,7 @@
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { t } = useI18n()
 
@@ -122,6 +132,8 @@ const loading = ref(false)
 const error = ref('')
 const message = ref('')
 const deletingMap = ref<Record<string, boolean>>({})
+const showConfirmModal = ref(false)
+const pendingDeleteId = ref('')
 
 const fetchImages = async () => {
   loading.value = true
@@ -142,10 +154,15 @@ const fetchImages = async () => {
   }
 }
 
-const handleDelete = async (imageId: string) => {
-  if (!confirm(t('dockerImages.deleteConfirm', { id: imageId }))) {
-    return
-  }
+const handleDelete = (imageId: string) => {
+  pendingDeleteId.value = imageId
+  showConfirmModal.value = true
+}
+
+const onConfirmDelete = async () => {
+  showConfirmModal.value = false
+  const imageId = pendingDeleteId.value
+  if (!imageId) return
 
   deletingMap.value[imageId] = true
   error.value = ''
@@ -163,7 +180,13 @@ const handleDelete = async (imageId: string) => {
     error.value = err.message || t('dockerImages.deleteFailed')
   } finally {
     deletingMap.value[imageId] = false
+    pendingDeleteId.value = ''
   }
+}
+
+const onCancelDelete = () => {
+  showConfirmModal.value = false
+  pendingDeleteId.value = ''
 }
 
 onMounted(() => {

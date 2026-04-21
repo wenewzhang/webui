@@ -66,7 +66,7 @@ export const dockerApi = {
   },
   deleteImage(imageId: string): Promise<DockerDeleteImageResponse> {
     return apiClient
-      .post('/docker/delete_image', { image_id: imageId })
+      .delete(`/docker/delete_image/${imageId}`)
       .then((res) => res.data)
   },
 }
