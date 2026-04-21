@@ -79,7 +79,7 @@
                 <span
                   v-for="tag in item.repo_tags"
                   :key="tag"
-                  class="inline-block px-2 py-0.5 rounded bg-gray-100 text-gray-700 text-xs mr-1"
+                  class="inline-block px-2 py-0.5 rounded bg-gray-100 text-gray-700 text-sm mr-1"
                 >
                   {{ tag }}
                 </span>
