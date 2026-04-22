@@ -51,6 +51,8 @@ export default {
     device: 'Device',
     creating: 'Creating...',
     processing: 'Processing...',
+    start: 'Start',
+    stop: 'Stop',
   },
   // Login Page
   login: {
@@ -426,6 +428,23 @@ export default {
     deleteConfirm: "Are you sure you want to delete image '{id}'? This action cannot be undone.",
     deleteSuccess: "Image '{id}' deleted successfully",
     deleteFailed: 'Failed to delete image',
+  },
+  // Docker Containers Page
+  dockerContainers: {
+    name: 'Name',
+    image: 'Image',
+    status: 'Status',
+    created: 'Created',
+    noContainers: 'No containers',
+    fetchFailed: 'Failed to fetch containers',
+    startSuccess: "Container '{id}' started successfully",
+    startFailed: 'Failed to start container',
+    stopSuccess: "Container '{id}' stopped successfully",
+    stopFailed: 'Failed to stop container',
+    deleteConfirmTitle: 'Confirm Delete Container',
+    deleteConfirm: "Are you sure you want to delete container '{id}'? This action cannot be undone.",
+    deleteSuccess: "Container '{id}' deleted successfully",
+    deleteFailed: 'Failed to delete container',
   },
   // Docker Search Page
   dockerSearch: {

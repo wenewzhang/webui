@@ -51,6 +51,8 @@ export default {
     device: '设备',
     creating: '创建中...',
     processing: '处理中...',
+    start: '启动',
+    stop: '停止',
   },
   // 登录页面
   login: {
@@ -426,6 +428,23 @@ export default {
     deleteConfirm: "确定要删除镜像 '{id}' 吗？此操作不可撤销。",
     deleteSuccess: "镜像 '{id}' 删除成功",
     deleteFailed: '删除镜像失败',
+  },
+  // Docker 容器页面
+  dockerContainers: {
+    name: '名称',
+    image: '镜像',
+    status: '状态',
+    created: '创建时间',
+    noContainers: '暂无容器',
+    fetchFailed: '获取容器列表失败',
+    startSuccess: "容器 '{id}' 启动成功",
+    startFailed: '启动容器失败',
+    stopSuccess: "容器 '{id}' 停止成功",
+    stopFailed: '停止容器失败',
+    deleteConfirmTitle: '确认删除容器',
+    deleteConfirm: "确定要删除容器 '{id}' 吗？此操作不可撤销。",
+    deleteSuccess: "容器 '{id}' 删除成功",
+    deleteFailed: '删除容器失败',
   },
   // Docker 搜索页面
   dockerSearch: {
