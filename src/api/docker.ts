@@ -107,7 +107,7 @@ export const dockerApi = {
   },
   restartContainer(containerId: string): Promise<DockerContainerActionResponse> {
     return apiClient
-      .delete('/docker/retart', { container_id: containerId })
+      .post('/docker/restart', { container_id: containerId })
       .then((res) => res.data)
   },
   removeContainer(containerId: string): Promise<DockerContainerActionResponse> {

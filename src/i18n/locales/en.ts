@@ -53,6 +53,7 @@ export default {
     processing: 'Processing...',
     start: 'Start',
     stop: 'Stop',
+    restart: 'Restart',
   },
   // Login Page
   login: {
@@ -441,6 +442,8 @@ export default {
     startFailed: 'Failed to start container',
     stopSuccess: "Container '{id}' stopped successfully",
     stopFailed: 'Failed to stop container',
+    restartSuccess: "Container '{id}' restarted successfully",
+    restartFailed: 'Failed to restart container',
     deleteConfirmTitle: 'Confirm Delete Container',
     deleteConfirm: "Are you sure you want to delete container '{id}'? This action cannot be undone.",
     deleteSuccess: "Container '{id}' deleted successfully",

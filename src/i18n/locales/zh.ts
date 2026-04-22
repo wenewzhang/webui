@@ -53,6 +53,7 @@ export default {
     processing: '处理中...',
     start: '启动',
     stop: '停止',
+    restart: '重启',
   },
   // 登录页面
   login: {
@@ -441,6 +442,8 @@ export default {
     startFailed: '启动容器失败',
     stopSuccess: "容器 '{id}' 停止成功",
     stopFailed: '停止容器失败',
+    restartSuccess: "容器 '{id}' 重启成功",
+    restartFailed: '重启容器失败',
     deleteConfirmTitle: '确认删除容器',
     deleteConfirm: "确定要删除容器 '{id}' 吗？此操作不可撤销。",
     deleteSuccess: "容器 '{id}' 删除成功",
