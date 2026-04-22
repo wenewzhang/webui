@@ -483,7 +483,7 @@ export default {
     restart: 'Restart',
     shutdown: 'Shutdown',
     restarting: 'Restarting...',
-    forceRestarting: 'Force restarting...',
+    forceRestarting: 'Force restart',
     shuttingDown: 'Shutting down...',    
     restartTitle: 'Restart System',
     restartForceTitle: 'Force Restart System',

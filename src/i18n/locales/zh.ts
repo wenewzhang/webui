@@ -483,7 +483,7 @@ export default {
     restart: '重启',
     shutdown: '关机',
     restarting: '正在重启...',
-    forceRestarting: '正在强制重启...',
+    forceRestarting: '强制重启',
     shuttingDown: '正在关机...',
     restartTitle: '重启系统',
     restartForceTitle: '强制重启系统',
