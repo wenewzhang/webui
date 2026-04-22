@@ -341,6 +341,9 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
       children: children 
     })
   }
+  if (lower.includes('only admin users can perform this operation')) {
+    return t('dataset.deletePermissionDenied')
+  }
   return apiError
 }
 

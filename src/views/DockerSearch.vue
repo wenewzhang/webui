@@ -261,7 +261,11 @@ const pollTaskOnce = async (task: PullTask) => {
     }
   } catch (err: any) {
     task.status = 'error'
-    task.detail = err.message || t('dockerSearch.queryTaskFailed')
+    if (err.response?.status === 403) {
+      task.detail = t('dockerSearch.permissionDenied')
+    } else {
+      task.detail = err.message || t('dockerSearch.queryTaskFailed')
+    }
     stopTaskTimer(task)
   }
 }
@@ -285,7 +289,11 @@ const handleSearch = async () => {
       error.value = res.message || t('dockerSearch.searchFailed')
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerSearch.searchFailed')
+    if (err.response?.status === 403) {
+      error.value = t('dockerSearch.permissionDenied')
+    } else {
+      error.value = err.message || t('dockerSearch.searchFailed')
+    }
   } finally {
     loading.value = false
   }
@@ -315,7 +323,11 @@ const handleInstall = async (imageName: string) => {
       error.value = res.message || t('dockerSearch.installFailed', { name: imageName })
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerSearch.installFailed', { name: imageName })
+    if (err.response?.status === 403) {
+      error.value = t('dockerSearch.permissionDenied')
+    } else {
+      error.value = err.message || t('dockerSearch.installFailed', { name: imageName })
+    }
   } finally {
     installingMap.value[imageName] = false
   }
