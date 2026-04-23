@@ -35,7 +35,7 @@ const router = createRouter({
             {
               path: 'all',
               name: 'StorageAll',
-              component: () => import('@/views/AllStorage.vue'),
+              component: () => import('@/views/StorageAll.vue'),
               meta: { title: 'route.storageAll' },
             },
             {

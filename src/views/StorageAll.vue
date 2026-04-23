@@ -134,6 +134,16 @@
     </div>
   </div>
 
+  <ConfirmModal
+    :show="showConfirmModal"
+    :title="t('common.delete')"
+    :message="t('storagePage.deleteDiskConfirmMessage', { diskName: pendingDeleteDisk?.name })"
+    :confirm-text="t('common.confirm')"
+    :cancel-text="t('common.cancel')"
+    @confirm="onConfirmDelete"
+    @cancel="onCancelDelete"
+  />
+
   <!-- Create Partition Modal -->
   <div v-if="showPartitionModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="partition-modal-title" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -247,6 +257,7 @@
 import { onMounted, ref, reactive } from 'vue'
 import { storageApi, type Disk } from '@/api/storage'
 import i18n from '@/i18n'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const t = i18n.global.t
 const disks = ref<Disk[]>([])
@@ -273,6 +284,10 @@ const clearLabelError = ref('')
 const clearLabelSuccess = ref('')
 const currentClearLabelDisk = ref<Disk | null>(null)
 const selectedPartition = ref('')
+
+// Delete confirm modal state
+const showConfirmModal = ref(false)
+const pendingDeleteDisk = ref<Disk | null>(null)
 
 const fetchDisks = async () => {
   loading.value = true
@@ -450,10 +465,16 @@ const mapDeleteError = (apiError: string | null | undefined): string => {
   return apiError
 }
 
-const handleDelete = async (disk: Disk) => {
-  const message = t('storagePage.deleteDiskConfirmMessage', { diskName: disk.name })
-  const confirmed = window.confirm(message)
-  if (!confirmed) return
+const handleDelete = (disk: Disk) => {
+  pendingDeleteDisk.value = disk
+  showConfirmModal.value = true
+}
+
+const onConfirmDelete = async () => {
+  showConfirmModal.value = false
+  const disk = pendingDeleteDisk.value
+  if (!disk) return
+  pendingDeleteDisk.value = null
 
   try {
     const res = await storageApi.deleteDisk(disk.name)
@@ -465,6 +486,11 @@ const handleDelete = async (disk: Disk) => {
   } catch (err: any) {
     error.value = mapDeleteError(err.response?.data?.error)
   }
+}
+
+const onCancelDelete = () => {
+  showConfirmModal.value = false
+  pendingDeleteDisk.value = null
 }
 
 onMounted(fetchDisks)
