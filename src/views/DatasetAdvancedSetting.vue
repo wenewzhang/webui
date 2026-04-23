@@ -537,10 +537,20 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { storageApi } from '@/api/storage'
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
+
+const mapApiError = (err: any): string => {
+  const msg = err.response?.data?.error || err.message || 'Network error'
+  if (typeof msg === 'string' && msg.toLowerCase().includes('only admin users can perform this operation')) {
+    return t('common.permissionDenied')
+  }
+  return msg
+}
 
 const datasetName = ref('')
 const advancedData = ref<Record<string, string> | null>(null)
@@ -749,7 +759,7 @@ const fetchAdvancedSettings = async () => {
       error.value = response.error || 'Failed to fetch advanced settings'
     }
   } catch (err: any) {
-    error.value = err.message || 'Network error'
+    error.value = mapApiError(err)
   } finally {
     loading.value = false
   }
@@ -776,7 +786,7 @@ const savePrimaryCache = async () => {
       saveError.value = response.error || 'Failed to save primarycache'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -820,7 +830,7 @@ const saveQuota = async () => {
       saveError.value = response.error || 'Failed to save quota'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -864,7 +874,7 @@ const saveReservation = async () => {
       saveError.value = response.error || 'Failed to save reservation'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -908,7 +918,7 @@ const saveMountpoint = async () => {
       saveError.value = response.error || 'Failed to save mountpoint'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -935,7 +945,7 @@ const saveRecordsize = async () => {
       saveError.value = response.error || 'Failed to save recordsize'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -962,7 +972,7 @@ const saveAtime = async () => {
       saveError.value = response.error || 'Failed to save atime'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -989,7 +999,7 @@ const saveRelatime = async () => {
       saveError.value = response.error || 'Failed to save relatime'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1016,7 +1026,7 @@ const saveReadonly = async () => {
       saveError.value = response.error || 'Failed to save readonly'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1043,7 +1053,7 @@ const saveAclmode = async () => {
       saveError.value = response.error || 'Failed to save aclmode'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1070,7 +1080,7 @@ const saveAcltype = async () => {
       saveError.value = response.error || 'Failed to save acltype'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1097,7 +1107,7 @@ const saveAclinherit = async () => {
       saveError.value = response.error || 'Failed to save aclinherit'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1124,7 +1134,7 @@ const saveCanmount = async () => {
       saveError.value = response.error || 'Failed to save canmount'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1151,7 +1161,7 @@ const saveLogbias = async () => {
       saveError.value = response.error || 'Failed to save logbias'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1178,7 +1188,7 @@ const saveCompression = async () => {
       saveError.value = response.error || 'Failed to save compression'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1205,7 +1215,7 @@ const saveSync = async () => {
       saveError.value = response.error || 'Failed to save sync'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
@@ -1232,7 +1242,7 @@ const saveChecksum = async () => {
       saveError.value = response.error || 'Failed to save checksum'
     }
   } catch (err: any) {
-    saveError.value = err.message || 'Network error'
+    saveError.value = mapApiError(err)
   } finally {
     saving.value = false
   }
