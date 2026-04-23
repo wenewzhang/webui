@@ -1,5 +1,13 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
+    <!-- Toast -->
+    <Toast
+      :show="toast.show"
+      :message="toast.message"
+      :type="toast.type"
+      @update:show="toast.show = $event"
+    />
+
     <div class="flex items-center justify-between mb-6">
       <h2 class="text-2xl font-bold text-gray-900">{{ $t('samba.createZfsShare') }}</h2>
       <button
@@ -20,10 +28,6 @@
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
       </svg>
       <span class="text-gray-600 mt-2 block">{{ $t('common.loading') }}</span>
-    </div>
-
-    <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4">
-      <p class="text-sm text-red-700">{{ error }}</p>
     </div>
 
     <div class="space-y-6">
@@ -113,16 +117,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { sambaApi, type SambaUser } from '@/api/samba'
+import Toast from '@/components/Toast.vue'
+import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
 const router = useRouter()
 
 const loading = ref(false)
-const error = ref('')
 const datasets = ref<string[]>([])
 const users = ref<SambaUser[]>([])
 const saving = ref(false)
@@ -132,6 +137,18 @@ const shareName = ref('')
 const owner = ref('')
 const quotaValue = ref('none')
 const quotaUnit = ref('G')
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success' as 'success' | 'error'
+})
+
+const showToast = (message: string, type: 'success' | 'error' = 'error') => {
+  toast.message = message || t('error.unknown')
+  toast.type = type
+  toast.show = true
+}
 
 const quotaInput = computed(() => {
   if (quotaValue.value === 'none') {
@@ -150,16 +167,16 @@ const validateQuota = (): boolean => {
 
 const fetchDatasets = async () => {
   loading.value = true
-  error.value = ''
   try {
     const res = await sambaApi.listSambaDatasets()
     if (res.success) {
       datasets.value = res.data.map((d) => d.name) || []
     } else {
-      error.value = res.error || t('samba.loadDatasetsFailed')
+      showToast(res.error || t('samba.loadDatasetsFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('error.unknown'))
   } finally {
     loading.value = false
   }
@@ -179,11 +196,10 @@ const fetchUsers = async () => {
 const handleCreate = async () => {
   if (!selectedDataset.value) return
   if (!validateQuota()) {
-    error.value = 'Quota must be 1-65535 or none'
+    showToast('Quota must be 1-65535 or none')
     return
   }
   saving.value = true
-  error.value = ''
   try {
     const res = await sambaApi.createZfsShare(
       shareName.value || selectedDataset.value.replace(/\//g, '_'),
@@ -194,10 +210,11 @@ const handleCreate = async () => {
     if (res.success) {
       router.push('/samba')
     } else {
-      error.value = res.error || t('samba.createZfsShareFailed')
+      showToast(res.error || t('samba.createZfsShareFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || t('error.unknown'))
   } finally {
     saving.value = false
   }
