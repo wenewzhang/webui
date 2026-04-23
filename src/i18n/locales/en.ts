@@ -465,6 +465,8 @@ export default {
     volumes: 'Volume Mappings',
     noVolumes: 'No volume mappings',
     hostPath: 'Host Path',
+    selectDatasetMountpoint: 'Select Dataset Mount Point',
+    dirName: 'Directory Name',
     containerPath: 'Container Path',
     readOnly: 'Read Only',
     restartPolicy: 'Restart Policy',

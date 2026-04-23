@@ -465,6 +465,8 @@ export default {
     volumes: '卷映射',
     noVolumes: '暂无卷映射',
     hostPath: '主机路径',
+    selectDatasetMountpoint: '选择数据集挂载点',
+    dirName: '目录名称',
     containerPath: '容器路径',
     readOnly: '只读',
     restartPolicy: '重启策略',

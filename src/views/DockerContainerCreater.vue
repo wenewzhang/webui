@@ -151,11 +151,18 @@
           {{ $t('dockerContainers.noVolumes') }}
         </div>
         <div v-for="(item, index) in volumes" :key="index" class="flex gap-2 mb-2 items-center">
+          <select
+            v-model="item.mountpoint"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="">{{ $t('dockerContainers.selectDatasetMountpoint') }}</option>
+            <option v-for="ds in datasets" :key="ds.mountpoint" :value="ds.mountpoint">{{ ds.mountpoint }}</option>
+          </select>
           <input
-            v-model="item.host_path"
+            v-model="item.dir_name"
             type="text"
             class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            :placeholder="$t('dockerContainers.hostPath')"
+            :placeholder="$t('dockerContainers.dirName')"
           />
           <input
             v-model="item.container_path"
@@ -237,6 +244,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { dockerApi, type DockerCreateContainerRequest } from '@/api/docker'
+import { sambaApi } from '@/api/samba'
 import Toast from '@/components/Toast.vue'
 import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
@@ -246,12 +254,13 @@ const router = useRouter()
 const loading = ref(false)
 const saving = ref(false)
 const images = ref<string[]>([])
+const datasets = ref<{ name: string; mountpoint: string }[]>([])
 
 const selectedImage = ref('')
 const containerName = ref('')
 const envVars = ref<{ key: string; value: string }[]>([])
 const ports = ref<{ host_port: string; container_port: string }[]>([])
-const volumes = ref<{ host_path: string; container_path: string; read_only: boolean }[]>([])
+const volumes = ref<{ mountpoint: string; dir_name: string; container_path: string; read_only: boolean }[]>([])
 const restartPolicy = ref('always')
 const autoStart = ref(true)
 
@@ -290,6 +299,17 @@ const fetchImages = async () => {
   }
 }
 
+const fetchDatasets = async () => {
+  try {
+    const res = await sambaApi.listSambaDatasets()
+    if (res.success) {
+      datasets.value = res.data || []
+    }
+  } catch (err: any) {
+    // silent fail
+  }
+}
+
 const addEnvVar = () => {
   envVars.value.push({ key: '', value: '' })
 }
@@ -307,7 +327,7 @@ const removePort = (index: number) => {
 }
 
 const addVolume = () => {
-  volumes.value.push({ host_path: '', container_path: '', read_only: false })
+  volumes.value.push({ mountpoint: '', dir_name: '', container_path: '', read_only: false })
 }
 
 const removeVolume = (index: number) => {
@@ -324,7 +344,13 @@ const handleCreate = async () => {
     })
 
     const validPorts = ports.value.filter((p) => p.host_port && p.container_port)
-    const validVolumes = volumes.value.filter((v) => v.host_path && v.container_path)
+    const validVolumes = volumes.value
+      .filter((v) => (v.mountpoint || v.dir_name) && v.container_path)
+      .map((v) => ({
+        host_path: v.mountpoint ? v.mountpoint + '/' + v.dir_name : v.dir_name,
+        container_path: v.container_path,
+        read_only: v.read_only
+      }))
 
     const req: DockerCreateContainerRequest = {
       image: selectedImage.value,
@@ -356,5 +382,6 @@ const goBack = () => {
 
 onMounted(() => {
   fetchImages()
+  fetchDatasets()
 })
 </script>
