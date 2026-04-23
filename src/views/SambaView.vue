@@ -32,15 +32,6 @@
       </div>
     </div>
 
-    <div v-else-if="error" class="text-center py-8">
-      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mb-4">
-        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-      <p class="text-red-600">{{ error }}</p>
-    </div>
-
     <div v-else class="space-y-8">
       <!-- Dir Shares -->
       <div>
@@ -264,7 +255,6 @@ const { t } = useI18n()
 const router = useRouter()
 
 const loading = ref(false)
-const error = ref('')
 const dirShares = ref<DirShare[]>([])
 const zfsShares = ref<ZfsShare[]>([])
 const showZfsShareModal = ref(false)
@@ -280,9 +270,26 @@ const toast = reactive({
   type: 'success' as 'success' | 'error'
 })
 
+const showToast = (message: string | any, type: 'success' | 'error' = 'error') => {
+  let msg = ''
+  if (typeof message === 'string') {
+    msg = message
+  } else if (message && typeof message === 'object') {
+    msg = message.message || message.error || ''
+  }
+
+  if (msg.toLowerCase().includes('permission denied') ||
+      msg.toLowerCase().includes('only admin users can perform this operation')) {
+    msg = t('common.permissionDenied')
+  }
+
+  toast.message = msg || t('error.unknown')
+  toast.type = type
+  toast.show = true
+}
+
 const fetchShares = async () => {
   loading.value = true
-  error.value = ''
   try {
     const [dirRes, zfsRes] = await Promise.all([
       sambaApi.listDirShares(),
@@ -292,16 +299,16 @@ const fetchShares = async () => {
     if (dirRes.success) {
       dirShares.value = dirRes.shares || []
     } else {
-      error.value = dirRes.error || t('samba.loadDirSharesFailed')
+      showToast(dirRes.error || t('samba.loadDirSharesFailed'))
     }
 
     if (zfsRes.success) {
       zfsShares.value = zfsRes.shares || []
     } else {
-      error.value = zfsRes.error || t('samba.loadZfsSharesFailed')
+      showToast(zfsRes.error || t('samba.loadZfsSharesFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    showToast(err.response?.data?.error)
   } finally {
     loading.value = false
   }
@@ -334,10 +341,10 @@ const handleConfirmCloseDirShare = async () => {
     if (res.success) {
       await fetchShares()
     } else {
-      error.value = res.error || t('samba.closeDirShareFailed')
+      showToast(res.error || t('samba.closeDirShareFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    showToast(err.response?.data?.error)
   } finally {
     closingDirShare.value = ''
     confirmModalDirShare.value = null
@@ -358,10 +365,10 @@ const handleConfirmClose = async () => {
     if (res.success) {
       await fetchShares()
     } else {
-      error.value = res.error || t('samba.closeZfsShareFailed')
+      showToast(res.error || t('samba.closeZfsShareFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    showToast(err.response?.data?.error)
   } finally {
     closingShare.value = ''
     confirmModalShare.value = null
