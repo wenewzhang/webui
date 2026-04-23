@@ -392,6 +392,9 @@ const mapCloneError = (apiError: string | null | undefined): string => {
   if (lower.includes('new name must contain only alphanumeric characters, underscores, hyphens, or dots')) {
     return t('dataset.cloneErrorInvalidName')
   }
+  if (lower.includes('only admin users can perform this operation')) {
+    return t('common.permissionDenied')
+  }
   return apiError
 }
 
@@ -436,6 +439,9 @@ const mapCreateError = (apiError: string | null | undefined): string => {
   if (lower.includes('new name must contain only alphanumeric characters, underscores, hyphens, or dots')) {
     return t('dataset.createErrorInvalidName')
   }
+  if (lower.includes('only admin users can perform this operation')) {
+    return t('common.permissionDenied')
+  }  
   return apiError
 }
 
@@ -473,6 +479,9 @@ const mapPromoteError = (apiError: string | null | undefined): string => {
     const datasetName = match ? match[1] : ''
     return t('dataset.promoteErrorNotCloned', { name: datasetName })
   }
+  if (lower.includes('only admin users can perform this operation')) {
+    return t('common.permissionDenied')
+  }  
   return apiError
 }
 
