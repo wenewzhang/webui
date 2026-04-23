@@ -1,5 +1,13 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
+    <!-- Toast -->
+    <Toast
+      :show="toast.show"
+      :message="toast.message"
+      :type="toast.type"
+      @update:show="toast.show = $event"
+    />
+
     <ConfirmModal
       :show="showConfirmModal"
       :title="t('dockerContainers.deleteConfirmTitle')"
@@ -31,10 +39,6 @@
         </svg>
         {{ $t('common.refresh') }}
       </button>
-    </div>
-
-    <div v-if="error" class="mb-4 p-4 bg-red-50 text-red-700 rounded-md">
-      {{ error }}
     </div>
 
     <div v-if="message" class="mb-4 p-4 bg-green-50 text-green-700 rounded-md">
@@ -190,10 +194,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import Toast from '@/components/Toast.vue'
+import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
 
@@ -207,12 +213,23 @@ interface DockerContainer {
 
 const containers = ref<DockerContainer[]>([])
 const loading = ref(false)
-const error = ref('')
 const message = ref('')
 const actionMap = ref<Record<string, boolean>>({})
 const currentAction = ref('')
 const showConfirmModal = ref(false)
 const pendingActionId = ref('')
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success' as 'success' | 'error'
+})
+
+const showToast = (message: string, type: 'success' | 'error' = 'error') => {
+  toast.message = message || t('error.unknown')
+  toast.type = type
+  toast.show = true
+}
 
 const formatDate = (timestamp: number): string => {
   if (!timestamp) return '-'
@@ -222,7 +239,6 @@ const formatDate = (timestamp: number): string => {
 
 const fetchContainers = async () => {
   loading.value = true
-  error.value = ''
   message.value = ''
 
   try {
@@ -230,10 +246,11 @@ const fetchContainers = async () => {
     if (res.success) {
       containers.value = res.containers || []
     } else {
-      error.value = res.message || t('dockerContainers.fetchFailed')
+      showToast(res.message || t('dockerContainers.fetchFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerContainers.fetchFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerContainers.fetchFailed'))
   } finally {
     loading.value = false
   }
@@ -242,7 +259,6 @@ const fetchContainers = async () => {
 const handleStart = async (containerId: string) => {
   actionMap.value[containerId] = true
   currentAction.value = 'start'
-  error.value = ''
   message.value = ''
 
   try {
@@ -251,10 +267,11 @@ const handleStart = async (containerId: string) => {
       message.value = t('dockerContainers.startSuccess', { id: containerId })
       await fetchContainers()
     } else {
-      error.value = res.message || t('dockerContainers.startFailed')
+      showToast(res.message || t('dockerContainers.startFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerContainers.startFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerContainers.startFailed'))
   } finally {
     actionMap.value[containerId] = false
     currentAction.value = ''
@@ -264,7 +281,6 @@ const handleStart = async (containerId: string) => {
 const handleRestart = async (containerId: string) => {
   actionMap.value[containerId] = true
   currentAction.value = 'restart'
-  error.value = ''
   message.value = ''
 
   try {
@@ -273,10 +289,11 @@ const handleRestart = async (containerId: string) => {
       message.value = t('dockerContainers.restartSuccess', { id: containerId })
       await fetchContainers()
     } else {
-      error.value = res.message || t('dockerContainers.restartFailed')
+      showToast(res.message || t('dockerContainers.restartFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerContainers.restartFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerContainers.restartFailed'))
   } finally {
     actionMap.value[containerId] = false
     currentAction.value = ''
@@ -286,7 +303,6 @@ const handleRestart = async (containerId: string) => {
 const handleStop = async (containerId: string) => {
   actionMap.value[containerId] = true
   currentAction.value = 'stop'
-  error.value = ''
   message.value = ''
 
   try {
@@ -295,10 +311,11 @@ const handleStop = async (containerId: string) => {
       message.value = t('dockerContainers.stopSuccess', { id: containerId })
       await fetchContainers()
     } else {
-      error.value = res.message || t('dockerContainers.stopFailed')
+      showToast(res.message || t('dockerContainers.stopFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerContainers.stopFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerContainers.stopFailed'))
   } finally {
     actionMap.value[containerId] = false
     currentAction.value = ''
@@ -317,7 +334,6 @@ const onConfirmDelete = async () => {
 
   actionMap.value[containerId] = true
   currentAction.value = 'delete'
-  error.value = ''
   message.value = ''
 
   try {
@@ -326,10 +342,11 @@ const onConfirmDelete = async () => {
       message.value = t('dockerContainers.deleteSuccess', { id: containerId })
       containers.value = containers.value.filter((c) => c.id !== containerId)
     } else {
-      error.value = res.message || t('dockerContainers.deleteFailed')
+      showToast(res.message || t('dockerContainers.deleteFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerContainers.deleteFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerContainers.deleteFailed'))
   } finally {
     actionMap.value[containerId] = false
     currentAction.value = ''

@@ -1,5 +1,13 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
+    <!-- Toast -->
+    <Toast
+      :show="toast.show"
+      :message="toast.message"
+      :type="toast.type"
+      @update:show="toast.show = $event"
+    />
+
     <ConfirmModal
       :show="showConfirmModal"
       :title="t('dockerImages.deleteConfirmTitle')"
@@ -31,10 +39,6 @@
         </svg>
         {{ $t('common.refresh') }}
       </button>
-    </div>
-
-    <div v-if="error" class="mb-4 p-4 bg-red-50 text-red-700 rounded-md">
-      {{ error }}
     </div>
 
     <div v-if="message" class="mb-4 p-4 bg-green-50 text-green-700 rounded-md">
@@ -131,10 +135,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import Toast from '@/components/Toast.vue'
+import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
 
@@ -147,11 +153,22 @@ interface DockerImage {
 
 const images = ref<DockerImage[]>([])
 const loading = ref(false)
-const error = ref('')
 const message = ref('')
 const deletingMap = ref<Record<string, boolean>>({})
 const showConfirmModal = ref(false)
 const pendingDeleteId = ref('')
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success' as 'success' | 'error'
+})
+
+const showToast = (message: string, type: 'success' | 'error' = 'error') => {
+  toast.message = message || t('error.unknown')
+  toast.type = type
+  toast.show = true
+}
 
 const formatDate = (timestamp: number): string => {
   if (!timestamp) return '-'
@@ -173,7 +190,6 @@ const formatSize = (bytes: number): string => {
 
 const fetchImages = async () => {
   loading.value = true
-  error.value = ''
   message.value = ''
 
   try {
@@ -186,10 +202,11 @@ const fetchImages = async () => {
         size: img.size,
       }))
     } else {
-      error.value = res.message || t('dockerSearch.searchFailed')
+      showToast(res.message || t('dockerSearch.searchFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerSearch.searchFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerSearch.searchFailed'))
   } finally {
     loading.value = false
   }
@@ -206,7 +223,6 @@ const onConfirmDelete = async () => {
   if (!imageId) return
 
   deletingMap.value[imageId] = true
-  error.value = ''
   message.value = ''
 
   try {
@@ -215,10 +231,11 @@ const onConfirmDelete = async () => {
       message.value = t('dockerImages.deleteSuccess', { id: imageId })
       images.value = images.value.filter((img) => img.id !== imageId)
     } else {
-      error.value = res.message || t('dockerImages.deleteFailed')
+      showToast(res.message || t('dockerImages.deleteFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('dockerImages.deleteFailed')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerImages.deleteFailed'))
   } finally {
     deletingMap.value[imageId] = false
     pendingDeleteId.value = ''
