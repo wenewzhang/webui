@@ -18,7 +18,19 @@
       @cancel="onCancelDelete"
     />
     <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-4">
       <h2 class="text-2xl font-bold text-gray-900">{{ $t('route.dockerContainers') }}</h2>
+      <button
+        @click="router.push('/apps/docker-containers/create')"
+        class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        {{ $t('common.create') }}
+    </button>
+    </div>
       <button
         @click="fetchContainers"
         :disabled="loading"
@@ -195,6 +207,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
 import ConfirmModal from '@/components/ConfirmModal.vue'
@@ -202,6 +215,7 @@ import Toast from '@/components/Toast.vue'
 import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
+const router = useRouter()
 
 interface DockerContainer {
   id: string

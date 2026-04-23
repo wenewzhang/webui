@@ -140,6 +140,12 @@ const router = createRouter({
               meta: { title: 'route.dockerContainers' },
             },
             {
+              path: 'docker-containers/create',
+              name: 'DockerContainerCreate',
+              component: () => import('@/views/DockerContainerCreater.vue'),
+              meta: { title: 'route.createDockerContainer' },
+            },
+            {
               path: 'docker-settings',
               name: 'DockerSettings',
               component: () => import('@/views/DockerSettings.vue'),

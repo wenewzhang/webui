@@ -64,6 +64,21 @@ export interface DockerContainerActionResponse {
   message?: string
 }
 
+export interface DockerCreateContainerRequest {
+  image: string
+  name: string
+  env?: Record<string, string>
+  ports?: { host_port: string; container_port: string }[]
+  volumes?: { host_path: string; container_path: string; read_only: boolean }[]
+  restart_policy?: string
+  auto_start?: boolean
+}
+
+export interface DockerCreateContainerResponse {
+  success: boolean
+  message?: string
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -128,6 +143,11 @@ export const dockerApi = {
   removePod(podName: string): Promise<DockerContainerActionResponse> {
     return apiClient
       .post(`/podman/pod/remove/${podName}`)
+      .then((res) => res.data)
+  },
+  createContainer(data: DockerCreateContainerRequest): Promise<DockerCreateContainerResponse> {
+    return apiClient
+      .post('/docker/create_container', data)
       .then((res) => res.data)
   },
 }
