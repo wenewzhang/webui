@@ -250,6 +250,7 @@ import { sambaApi, type DirShare, type ZfsShare } from '@/api/samba'
 import SambaZFSshare from './SambaZFSshare.vue'
 import Toast from '@/components/Toast.vue'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -271,18 +272,7 @@ const toast = reactive({
 })
 
 const showToast = (message: string | any, type: 'success' | 'error' = 'error') => {
-  let msg = ''
-  if (typeof message === 'string') {
-    msg = message
-  } else if (message && typeof message === 'object') {
-    msg = message.message || message.error || ''
-  }
-
-  if (msg.toLowerCase().includes('permission denied') ||
-      msg.toLowerCase().includes('only admin users can perform this operation')) {
-    msg = t('common.permissionDenied')
-  }
-
+  const msg = permissionDeniedMessage(t, message)
   toast.message = msg || t('error.unknown')
   toast.type = type
   toast.show = true
