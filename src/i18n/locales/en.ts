@@ -54,6 +54,7 @@ export default {
     start: 'Start',
     stop: 'Stop',
     restart: 'Restart',
+    permissionDenied: 'Only admin users can perform this operation',
   },
   // Login Page
   login: {

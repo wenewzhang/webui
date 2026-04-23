@@ -283,6 +283,15 @@ const showToastMessage = (message: string, type: 'success' | 'error' = 'success'
   showToast.value = true
 }
 
+// 映射 API 错误消息，处理权限不足等通用错误
+const mapApiError = (err: any): string => {
+  const msg = err.response?.data?.error || err.message || t('error.networkError')
+  if (typeof msg === 'string' && msg.toLowerCase().includes('only admin users can perform this operation')) {
+    return t('common.permissionDenied')
+  }
+  return msg
+}
+
 // Toast 隐藏回调
 const onToastHide = () => {
   toastMessage.value = ''
@@ -319,7 +328,7 @@ const fetchDevices = async () => {
       error.value = response.error || t('error.unknown')
     }
   } catch (err: any) {
-    error.value = err.message || t('error.networkError')
+    error.value = mapApiError(err)
   } finally {
     loading.value = false
   }
@@ -348,7 +357,7 @@ const fetchFreeDisksAndParts = async () => {
       freeDiskError.value = partsResponse.error || t('error.unknown')
     }
   } catch (err: any) {
-    freeDiskError.value = err.message || t('error.networkError')
+    freeDiskError.value = mapApiError(err)
   } finally {
     freeDiskLoading.value = false
   }
@@ -462,7 +471,7 @@ const handleReplace = async () => {
       showToastMessage(`${t('pool.replaceFailed', { poolName: poolName.value })}\n${toastErrorMsg}`, 'error')
     }
   } catch (err: any) {
-    showToastMessage(`${t('pool.replaceFailed', { poolName: poolName.value })}\n${err.message || t('error.networkError')}`, 'error')
+    showToastMessage(`${t('pool.replaceFailed', { poolName: poolName.value })}\n${mapApiError(err)}`, 'error')
   } finally {
     replacing.value = false
   }
@@ -505,9 +514,9 @@ const handleDetach = async (deviceName: string) => {
       showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${errorMsg}`, 'error')
     }
   } catch (err: any) {
-    detachError.value = err.message || t('error.networkError')
+    detachError.value = mapApiError(err)
     // 显示网络错误 toast
-    showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${err.message || t('error.networkError')}`, 'error')
+    showToastMessage(`${t('pool.detachFailed', { poolName: poolName.value })}\n${mapApiError(err)}`, 'error')
   } finally {
     detaching.value = false
     selectedPoolDevice.value = null
@@ -572,7 +581,7 @@ const handleAttach = async () => {
     }
   } catch (err: any) {
     // 显示网络错误 toast
-    showToastMessage(`${t('pool.attachFailed', { poolName: poolName.value })}\n${err.message || t('error.networkError')}`, 'error')
+    showToastMessage(`${t('pool.attachFailed', { poolName: poolName.value })}\n${mapApiError(err)}`, 'error')
   } finally {
     attaching.value = false
   }

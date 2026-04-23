@@ -54,6 +54,7 @@ export default {
     start: '启动',
     stop: '停止',
     restart: '重启',
+    permissionDenied: '只有管理员才能执行此操作',
   },
   // 登录页面
   login: {
