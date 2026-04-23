@@ -13,6 +13,14 @@
         <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
           <!-- Modal 内容 -->
           <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+            <!-- Toast -->
+            <Toast
+              :show="toast.show"
+              :message="toast.message"
+              :type="toast.type"
+              @update:show="toast.show = $event"
+            />
+
             <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
               <div class="sm:flex sm:items-start">
                 <!-- 图标 -->
@@ -34,11 +42,6 @@
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       <span class="text-gray-600">{{ $t('common.loading') }}</span>
-                    </div>
-
-                    <!-- 错误状态 -->
-                    <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4">
-                      <p class="text-sm text-red-700">{{ error }}</p>
                     </div>
 
                     <!-- 数据展示 -->
@@ -119,9 +122,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, reactive } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { sambaApi } from '@/api/samba'
+import Toast from '@/components/Toast.vue'
+import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
 
@@ -138,11 +143,22 @@ const emit = defineEmits<{
 }>()
 
 const loading = ref(false)
-const error = ref('')
 const shareInfo = ref<Record<string, any> | null>(null)
 const users = ref<{ username: string }[]>([])
 const usersLoading = ref(false)
 const saving = ref(false)
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success' as 'success' | 'error'
+})
+
+const showToast = (message: string, type: 'success' | 'error' = 'error') => {
+  toast.message = message || t('error.unknown')
+  toast.type = type
+  toast.show = true
+}
 
 const flattenedInfo = computed(() => {
   if (!shareInfo.value) return {}
@@ -178,17 +194,16 @@ const formatValue = (value: any): string => {
 const fetchShareInfo = async () => {
   if (!props.dataset) return
   loading.value = true
-  error.value = ''
   shareInfo.value = null
   try {
     const res = await sambaApi.getZfsShareInfo(props.dataset)
     if (res.success) {
       shareInfo.value = res.data || null
     } else {
-      error.value = res.error || t('samba.loadZfsShareInfoFailed')
+      showToast(res.error || t('samba.loadZfsShareInfoFailed'))
     }
   } catch (err: any) {
-    error.value = err.message || t('error.unknown')
+    showToast(err.message || t('error.unknown'))
   } finally {
     loading.value = false
   }
@@ -215,7 +230,6 @@ const onClose = () => {
 const onConfirm = async () => {
   if (!shareInfo.value || !props.dataset) return
   saving.value = true
-  error.value = ''
   try {
     const res = await sambaApi.updateZfsShare(
       props.dataset,
@@ -230,7 +244,9 @@ const onConfirm = async () => {
       emit('saved', false, errMsg)
     }
   } catch (err: any) {
-    const errMsg = err.message || t('error.unknown')
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    const errMsg = msg || t('error.unknown')
+    showToast(errMsg)
     emit('saved', false, errMsg)
   } finally {
     saving.value = false
