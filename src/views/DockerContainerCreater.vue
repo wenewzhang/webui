@@ -280,7 +280,7 @@ const fetchImages = async () => {
       })
       images.value = tags
     } else {
-      showToast(res.message || t('dockerImages.loadFailed'))
+      showToast(res.message || t('dockerContainers.loadImagesFailed'))
     }
   } catch (err: any) {
     const msg = permissionDeniedMessage(t, err.response?.data)
