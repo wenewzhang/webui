@@ -3,7 +3,6 @@
     <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ $t('nav.storageAll') }}</h2>
 
     <div v-if="loading" class="text-gray-600">{{ $t('common.loading') }}</div>
-    <div v-else-if="error" class="text-red-600">{{ error }}</div>
     <div v-else-if="disks.length" class="space-y-6">
       <!-- 遍历所有磁盘 -->
       <div
@@ -144,6 +143,13 @@
     @cancel="onCancelDelete"
   />
 
+  <Toast
+    v-model:show="showToast"
+    :message="toastMessage"
+    :type="toastType"
+    @hide="onToastHide"
+  />
+
   <!-- Create Partition Modal -->
   <div v-if="showPartitionModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="partition-modal-title" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -258,11 +264,25 @@ import { onMounted, ref, reactive } from 'vue'
 import { storageApi, type Disk } from '@/api/storage'
 import i18n from '@/i18n'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import Toast from '@/components/Toast.vue'
 
 const t = i18n.global.t
 const disks = ref<Disk[]>([])
 const loading = ref(false)
-const error = ref<string | null>(null)
+// Toast state
+const showToast = ref(false)
+const toastMessage = ref('')
+const toastType = ref<'success' | 'error'>('success')
+
+const showToastMessage = (message: string, type: 'success' | 'error' = 'success') => {
+  toastMessage.value = message
+  toastType.value = type
+  showToast.value = true
+}
+
+const onToastHide = () => {
+  toastMessage.value = ''
+}
 
 // Partition modal state
 const showPartitionModal = ref(false)
@@ -291,16 +311,15 @@ const pendingDeleteDisk = ref<Disk | null>(null)
 
 const fetchDisks = async () => {
   loading.value = true
-  error.value = null
   try {
     const res = await storageApi.getDisks()
     if (res.success) {
       disks.value = res.data
     } else {
-      error.value = res.error || t('error.unknown')
+      showToastMessage(res.error || t('error.unknown'), 'error')
     }
   } catch (err: any) {
-    error.value = err.response?.data?.error || t('error.networkError')
+    showToastMessage(err.response?.data?.error || t('error.networkError'), 'error')
   } finally {
     loading.value = false
   }
@@ -481,10 +500,10 @@ const onConfirmDelete = async () => {
     if (res.success) {
       await fetchDisks()
     } else {
-      error.value = mapDeleteError(res.error)
+      showToastMessage(mapDeleteError(res.error), 'error')
     }
   } catch (err: any) {
-    error.value = mapDeleteError(err.response?.data?.error)
+    showToastMessage(mapDeleteError(err.response?.data?.error), 'error')
   }
 }
 
