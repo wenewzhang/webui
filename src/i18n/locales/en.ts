@@ -474,6 +474,19 @@ export default {
     createFailed: 'Failed to create container',
     loadImagesFailed: 'Failed to load images',
   },
+  // Docker Settings Page
+  dockerSettings: {
+    registryTitle: 'Docker Registry',
+    mirrorTitle: 'Mirror Address',
+    noData: 'No data',
+    fetchRegistryFailed: 'Failed to fetch Docker registry',
+    fetchMirrorFailed: 'Failed to fetch mirror address',
+    quickSelect: 'Quick Select Registry',
+    inputPrefix: 'Select or enter prefix',
+    inputLocation: 'Select or enter location',
+    updateRegistrySuccess: 'Docker registry updated successfully',
+    updateRegistryFailed: 'Failed to update Docker registry',
+  },
   // Docker Search Page
   dockerSearch: {
     placeholder: 'Enter image name, e.g. nginx',

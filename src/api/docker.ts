@@ -79,6 +79,33 @@ export interface DockerCreateContainerResponse {
   message?: string
 }
 
+export interface DockerSettingRegistryResponse {
+  success: boolean
+  message?: string
+  registry?: string
+  [key: string]: any
+}
+
+export interface DockerSettingMirrorResponse {
+  success: boolean
+  message?: string
+  mirrors?: string[]
+  mirror?: string
+  [key: string]: any
+}
+
+export interface DockerRegistryConfig {
+  prefix?: string
+  location?: string
+  insecure?: boolean
+  [key: string]: any
+}
+
+export interface DockerSettingRegistryUpdateResponse {
+  success: boolean
+  message?: string
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -148,6 +175,21 @@ export const dockerApi = {
   createContainer(data: DockerCreateContainerRequest): Promise<DockerCreateContainerResponse> {
     return apiClient
       .post('/docker/create_container', data)
+      .then((res) => res.data)
+  },
+  getSettingRegistry(): Promise<DockerSettingRegistryResponse> {
+    return apiClient
+      .get('/docker/setting/registry')
+      .then((res) => res.data)
+  },
+  getSettingMirror(): Promise<DockerSettingMirrorResponse> {
+    return apiClient
+      .get('/docker/setting/mirror')
+      .then((res) => res.data)
+  },
+  updateSettingRegistry(data: DockerRegistryConfig): Promise<DockerSettingRegistryUpdateResponse> {
+    return apiClient
+      .post('/docker/setting/registry', data)
       .then((res) => res.data)
   },
 }

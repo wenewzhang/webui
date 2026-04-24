@@ -474,6 +474,19 @@ export default {
     createFailed: '创建容器失败',
     loadImagesFailed: '加载镜像失败',
   },
+  // Docker 设置页面
+  dockerSettings: {
+    registryTitle: 'Docker 源地址',
+    mirrorTitle: '下载镜像地址',
+    noData: '暂无数据',
+    fetchRegistryFailed: '获取 Docker 源地址失败',
+    fetchMirrorFailed: '获取下载镜像地址失败',
+    quickSelect: '快速选择 Registry',
+    inputPrefix: '请选择或输入 prefix',
+    inputLocation: '请选择或输入 location',
+    updateRegistrySuccess: 'Docker 源地址更新成功',
+    updateRegistryFailed: 'Docker 源地址更新失败',
+  },
   // Docker 搜索页面
   dockerSearch: {
     placeholder: '请输入镜像名称，例如 nginx',
