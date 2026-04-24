@@ -131,7 +131,7 @@ const handleAction = async () => {
     }
     if (res.success) {
       toastType.value = 'success'
-      toastMessage.value = forceRestart ? t('system.forceRestarting') : isRestart.value ? t('system.restarting') : t('system.shuttingDown')
+      toastMessage.value = isRestart.value ? t('system.restarting') : t('system.shuttingDown')
     } else {
       toastType.value = 'error'
       toastMessage.value = res.message?.toLowerCase().includes('permission denied')
