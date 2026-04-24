@@ -492,6 +492,10 @@ export default {
     addMirror: 'Add Mirror',
     addMirrorSuccess: 'Mirror added successfully',
     addMirrorFailed: 'Failed to add mirror',
+    deleteMirrorConfirmTitle: 'Confirm Delete',
+    deleteMirrorConfirm: 'Are you sure you want to delete mirror {location}?',
+    deleteMirrorSuccess: 'Mirror deleted successfully',
+    deleteMirrorFailed: 'Failed to delete mirror',
   },
   // Docker Search Page
   dockerSearch: {

@@ -492,6 +492,10 @@ export default {
     addMirror: '添加镜像地址',
     addMirrorSuccess: '添加镜像地址成功',
     addMirrorFailed: '添加镜像地址失败',
+    deleteMirrorConfirmTitle: '确认删除',
+    deleteMirrorConfirm: '确定要删除镜像地址 {location} 吗？',
+    deleteMirrorSuccess: '删除镜像地址成功',
+    deleteMirrorFailed: '删除镜像地址失败',
   },
   // Docker 搜索页面
   dockerSearch: {

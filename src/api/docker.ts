@@ -208,4 +208,9 @@ export const dockerApi = {
       .post('/docker/setting/mirror', data)
       .then((res) => res.data)
   },
+  deleteSettingMirror(location: string): Promise<DockerCreateMirrorResponse> {
+    return apiClient
+      .delete('/docker/setting/mirror', { data: { location } })
+      .then((res) => res.data)
+  },
 }

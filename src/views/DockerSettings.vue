@@ -10,6 +10,16 @@
       @update:show="toast.show = $event"
     />
 
+    <ConfirmModal
+      :show="showConfirmModal"
+      :title="t('dockerSettings.deleteMirrorConfirmTitle')"
+      :message="t('dockerSettings.deleteMirrorConfirm', { location: pendingDeleteLocation })"
+      :confirm-text="t('common.confirm')"
+      :cancel-text="t('common.cancel')"
+      @confirm="onConfirmDelete"
+      @cancel="onCancelDelete"
+    />
+
     <div class="mt-6 space-y-6">
       <!-- Docker 源地址 -->
       <div class="border border-gray-200 rounded-lg p-4">
@@ -180,6 +190,7 @@
               <tr>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Insecure</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('common.action') }}</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -192,6 +203,28 @@
                   <span v-else class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                     false
                   </span>
+                </td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                  <button
+                    @click="handleDelete(item.location)"
+                    :disabled="deletingMirror"
+                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg
+                      v-if="deletingMirror && pendingDeleteLocation === item.location"
+                      class="animate-spin -ml-1 mr-1 h-3 w-3 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    {{ $t('common.delete') }}
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -211,6 +244,7 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { dockerApi, type DockerRegistryConfig } from '@/api/docker'
 import Toast from '@/components/Toast.vue'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
@@ -229,6 +263,9 @@ const loadingRegistry = ref(false)
 const loadingMirror = ref(false)
 const savingRegistry = ref(false)
 const showRegistrySelector = ref(false)
+const showConfirmModal = ref(false)
+const pendingDeleteLocation = ref('')
+const deletingMirror = ref(false)
 
 const registryOptions = ['docker.io', 'quay.io']
 
@@ -240,6 +277,39 @@ const selectRegistry = (value: string) => {
 
 const goToAddMirror = () => {
   router.push('/apps/docker-settings/mirror/add')
+}
+
+const handleDelete = (location: string) => {
+  pendingDeleteLocation.value = location
+  showConfirmModal.value = true
+}
+
+const onConfirmDelete = async () => {
+  showConfirmModal.value = false
+  const loc = pendingDeleteLocation.value
+  if (!loc) return
+
+  deletingMirror.value = true
+  try {
+    const res = await dockerApi.deleteSettingMirror(loc)
+    if (res.success) {
+      showToast(t('dockerSettings.deleteMirrorSuccess'), 'success')
+      mirrorData.value = (mirrorData.value || []).filter((item: any) => item.location !== loc)
+    } else {
+      showToast(res.message || t('dockerSettings.deleteMirrorFailed'))
+    }
+  } catch (err: any) {
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerSettings.deleteMirrorFailed'))
+  } finally {
+    deletingMirror.value = false
+    pendingDeleteLocation.value = ''
+  }
+}
+
+const onCancelDelete = () => {
+  showConfirmModal.value = false
+  pendingDeleteLocation.value = ''
 }
 
 const toast = reactive({
