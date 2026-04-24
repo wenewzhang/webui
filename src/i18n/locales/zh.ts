@@ -501,6 +501,10 @@ export default {
   // Docker 搜索页面
   dockerSearch: {
     placeholder: '请输入镜像名称，例如 nginx',
+    directInstall: '直接安装镜像',
+    directInstallTitle: '直接安装镜像',
+    directInstallMessage: '请输入镜像名称或 URL',
+    directInstallPlaceholder: '例如: nginx:latest 或 registry.example.com/image:tag',
     progress:'进度条',
     name: '镜像名称',
     stars: '星标数',

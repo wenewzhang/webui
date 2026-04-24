@@ -501,6 +501,10 @@ export default {
   // Docker Search Page
   dockerSearch: {
     placeholder: 'Enter image name, e.g. nginx',
+    directInstall: 'Direct Install Image',
+    directInstallTitle: 'Direct Install Image',
+    directInstallMessage: 'Please enter image name or URL',
+    directInstallPlaceholder: 'e.g. nginx:latest or registry.example.com/image:tag',
     progress: 'Progress',
     name: 'Image Name',
     stars: 'Stars',

@@ -1,6 +1,14 @@
 <template>
   <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-4">{{ $t('route.dockerSearch') }}</h2>
+    <div class="flex items-center justify-start mb-4">
+      <h2 class="text-2xl font-bold text-gray-900 mr-6">{{ $t('route.dockerSearch') }}</h2>
+      <button
+        @click="showDirectInstallModal = true"
+        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      >
+        {{ $t('dockerSearch.directInstall') }}
+      </button>
+    </div>
 
     <!-- 搜索栏 -->
     <div class="flex items-center gap-3 mb-6">
@@ -169,6 +177,17 @@
     <div v-else-if="searched && !loading" class="text-center py-8 text-gray-500">
       {{ $t('dockerSearch.noResults') }}
     </div>
+    <!-- 直接安装镜像 Modal -->
+    <InputModal
+      :show="showDirectInstallModal"
+      :title="$t('dockerSearch.directInstallTitle')"
+      :message="$t('dockerSearch.directInstallMessage')"
+      :placeholder="$t('dockerSearch.directInstallPlaceholder')"
+      :confirm-text="$t('dockerSearch.install')"
+      :cancel-text="$t('common.cancel')"
+      @confirm="handleDirectInstall"
+      @cancel="showDirectInstallModal = false"
+    />
   </div>
 </template>
 
@@ -176,6 +195,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
+import InputModal from '@/components/InputModal.vue'
 
 const { t } = useI18n()
 
@@ -197,6 +217,7 @@ const searched = ref(false)
 const installingMap = ref<Record<string, boolean>>({})
 const activeTasks = ref<PullTask[]>([])
 const localImageTags = ref<string[]>([])
+const showDirectInstallModal = ref(false)
 
 const isImageInstalled = (name: string): boolean => {
   if (!name) return false
@@ -297,6 +318,11 @@ const handleSearch = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleDirectInstall = (imageName: string) => {
+  showDirectInstallModal.value = false
+  handleInstall(imageName)
 }
 
 const handleInstall = async (imageName: string) => {
