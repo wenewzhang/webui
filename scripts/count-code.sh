@@ -4,7 +4,7 @@ echo "=== Code Statistics ==="
 echo ""
 
 echo "By file (.ts & .vue):"
-find ./src -type f \( -name "*.ts" -o -name "*.vue" \) | xargs wc -l
+find ./src -type f \( -name "*.ts" -o -name "*.vue" -o -name "*.css" \) | xargs wc -l
 echo ""
 
 echo "--- Summary ---"
