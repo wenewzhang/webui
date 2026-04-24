@@ -15,59 +15,61 @@
       <div class="border border-gray-200 rounded-lg p-4">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-lg font-semibold text-gray-800">{{ $t('dockerSettings.registryTitle') }}</h3>
-          <button
-            @click="fetchRegistry"
-            :disabled="loadingRegistry"
-            class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <svg
-              v-if="loadingRegistry"
-              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
+          <div class="flex items-center gap-2">
+            <!-- 快速选择 Registry -->
+            <div class="relative inline-block">
+              <button
+                @click="showRegistrySelector = !showRegistrySelector"
+                type="button"
+                class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {{ $t('dockerSettings.quickSelect') }}
+                <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div
+                v-if="showRegistrySelector"
+                class="absolute right-0 z-10 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+              >
+                <div class="py-1" role="menu">
+                  <button
+                    v-for="opt in registryOptions"
+                    :key="opt"
+                    @click="selectRegistry(opt)"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    role="menuitem"
+                  >
+                    {{ opt }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button
+              @click="fetchRegistry"
+              :disabled="loadingRegistry"
+              class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              />
-            </svg>
-            {{ $t('common.refresh') }}
-          </button>
+              <svg
+                v-if="loadingRegistry"
+                class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              {{ $t('common.refresh') }}
+            </button>
+          </div>
         </div>
 
         <div class="space-y-4">
-          <!-- 快速选择 Registry -->
-          <div class="relative inline-block">
-            <button
-              @click="showRegistrySelector = !showRegistrySelector"
-              type="button"
-              class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              {{ $t('dockerSettings.quickSelect') }}
-              <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div
-              v-if="showRegistrySelector"
-              class="absolute z-10 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-            >
-              <div class="py-1" role="menu">
-                <button
-                  v-for="opt in registryOptions"
-                  :key="opt"
-                  @click="selectRegistry(opt)"
-                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                  role="menuitem"
-                >
-                  {{ opt }}
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- prefix -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">prefix</label>
@@ -198,7 +200,7 @@ const loadingMirror = ref(false)
 const savingRegistry = ref(false)
 const showRegistrySelector = ref(false)
 
-const registryOptions = ['docker.io', 'quay.io', 'ghcr.io']
+const registryOptions = ['docker.io', 'quay.io']
 
 const selectRegistry = (value: string) => {
   registryForm.prefix = value
