@@ -145,11 +145,18 @@
       <div class="border border-gray-200 rounded-lg p-4">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-semibold text-gray-800">{{ $t('dockerSettings.mirrorTitle') }}</h3>
-          <button
-            @click="fetchMirror"
-            :disabled="loadingMirror"
-            class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <div class="flex items-center gap-2">
+            <button
+              @click="goToAddMirror"
+              class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              {{ $t('common.add') }}
+            </button>
+            <button
+              @click="fetchMirror"
+              :disabled="loadingMirror"
+              class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
             <svg
               v-if="loadingMirror"
               class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
@@ -165,6 +172,7 @@
             </svg>
             {{ $t('common.refresh') }}
           </button>
+        </div>
         </div>
         <div v-if="Array.isArray(mirrorData) && mirrorData.length > 0" class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
@@ -200,11 +208,13 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import { dockerApi, type DockerRegistryConfig } from '@/api/docker'
 import Toast from '@/components/Toast.vue'
 import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
+const router = useRouter()
 
 const DEFAULT_REGISTRY: DockerRegistryConfig = {
   prefix: '',
@@ -226,6 +236,10 @@ const selectRegistry = (value: string) => {
   registryForm.prefix = value
   registryForm.location = value
   showRegistrySelector.value = false
+}
+
+const goToAddMirror = () => {
+  router.push('/apps/docker-settings/mirror/add')
 }
 
 const toast = reactive({

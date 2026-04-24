@@ -109,6 +109,7 @@ export default {
     dockerImages: 'Docker Images',
     dockerContainers: 'Docker Containers',
     dockerSettings: 'Docker Settings',
+    addDockerMirror: 'Add Docker Mirror',
     terminal: 'Terminal',
     systemRestart: 'System Restart',
     systemShutdown: 'System Shutdown',
@@ -486,6 +487,11 @@ export default {
     inputLocation: 'Select or enter location',
     updateRegistrySuccess: 'Docker registry updated successfully',
     updateRegistryFailed: 'Failed to update Docker registry',
+    location: 'Location',
+    insecure: 'Insecure',
+    addMirror: 'Add Mirror',
+    addMirrorSuccess: 'Mirror added successfully',
+    addMirrorFailed: 'Failed to add mirror',
   },
   // Docker Search Page
   dockerSearch: {

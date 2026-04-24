@@ -112,6 +112,11 @@ export interface DockerSettingRegistryUpdateResponse {
   message?: string
 }
 
+export interface DockerCreateMirrorResponse {
+  success: boolean
+  message?: string
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -196,6 +201,11 @@ export const dockerApi = {
   updateSettingRegistry(data: DockerRegistryConfig): Promise<DockerSettingRegistryUpdateResponse> {
     return apiClient
       .post('/docker/setting/registry', data)
+      .then((res) => res.data)
+  },
+  createSettingMirror(data: DockerMirror): Promise<DockerCreateMirrorResponse> {
+    return apiClient
+      .post('/docker/setting/mirror', data)
       .then((res) => res.data)
   },
 }

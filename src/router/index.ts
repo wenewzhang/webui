@@ -151,6 +151,12 @@ const router = createRouter({
               component: () => import('@/views/DockerSettings.vue'),
               meta: { title: 'route.dockerSettings' },
             },
+            {
+              path: 'docker-settings/mirror/add',
+              name: 'DockerSettingAddMirror',
+              component: () => import('@/views/DockerSettingAddMirror.vue'),
+              meta: { title: 'route.addDockerMirror' },
+            },
           ],
         },
         {

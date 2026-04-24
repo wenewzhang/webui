@@ -109,6 +109,7 @@ export default {
     dockerImages: 'Docker 镜像',
     dockerContainers: 'Docker 容器',
     dockerSettings: 'Docker 设置',
+    addDockerMirror: '添加 Docker 镜像地址',
     terminal: '终端',
     systemRestart: '系统重启',
     systemShutdown: '系统关机',
@@ -486,6 +487,11 @@ export default {
     inputLocation: '请选择或输入 location',
     updateRegistrySuccess: 'Docker 源地址更新成功',
     updateRegistryFailed: 'Docker 源地址更新失败',
+    location: 'Location',
+    insecure: 'Insecure',
+    addMirror: '添加镜像地址',
+    addMirrorSuccess: '添加镜像地址成功',
+    addMirrorFailed: '添加镜像地址失败',
   },
   // Docker 搜索页面
   dockerSearch: {
