@@ -141,7 +141,7 @@
         </div>
       </div>
 
-      <!-- 下载镜像地址 -->
+      <!-- Docker 镜像地址 -->
       <div class="border border-gray-200 rounded-lg p-4">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-lg font-semibold text-gray-800">{{ $t('dockerSettings.mirrorTitle') }}</h3>
@@ -166,8 +166,28 @@
             {{ $t('common.refresh') }}
           </button>
         </div>
-        <div v-if="mirrorData !== null" class="bg-gray-50 rounded-md p-3">
-          <pre class="text-sm text-gray-700 whitespace-pre-wrap font-mono">{{ formatData(mirrorData) }}</pre>
+        <div v-if="Array.isArray(mirrorData) && mirrorData.length > 0" class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Insecure</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="(item, index) in mirrorData" :key="index">
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">{{ item.location || '-' }}</td>
+                <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
+                  <span v-if="item.insecure" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                    true
+                  </span>
+                  <span v-else class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                    false
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div v-else-if="!loadingMirror" class="text-gray-500 text-sm">
           {{ $t('dockerSettings.noData') }}
@@ -248,15 +268,6 @@ const extractRegistryConfig = (res: any): DockerRegistryConfig => {
   }
 }
 
-const formatData = (data: any): string => {
-  if (data === null || data === undefined) return ''
-  if (typeof data === 'string') return data
-  if (Array.isArray(data)) {
-    if (data.length === 0) return t('dockerSettings.noData')
-    return data.map((item) => (typeof item === 'string' ? item : JSON.stringify(item, null, 2))).join('\n')
-  }
-  return JSON.stringify(data, null, 2)
-}
 
 const fetchRegistry = async () => {
   loadingRegistry.value = true

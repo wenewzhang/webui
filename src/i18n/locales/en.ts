@@ -477,10 +477,10 @@ export default {
   // Docker Settings Page
   dockerSettings: {
     registryTitle: 'Docker Registry',
-    mirrorTitle: 'Mirror Address',
+    mirrorTitle: 'Docker Mirror Address',
     noData: 'No data',
     fetchRegistryFailed: 'Failed to fetch Docker registry',
-    fetchMirrorFailed: 'Failed to fetch mirror address',
+    fetchMirrorFailed: 'Failed to fetch Docker mirror address',
     quickSelect: 'Quick Select Registry',
     inputPrefix: 'Select or enter prefix',
     inputLocation: 'Select or enter location',

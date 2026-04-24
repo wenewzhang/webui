@@ -86,10 +86,16 @@ export interface DockerSettingRegistryResponse {
   [key: string]: any
 }
 
+export interface DockerMirror {
+  insecure?: boolean
+  location?: string
+  [key: string]: any
+}
+
 export interface DockerSettingMirrorResponse {
   success: boolean
   message?: string
-  mirrors?: string[]
+  mirrors?: DockerMirror[]
   mirror?: string
   [key: string]: any
 }

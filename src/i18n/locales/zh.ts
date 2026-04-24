@@ -477,10 +477,10 @@ export default {
   // Docker 设置页面
   dockerSettings: {
     registryTitle: 'Docker 源地址',
-    mirrorTitle: '下载镜像地址',
+    mirrorTitle: 'Docker 镜像地址',
     noData: '暂无数据',
     fetchRegistryFailed: '获取 Docker 源地址失败',
-    fetchMirrorFailed: '获取下载镜像地址失败',
+    fetchMirrorFailed: '获取 Docker 镜像地址失败',
     quickSelect: '快速选择 Registry',
     inputPrefix: '请选择或输入 prefix',
     inputLocation: '请选择或输入 location',
