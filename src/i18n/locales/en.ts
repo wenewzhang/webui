@@ -487,6 +487,7 @@ export default {
     inputLocation: 'Select or enter location',
     updateRegistrySuccess: 'Docker registry updated successfully',
     updateRegistryFailed: 'Failed to update Docker registry',
+    prefix: 'Prefix',
     location: 'Location',
     insecure: 'Insecure',
     addMirror: 'Add Mirror',
