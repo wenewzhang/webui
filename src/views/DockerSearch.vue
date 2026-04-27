@@ -57,6 +57,76 @@
       {{ message }}
     </div>
 
+    <!-- 推荐应用 -->
+    <div v-if="recommendedApps.length > 0" class="mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $t('dockerSearch.recommendedApps') }}</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          v-for="item in recommendedApps"
+          :key="item.name"
+          class="border rounded-lg p-4 bg-gray-50 hover:bg-white hover:shadow-md transition-all flex flex-col"
+        >
+          <div class="flex items-start gap-4 mb-3">
+            <img
+              :src="item.icon_url"
+              alt=""
+              class="w-12 h-12 rounded-lg flex-shrink-0 object-cover bg-gray-200"
+              @error="handleImgError"
+            />
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="text-sm font-bold text-gray-900 truncate" :title="item.name">{{ item.name }}</h4>
+                <span class="text-xs text-yellow-600 flex items-center ml-2 flex-shrink-0">
+                  <svg class="w-3 h-3 mr-0.5 fill-current" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  {{ item.stars }}
+                </span>
+              </div>
+              <p class="text-xs text-gray-500 line-clamp-3">
+                {{ locale === 'zh' ? item.cn_description : item.description }}
+              </p>
+            </div>
+          </div>
+          <div class="flex justify-end mt-auto">
+            <button
+              @click="handleInstall(item.url)"
+              :disabled="installingMap[item.url] || isImageInstalled(item.url)"
+              class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <svg
+                v-if="installingMap[item.url]"
+                class="animate-spin -ml-1 mr-1 h-3 w-3 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              <span v-else-if="isImageInstalled(item.url)" class="flex items-center">
+                <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                {{ $t('dockerSearch.installed') }}
+              </span>
+              <span v-else>{{ $t('dockerSearch.install') }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 进行中的拉取任务 -->
     <div v-if="activeTasks.length > 0" class="mb-6 space-y-3">
       <h3 class="text-lg font-semibold text-gray-900">{{ $t('dockerSearch.activeTasks') }}</h3>
@@ -195,9 +265,10 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { dockerApi } from '@/api/docker'
+import { systemApi, type RecommendedApp } from '@/api/system'
 import InputModal from '@/components/InputModal.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 interface PullTask {
   imageName: string
@@ -217,7 +288,15 @@ const searched = ref(false)
 const installingMap = ref<Record<string, boolean>>({})
 const activeTasks = ref<PullTask[]>([])
 const localImageTags = ref<string[]>([])
+const recommendedApps = ref<RecommendedApp[]>([])
 const showDirectInstallModal = ref(false)
+
+const handleImgError = (e: Event) => {
+  const target = e.currentTarget as HTMLElement | null
+  if (target) {
+    target.style.display = 'none'
+  }
+}
 
 const isImageInstalled = (name: string): boolean => {
   if (!name) return false
@@ -359,7 +438,19 @@ const handleInstall = async (imageName: string) => {
   }
 }
 
+const fetchRecommendedApps = async () => {
+  try {
+    const res = await systemApi.recommendedApps()
+    if (res.success) {
+      recommendedApps.value = res.data || []
+    }
+  } catch {
+    // silently ignore
+  }
+}
+
 onMounted(async () => {
+  fetchRecommendedApps()
   try {
     const res = await dockerApi.getImages()
     if (res.success && res.images) {
