@@ -550,11 +550,6 @@ const showExportConfirm = (poolName: string) => {
   showConfirmDialog.value = true
 }
 
-// 显示导出所有存储池确认
-const showExportAllConfirm = () => {
-  alert(t('pool.selectPoolToExport'))
-}
-
 // 取消导出
 const cancelExport = () => {
   showConfirmDialog.value = false

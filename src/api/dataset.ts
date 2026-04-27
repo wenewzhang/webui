@@ -34,7 +34,7 @@ export interface PromoteDatasetResponse {
 
 export interface BootfsResponse {
   success: boolean
-  data: string
+  data: { bootfs: string }
   error: string | null
 }
 

@@ -55,7 +55,7 @@
           </button>
         </div>
         
-        <div v-for="(disk, index) in form.disks" :key="index" class="disk-select-row">
+        <div v-for="(_disk, index) in form.disks" :key="index" class="disk-select-row">
           <select v-model="form.disks[index]" class="form-input form-select disk-select">
             <option value="">{{ $t('pool.selectDisk') }}</option>
             <option 
