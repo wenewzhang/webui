@@ -59,8 +59,26 @@
 
     <!-- 推荐应用 -->
     <div v-if="recommendedApps.length > 0" class="mb-6">
-      <h3 class="text-lg font-semibold text-gray-900 mb-3">{{ $t('dockerSearch.recommendedApps') }}</h3>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <button
+        type="button"
+        class="flex items-center justify-start w-full text-left group mb-3"
+        @click="showRecommendedApps = !showRecommendedApps"
+      >
+        <h3 class="text-lg font-semibold text-gray-900">{{ $t('dockerSearch.recommendedApps') }}</h3>
+        <span class="ml-2 text-gray-400 group-hover:text-gray-600 transition-colors">
+          <svg
+            class="w-5 h-5 transform transition-transform duration-200"
+            :class="{ 'rotate-180': !showRecommendedApps }"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </span>
+      </button>
+      <div v-show="showRecommendedApps" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div
           v-for="item in recommendedApps"
           :key="item.name"
@@ -289,6 +307,7 @@ const installingMap = ref<Record<string, boolean>>({})
 const activeTasks = ref<PullTask[]>([])
 const localImageTags = ref<string[]>([])
 const recommendedApps = ref<RecommendedApp[]>([])
+const showRecommendedApps = ref(true)
 const showDirectInstallModal = ref(false)
 
 const handleImgError = (e: Event) => {
