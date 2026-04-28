@@ -10,7 +10,7 @@
         {{ $t('common.retry') || 'Reconnect' }}
       </button>
     </div>
-    <div ref="terminalContainer" class="terminal-container" />
+    <div ref="terminalContainer" class="terminal-container" tabindex="0" @click="handleClick" />
   </div>
 </template>
 
@@ -25,8 +25,15 @@ let ws: WebSocket | null = null
 const isConnected = ref(false)
 const statusText = ref('Disconnected')
 
+const textEncoder = new TextEncoder()
+const textDecoder = new TextDecoder()
+
 let reconnectTimer: ReturnType<typeof setTimeout> | null = null
 let disposeOnData: (() => void) | null = null
+
+function handleClick() {
+  term?.focus()
+}
 
 function getWsUrl(): string {
   const envUrl = import.meta.env.VITE_TTYD_WS_URL as string | undefined
@@ -52,7 +59,7 @@ function connect() {
 
   console.log('[ttyd] Connecting to:', url)
   try {
-    ws = new WebSocket(url)
+    ws = new WebSocket(url, ['tty'])
   } catch (err) {
     statusText.value = 'Connection failed'
     console.error('WebSocket error:', err)
@@ -60,25 +67,41 @@ function connect() {
     return
   }
 
-  ws.binaryType = 'blob'
+  ws.binaryType = 'arraybuffer'
 
   ws.onopen = () => {
     isConnected.value = true
     statusText.value = 'Connected'
     console.log('[ttyd] WebSocket connected')
+
+    // Send initial terminal size (ttyd protocol: plain JSON on open)
+    if (term) {
+      const init = JSON.stringify({ columns: term.cols, rows: term.rows })
+      ws?.send(textEncoder.encode(init))
+    }
   }
 
   ws.onmessage = (event) => {
     if (!term) return
-    if (typeof event.data === 'string') {
-      term.write(event.data)
-    } else {
-      // Handle Blob (binaryType = 'blob')
-      const reader = new FileReader()
-      reader.onload = () => {
-        term?.write(reader.result as string)
-      }
-      reader.readAsText(event.data)
+    const rawData = event.data as ArrayBuffer
+    const dataView = new Uint8Array(rawData)
+    if (dataView.length === 0) return
+
+    const cmd = String.fromCharCode(dataView[0])
+    const payload = rawData.slice(1)
+
+    switch (cmd) {
+      case '0': // OUTPUT
+        term.write(textDecoder.decode(payload))
+        break
+      case '1': // SET_WINDOW_TITLE
+        // Optionally handle title
+        break
+      case '2': // SET_PREFERENCES
+        // Optionally handle preferences
+        break
+      default:
+        console.warn('[ttyd] unknown command:', cmd)
     }
   }
 
@@ -124,21 +147,32 @@ onMounted(() => {
   })
 
   term.open(terminalContainer.value)
+  term.focus()
 
   // Send user input to ttyd via WebSocket
+  // ttyd protocol: first byte '0' means stdin input
   disposeOnData = term.onData((data) => {
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(data)
+      const payload = new Uint8Array(data.length * 3 + 1)
+      payload[0] = 48 // '0'.charCodeAt(0)
+      const stats = textEncoder.encodeInto(data, payload.subarray(1))
+      ws.send(payload.subarray(0, (stats.written as number) + 1))
     }
   }).dispose
 
-  // Fit terminal to container
+  // Fit terminal to container and notify ttyd of resize
   const fitTerminal = () => {
     if (term && terminalContainer.value) {
       const { width, height } = terminalContainer.value.getBoundingClientRect()
       const cols = Math.max(10, Math.floor(width / 9))
       const rows = Math.max(5, Math.floor(height / 17))
       term.resize(cols, rows)
+
+      // ttyd protocol: first byte '1' means resize
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        const msg = JSON.stringify({ columns: cols, rows: rows })
+        ws.send(textEncoder.encode('1' + msg))
+      }
     }
   }
 
