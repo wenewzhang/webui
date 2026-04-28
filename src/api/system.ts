@@ -16,7 +16,7 @@ export interface RecommendedApp {
 
 export interface RecommendedAppsResponse {
   success: boolean
-  apps?: RecommendedApp[]
+  data?: RecommendedApp[]
   message?: string
 }
 
