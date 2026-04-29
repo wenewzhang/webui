@@ -578,6 +578,12 @@ export default {
     confirmLabel: '我确认执行此操作',
     permissionDenied: '权限不足：只有管理员才能执行此操作',
   },
+  // SSH 设置
+  sshSettings: {
+    permitRootLogin: '允许 Root 登录',
+    passwordAuthentication: '密码认证',
+    prohibitPassword: '公钥认证',
+  },
   // 错误信息
   error: {
     networkError: '网络错误，请检查网络连接',

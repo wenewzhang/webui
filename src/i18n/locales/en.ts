@@ -578,6 +578,12 @@ export default {
     confirmLabel: 'I confirm to proceed with this action',
     permissionDenied: 'Permission denied: only admin users can perform this operation',
   },
+  // SSH Settings
+  sshSettings: {
+    permitRootLogin: 'PermitRootLogin',
+    passwordAuthentication: 'PasswordAuthentication',
+    prohibitPassword: 'SSH Key Authentication',
+  },
   // Error Messages
   error: {
     networkError: 'Network error, please check your connection',

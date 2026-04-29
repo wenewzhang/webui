@@ -50,27 +50,27 @@
                   <div class="mt-4 space-y-4">
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">
-                        PermitRootLogin
+                        {{ $t('sshSettings.permitRootLogin') }}
                       </label>
                       <select
                         v-model="form.permit_root_login"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
                       >
-                        <option value="yes">yes</option>
-                        <option value="no">no</option>
-                        <option value="prohibit-password">prohibit-password</option>
+                        <option value="yes">{{ $t('common.yes') }}</option>
+                        <option value="no">{{ $t('common.no') }}</option>
+                        <option value="prohibit-password">{{ $t('sshSettings.prohibitPassword') }}</option>
                       </select>
                     </div>
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">
-                        PasswordAuthentication
+                        {{ $t('sshSettings.passwordAuthentication') }}
                       </label>
                       <select
                         v-model="form.password_authentication"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
                       >
-                        <option value="yes">yes</option>
-                        <option value="no">no</option>
+                        <option value="yes">{{ $t('common.yes') }}</option>
+                        <option value="no">{{ $t('common.no') }}</option>
                       </select>
                     </div>
                   </div>
