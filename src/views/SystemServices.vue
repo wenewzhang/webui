@@ -97,13 +97,13 @@
               <span
                 :class="[
                   'inline-flex items-center px-3 py-1.5 text-sm font-bold rounded-full uppercase tracking-wide shadow-sm',
-                  item.enabled
+                  item.enabled === 'enabled'
                     ? 'bg-green-500 text-white'
                     : 'bg-gray-400 text-white'
                 ]"
               >
                 <span class="mr-1.5 h-2.5 w-2.5 rounded-full bg-white"></span>
-                {{ item.enabled ? $t('common.yes') : $t('common.no') }}
+                {{ item.enabled === 'enabled' ? $t('common.yes') : $t('common.no') }}
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -189,11 +189,11 @@
                   {{ $t('common.settings') }}
                 </button>
                 <button
-                  @click="handleAutostart(item.name, !item.enabled)"
+                  @click="handleAutostart(item.name, item.enabled === 'disabled')"
                   :disabled="actionMap[item.name]"
                   :class="[
                     'inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
-                    item.enabled
+                    item.enabled === 'enabled'
                       ? 'text-gray-700 bg-gray-100 hover:bg-gray-200 focus:ring-gray-500'
                       : 'text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
                   ]"
@@ -211,7 +211,7 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                  {{ item.enabled ? $t('systemServices.disableAutostart') : $t('systemServices.enableAutostart') }}
+                  {{ item.enabled === 'enabled' ? $t('systemServices.disableAutostart') : $t('systemServices.enableAutostart') }}
                 </button>
               </div>
             </td>
@@ -342,9 +342,9 @@ const onConfirmConfig = async (value: string) => {
   showConfigModal.value = false
   setAction(name, 'config', true)
   try {
-    const res = await systemApi.serviceSetConfig(name, value)
+    const res = await systemApi.serviceSetConfig(service_name, value)
     if (res.success) {
-      showToast(t('systemServices.configSuccess', { name }), 'success')
+      showToast(t('systemServices.configSuccess', { service_name }), 'success')
       await fetchServices()
     } else {
       showToast(res.message || t('systemServices.configFailed'))
@@ -363,15 +363,15 @@ const onCancelConfig = () => {
   pendingServiceName.value = ''
 }
 
-const handleAutostart = async (name: string, enable: boolean) => {
-  setAction(name, 'autostart', true)
+const handleAutostart = async (service_name: string, enable: boolean) => {
+  setAction(service_name, 'autostart', true)
   try {
-    const res = await systemApi.serviceSetAutostart(name, enable)
+    const res = await systemApi.serviceSetAutostart(service_name, enable)
     if (res.success) {
       showToast(
         enable
-          ? t('systemServices.enableAutostartSuccess', { name })
-          : t('systemServices.disableAutostartSuccess', { name }),
+          ? t('systemServices.enableAutostartSuccess', { service_name })
+          : t('systemServices.disableAutostartSuccess', { service_name }),
         'success'
       )
       await fetchServices()
@@ -382,7 +382,7 @@ const handleAutostart = async (name: string, enable: boolean) => {
     const msg = permissionDeniedMessage(t, err.response?.data)
     showToast(msg || err.message || t('systemServices.autostartFailed'))
   } finally {
-    setAction(name, 'autostart', false)
+    setAction(service_name, 'autostart', false)
   }
 }
 

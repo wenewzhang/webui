@@ -558,8 +558,8 @@ export default {
     configFailed: 'Failed to update service configuration',
     enableAutostart: 'Enable Auto Start',
     disableAutostart: 'Disable Auto Start',
-    enableAutostartSuccess: "Service '{name}' auto start enabled",
-    disableAutostartSuccess: "Service '{name}' auto start disabled",
+    enableAutostartSuccess: "Service '{service_name}' auto start enabled",
+    disableAutostartSuccess: "Service '{service_name}' auto start disabled",
     autostartFailed: 'Failed to update auto start setting',
   },
   // System Page

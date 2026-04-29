@@ -48,19 +48,19 @@ export const systemApi = {
   servicesStatus(): Promise<ServicesStatusResponse> {
     return apiClient.get('/system/services_status').then((res) => res.data)
   },
-  serviceStart(name: string): Promise<SystemActionResponse> {
-    return apiClient.post('/system/service_start', { name }).then((res) => res.data)
+  serviceStart(service_name: string): Promise<SystemActionResponse> {
+    return apiClient.post('/system/service_start', { service_name }).then((res) => res.data)
   },
-  serviceRestart(name: string): Promise<SystemActionResponse> {
-    return apiClient.post('/system/service_restart', { name }).then((res) => res.data)
+  serviceRestart(service_name: string): Promise<SystemActionResponse> {
+    return apiClient.post('/system/service_restart', { service_name }).then((res) => res.data)
   },
-  serviceStop(name: string): Promise<SystemActionResponse> {
-    return apiClient.post('/system/service_stop', { name }).then((res) => res.data)
+  serviceStop(service_name: string): Promise<SystemActionResponse> {
+    return apiClient.post('/system/service_stop', { service_name }).then((res) => res.data)
   },
-  serviceSetConfig(name: string, config: string): Promise<SystemActionResponse> {
-    return apiClient.post('/system/service_config', { name, config }).then((res) => res.data)
+  serviceSetConfig(service_name: string, config: string): Promise<SystemActionResponse> {
+    return apiClient.post('/system/service_config', { service_name, config }).then((res) => res.data)
   },
-  serviceSetAutostart(name: string, enable: boolean): Promise<SystemActionResponse> {
-    return apiClient.post('/system/service_autostart', { name, enable }).then((res) => res.data)
+  serviceSetAutostart(service_name: string, enable: boolean): Promise<SystemActionResponse> {
+    return apiClient.post('/system/service_autostart', { service_name, enable }).then((res) => res.data)
   },
 }

@@ -558,8 +558,8 @@ export default {
     configFailed: '更新服务配置失败',
     enableAutostart: '启用随系统启动',
     disableAutostart: '禁用随系统启动',
-    enableAutostartSuccess: "服务 '{name}' 已启用随系统启动",
-    disableAutostartSuccess: "服务 '{name}' 已禁用随系统启动",
+    enableAutostartSuccess: "服务 '{service_name}' 已启用随系统启动",
+    disableAutostartSuccess: "服务 '{service_name}' 已禁用随系统启动",
     autostartFailed: '更新随系统启动设置失败',
   },
   // 系统页面
