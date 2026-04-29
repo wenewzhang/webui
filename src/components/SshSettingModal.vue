@@ -125,10 +125,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { systemApi, type SshSetting } from '@/api/system'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
-
 interface Props {
   show: boolean
 }

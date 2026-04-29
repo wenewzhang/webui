@@ -22,8 +22,8 @@ export interface RecommendedAppsResponse {
 
 export interface ServiceStatus {
   name: string
-  status: string
-  enabled: boolean
+  active: string
+  enabled: string
 }
 
 export interface ServicesStatusResponse {
