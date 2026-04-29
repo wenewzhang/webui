@@ -130,7 +130,7 @@
                 </button>
                 <button
                   @click="handleRestart(item.name)"
-                  :disabled="actionMap[item.name] || item.active === 'active'"
+                  :disabled="actionMap[item.name] || item.active !== 'active'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -170,7 +170,7 @@
                 </button>
                 <button
                   @click="handleConfig(item.name)"
-                  :disabled="actionMap[item.name]"
+                  :disabled="actionMap[item.name] || nonConfigurableServices.includes(item.name)"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -242,6 +242,9 @@ const actionMap = ref<Record<string, boolean>>({})
 const currentActionMap = ref<Record<string, string>>({})
 const showConfigModal = ref(false)
 const pendingServiceName = ref('')
+
+// Services that do not support configuration
+const nonConfigurableServices = ['ttyd.service']
 
 const toast = reactive({
   show: false,
@@ -342,9 +345,9 @@ const onConfirmConfig = async (value: string) => {
   showConfigModal.value = false
   setAction(name, 'config', true)
   try {
-    const res = await systemApi.serviceSetConfig(service_name, value)
+    const res = await systemApi.serviceSetConfig(name, value)
     if (res.success) {
-      showToast(t('systemServices.configSuccess', { service_name }), 'success')
+      showToast(t('systemServices.configSuccess', { service_name: name }), 'success')
       await fetchServices()
     } else {
       showToast(res.message || t('systemServices.configFailed'))
