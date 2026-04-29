@@ -10,6 +10,7 @@ Standards-Version: 4.6.0
 Package: webui
 Architecture: all
 Depends: ${misc:Depends},
-         nginx
+         nginx,
+         openssl
 Description: OneNAS Web UI
  OneNAS SCALE Web User Interface built with Vue.js and Vite.

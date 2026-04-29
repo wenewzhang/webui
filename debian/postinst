@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+case "$1" in
+    configure)
+        mkdir -p /etc/nginx/ssl
+        if [ ! -f /etc/nginx/ssl/nginx-selfsigned.key ] || [ ! -f /etc/nginx/ssl/nginx-selfsigned.crt ]; then
+            openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
+                -keyout /etc/nginx/ssl/nginx-selfsigned.key \
+                -out /etc/nginx/ssl/nginx-selfsigned.crt \
+                -subj "/C=CN/ST=State/L=City/O=Organization/CN=localhost"
+        fi
+        ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0
