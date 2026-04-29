@@ -58,8 +58,7 @@
                       >
                         <option value="yes">yes</option>
                         <option value="no">no</option>
-                        <option value="without-password">without-password</option>
-                        <option value="forced-commands-only">forced-commands-only</option>
+                        <option value="prohibit-password">prohibit-password</option>
                       </select>
                     </div>
                     <div>
