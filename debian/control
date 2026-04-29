@@ -1,0 +1,15 @@
+Source: webui
+Section: web
+Priority: optional
+Maintainer: OneNAS Team <wenewboy@gmail.com>
+Build-Depends: debhelper-compat (= 13),
+               nodejs,
+               npm
+Standards-Version: 4.6.0
+
+Package: webui
+Architecture: all
+Depends: ${misc:Depends},
+         nginx
+Description: OneNAS Web UI
+ OneNAS SCALE Web User Interface built with Vue.js and Vite.

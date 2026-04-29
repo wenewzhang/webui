@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	npm install --unsafe-perm
+	npm run build
+
+override_dh_auto_install:
+	mkdir -p debian/webui/var/www/webui
+	cp -a dist/* debian/webui/var/www/webui/
+	mkdir -p debian/webui/etc/nginx/sites-available
+	cp deploy/nginx.conf debian/webui/etc/nginx/sites-available/webui
+
+override_dh_auto_clean:
+	rm -rf dist node_modules
+	dh_auto_clean
