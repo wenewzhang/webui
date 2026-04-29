@@ -20,6 +20,13 @@
       @cancel="onCancelConfig"
     />
 
+    <!-- SSH Setting Modal -->
+    <SshSettingModal
+      :show="showSshModal"
+      @confirm="onConfirmSsh"
+      @cancel="onCancelSsh"
+    />
+
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold text-gray-900">{{ $t('route.systemServices') }}</h2>
       <button
@@ -232,6 +239,7 @@ import { useI18n } from 'vue-i18n'
 import { systemApi, type ServiceStatus } from '@/api/system'
 import Toast from '@/components/Toast.vue'
 import InputModal from '@/components/InputModal.vue'
+import SshSettingModal from '@/components/SshSettingModal.vue'
 import { permissionDeniedMessage } from '@/utils/permissionUtils'
 
 const { t } = useI18n()
@@ -241,6 +249,7 @@ const loading = ref(false)
 const actionMap = ref<Record<string, boolean>>({})
 const currentActionMap = ref<Record<string, string>>({})
 const showConfigModal = ref(false)
+const showSshModal = ref(false)
 const pendingServiceName = ref('')
 
 // Services that do not support configuration
@@ -336,7 +345,11 @@ const handleStop = async (name: string) => {
 
 const handleConfig = (name: string) => {
   pendingServiceName.value = name
-  showConfigModal.value = true
+  if (name === 'ssh.service') {
+    showSshModal.value = true
+  } else {
+    showConfigModal.value = true
+  }
 }
 
 const onConfirmConfig = async (value: string) => {
@@ -363,6 +376,17 @@ const onConfirmConfig = async (value: string) => {
 
 const onCancelConfig = () => {
   showConfigModal.value = false
+  pendingServiceName.value = ''
+}
+
+const onConfirmSsh = () => {
+  showSshModal.value = false
+  showToast(t('systemServices.configSuccess', { service_name: pendingServiceName.value }), 'success')
+  pendingServiceName.value = ''
+}
+
+const onCancelSsh = () => {
+  showSshModal.value = false
   pendingServiceName.value = ''
 }
 

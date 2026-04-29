@@ -32,6 +32,17 @@ export interface ServicesStatusResponse {
   message?: string
 }
 
+export interface SshSetting {
+  permit_root_login: string
+  password_authentication: string
+}
+
+export interface SshSettingResponse {
+  success: boolean
+  data?: SshSetting
+  error?: null | string
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -62,5 +73,11 @@ export const systemApi = {
   },
   serviceSetAutostart(service_name: string, enable: boolean): Promise<SystemActionResponse> {
     return apiClient.post('/system/service_autostart', { service_name, enable }).then((res) => res.data)
+  },
+  getSshSetting(): Promise<SshSettingResponse> {
+    return apiClient.get('/system/ssh_setting').then((res) => res.data)
+  },
+  setSshSetting(setting: SshSetting): Promise<SystemActionResponse> {
+    return apiClient.post('/system/ssh_setting', setting).then((res) => res.data)
   },
 }
