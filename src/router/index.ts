@@ -160,6 +160,12 @@ const router = createRouter({
           ],
         },
         {
+          path: 'system/services',
+          name: 'SystemServices',
+          component: () => import('@/views/SystemServices.vue'),
+          meta: { title: 'route.systemServices' },
+        },
+        {
           path: 'system/restart',
           name: 'SystemRestart',
           component: () => import('@/views/SystemView.vue'),
