@@ -10,6 +10,14 @@ case "$1" in
                 -out /etc/nginx/ssl/nginx-selfsigned.crt \
                 -subj "/C=CN/ST=State/L=City/O=Organization/CN=localhost"
         fi
+
+        if [ -f /etc/nginx/sites-enabled/default ]; then
+            rm -f /etc/nginx/sites-enabled/default
+        fi
+
+        if [ ! -L /etc/nginx/sites-enabled/webui ]; then
+            ln -s /etc/nginx/sites-available/webui /etc/nginx/sites-enabled/webui
+        fi
         ;;
     abort-upgrade|abort-remove|abort-deconfigure)
         ;;
