@@ -78,19 +78,19 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm">
               <span
                 :class="[
-                  'inline-flex items-center px-3 py-1.5 text-sm font-bold rounded-full uppercase tracking-wide shadow-sm',
-                  item.status === 'active'
+                  'inline-flex items-center px-3 py-1.5 text-sm rounded-full tracking-wide shadow-sm',
+                  item.active === 'active'
                     ? 'bg-green-500 text-white'
                     : 'bg-gray-400 text-white'
                 ]"
               >
                 <span
                   :class="[
-                    'mr-1.5 h-2.5 w-2.5 rounded-full',
-                    item.status === 'active' ? 'bg-white' : 'bg-white'
+                    'mr-1.5 h-2 w-2 rounded-full',
+                    item.active === 'active' ? 'bg-white' : 'bg-white'
                   ]"
                 ></span>
-                {{ item.status }}
+                {{ item.active }}
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm">
@@ -110,7 +110,7 @@
               <div class="flex space-x-2">
                 <button
                   @click="handleStart(item.name)"
-                  :disabled="actionMap[item.name] || item.status === 'active'"
+                  :disabled="actionMap[item.name] || item.active === 'active'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -130,7 +130,7 @@
                 </button>
                 <button
                   @click="handleRestart(item.name)"
-                  :disabled="actionMap[item.name] || item.status !== 'active'"
+                  :disabled="actionMap[item.name] || item.active === 'active'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -150,7 +150,7 @@
                 </button>
                 <button
                   @click="handleStop(item.name)"
-                  :disabled="actionMap[item.name] || item.status !== 'active'"
+                  :disabled="actionMap[item.name] || item.active !== 'active'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
