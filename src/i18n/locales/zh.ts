@@ -554,7 +554,7 @@ export default {
     configTitle: "服务设置 - {name}",
     configMessage: '请输入配置内容',
     configPlaceholder: '输入配置内容',
-    configSuccess: "服务 '{name}' 配置更新成功",
+    configSuccess: "服务 '{service_name}' 配置更新成功",
     configFailed: '更新服务配置失败',
     enableAutostart: '启用随系统启动',
     disableAutostart: '禁用随系统启动',

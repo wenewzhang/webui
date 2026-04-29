@@ -554,7 +554,7 @@ export default {
     configTitle: "Service Settings - {name}",
     configMessage: 'Please enter configuration content',
     configPlaceholder: 'Enter configuration content',
-    configSuccess: "Service '{name}' configuration updated successfully",
+    configSuccess: "Service '{service_name}' configuration updated successfully",
     configFailed: 'Failed to update service configuration',
     enableAutostart: 'Enable Auto Start',
     disableAutostart: 'Disable Auto Start',
