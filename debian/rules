@@ -11,7 +11,7 @@ override_dh_auto_build:
 
 override_dh_auto_install:
 	mkdir -p debian/webui/var/www/webui
-	cp -a dist/* debian/webui/var/www/webui/
+	cp -a dist debian/webui/var/www/webui/
 	mkdir -p debian/webui/etc/nginx/sites-available
 	cp deploy/nginx.conf debian/webui/etc/nginx/sites-available/webui
 	mkdir -p debian/webui/etc/nginx/ssl
