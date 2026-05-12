@@ -402,6 +402,7 @@ export default {
     guest_permission: '客人权限',
     permissionWrite: '读写',
     permissionReadonly: '只读',
+    permissionNone: '不可用',
     quota: '配额',
     createDirShare: '创建目录共享',
     createZfsShare: '创建 ZFS 共享',

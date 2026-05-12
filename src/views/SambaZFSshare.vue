@@ -73,6 +73,7 @@
                                 >
                                   <option value="write">{{ $t('samba.permissionWrite') }}</option>
                                   <option value="readonly">{{ $t('samba.permissionReadonly') }}</option>
+                                  <option value="none">{{ $t('samba.permissionNone') }}</option>
                                 </select>
                               </template>
                               <template v-else>

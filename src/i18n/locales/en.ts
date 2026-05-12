@@ -402,6 +402,7 @@ export default {
     guest_permission: 'Guest Permission',
     permissionWrite: 'Write',
     permissionReadonly: 'Readonly',
+    permissionNone: 'None',
     quota: 'Quota',
     createDirShare: 'Create Directory Share',
     createZfsShare: 'Create ZFS Share',
