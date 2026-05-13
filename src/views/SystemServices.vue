@@ -117,7 +117,7 @@
               <div class="flex space-x-2">
                 <button
                   @click="handleStart(item.name)"
-                  :disabled="actionMap[item.name] || item.active === 'active'"
+                  :disabled="actionMap[item.name] || item.active === 'active' || item.name === 'sysconfig'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -137,7 +137,7 @@
                 </button>
                 <button
                   @click="handleRestart(item.name)"
-                  :disabled="actionMap[item.name] || item.active !== 'active'"
+                  :disabled="actionMap[item.name] || item.active !== 'active' || item.name === 'sysconfig'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -157,7 +157,7 @@
                 </button>
                 <button
                   @click="handleStop(item.name)"
-                  :disabled="actionMap[item.name] || item.active !== 'active'"
+                  :disabled="actionMap[item.name] || item.active !== 'active' || item.name === 'sysconfig'"
                   class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg
@@ -253,7 +253,7 @@ const showSshModal = ref(false)
 const pendingServiceName = ref('')
 
 // Services that do not support configuration
-const nonConfigurableServices = ['ttyd.service']
+const nonConfigurableServices = ['ttyd.service', 'sysconfig']
 
 const toast = reactive({
   show: false,
