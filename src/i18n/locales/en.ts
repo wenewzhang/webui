@@ -115,6 +115,7 @@ export default {
     addDockerMirror: 'Add Docker Mirror',
     terminal: 'Terminal',
     systemServices: 'System Services',
+    systemUpdater: 'System Update',
     systemRestart: 'System Restart',
     systemShutdown: 'System Shutdown',
     systemForceRestart: 'System Force Restart',
@@ -135,6 +136,7 @@ export default {
     terminal: 'Terminal',
     system: 'System',
     services: 'Services',
+    updater: 'Update',
     restart: 'Restart',
     restartForce: 'Force Restart',
     shutdown: 'Shutdown',
@@ -578,6 +580,16 @@ export default {
     shutdownConfirm: 'Are you sure you want to shutdown the system? This action will take effect immediately.',
     confirmLabel: 'I confirm to proceed with this action',
     permissionDenied: 'Permission denied: only admin users can perform this operation',
+  },
+  // System Update Page
+  systemUpdater: {
+    title: 'System Update',
+    currentVersion: 'Current Version',
+    latestVersion: 'Latest Version',
+    checkFailed: 'Failed to check for updates',
+    noUpdate: 'You are on the latest version',
+    updateAvailable: 'New version available',
+    checking: 'Checking for updates...',
   },
   // SSH Settings
   sshSettings: {

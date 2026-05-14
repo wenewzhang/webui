@@ -43,6 +43,20 @@ export interface SshSettingResponse {
   error?: null | string
 }
 
+export interface UpdateStatusResponse {
+  success: boolean
+  status: string
+  error?: null | string
+}
+
+export interface UpdateCheckResponse {
+  success: boolean
+  update_available: boolean
+  current_version: string
+  latest_version: string
+  error: null | string
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -79,5 +93,11 @@ export const systemApi = {
   },
   setSshSetting(setting: SshSetting): Promise<SystemActionResponse> {
     return apiClient.post('/system/ssh_setting', setting).then((res) => res.data)
+  },
+  updateStatus(): Promise<UpdateStatusResponse> {
+    return apiClient.get('/system/update_status').then((res) => res.data)
+  },
+  updateCheck(): Promise<UpdateCheckResponse> {
+    return apiClient.get('/system/update_check').then((res) => res.data)
   },
 }

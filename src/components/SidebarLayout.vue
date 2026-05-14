@@ -235,6 +235,9 @@ const TerminalIcon = () => h('svg', { class: 'h-5 w-5', fill: 'none', viewBox: '
 const ServicesIcon = () => h('svg', { class: 'h-4 w-4', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
   h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' })
 ])
+const UpdateIcon = () => h('svg', { class: 'h-4 w-4', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
+  h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' })
+])
 const SearchIcon = () => h('svg', { class: 'h-4 w-4', fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor' }, [
   h('path', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'stroke-width': '2', d: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' })
 ])
@@ -279,6 +282,7 @@ const menuItems = [
     icon: SystemIcon,
     children: [
       { name: 'services', path: '/system/services', icon: ServicesIcon },
+      { name: 'updater', path: '/system/updater', icon: UpdateIcon },
       { name: 'restart', path: '/system/restart', icon: RestartIcon },
       { name: 'shutdown', path: '/system/shutdown', icon: ShutdownIcon },
       { name: 'terminal', path: '/terminal', icon: TerminalIcon },

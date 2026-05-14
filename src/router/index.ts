@@ -184,6 +184,12 @@ const router = createRouter({
           meta: { title: 'route.systemForceRestart' },
         },
         {
+          path: 'system/updater',
+          name: 'SystemUpdater',
+          component: () => import('@/views/SystemUpdater.vue'),
+          meta: { title: 'route.systemUpdater' },
+        },
+        {
           path: 'terminal',
           name: 'Terminal',
           component: () => import('@/views/TerminalView.vue'),

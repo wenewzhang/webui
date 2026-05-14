@@ -115,6 +115,7 @@ export default {
     addDockerMirror: '添加 Docker 镜像地址',
     terminal: '终端',
     systemServices: '系统服务',
+    systemUpdater: '系统升级',
     systemRestart: '系统重启',
     systemShutdown: '系统关机',
     systemForceRestart: '系统强制重启',
@@ -135,6 +136,7 @@ export default {
     terminal: '终端',
     system: '系统',
     services: '服务',
+    updater: '升级',
     restart: '重启',
     restartForce: '强制重启',
     shutdown: '关机',
@@ -578,6 +580,16 @@ export default {
     shutdownConfirm: '确定要关闭系统吗？此操作将立即生效。',
     confirmLabel: '我确认执行此操作',
     permissionDenied: '权限不足：只有管理员才能执行此操作',
+  },
+  // 系统升级页面
+  systemUpdater: {
+    title: '系统升级',
+    currentVersion: '当前版本',
+    latestVersion: '最新版本',
+    checkFailed: '检查更新失败',
+    noUpdate: '当前已是最新版本',
+    updateAvailable: '发现新版本',
+    checking: '检查更新中...',
   },
   // SSH 设置
   sshSettings: {
