@@ -597,6 +597,7 @@ export default {
     progress: 'Progress',
     waitingForProgress: 'Waiting for progress...',
     queryTaskFailed: 'Failed to query task',
+    cancelFailed: 'Failed to cancel download',
     downloadFailed: 'Failed to download update',
     status: {
       pending: 'Pending',

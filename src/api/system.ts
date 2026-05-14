@@ -86,6 +86,12 @@ export interface UpdateDownloadProgressResponse {
   error?: string
 }
 
+export interface UpdateDownloadStopResponse {
+  success: boolean
+  message?: string
+  error?: string
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -134,5 +140,8 @@ export const systemApi = {
   },
   updateDownloadProgress(taskId: string): Promise<UpdateDownloadProgressResponse> {
     return apiClient.get(`/system/update_download/task/${taskId}`).then((res) => res.data)
+  },
+  updateDownloadStop(taskId: string): Promise<UpdateDownloadStopResponse> {
+    return apiClient.post('/system/update_download/stop', { task_id: taskId }).then((res) => res.data)
   },
 }

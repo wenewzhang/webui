@@ -597,6 +597,7 @@ export default {
     progress: '进度',
     waitingForProgress: '等待进度...',
     queryTaskFailed: '查询任务失败',
+    cancelFailed: '取消下载失败',
     downloadFailed: '下载更新失败',
     status: {
       pending: '等待中',

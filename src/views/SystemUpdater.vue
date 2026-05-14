@@ -130,6 +130,26 @@
         <div v-if="downloadTask.message || downloadTask.detail" class="text-sm text-gray-600 break-all font-mono whitespace-pre-wrap">
           {{ downloadTask.message || downloadTask.detail }}
         </div>
+
+        <!-- 取消按钮 -->
+        <div class="flex justify-end pt-2">
+          <button
+            @click="cancelDownload"
+            :disabled="cancelLoading"
+            class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg
+              v-if="cancelLoading"
+              class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-700"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -192,6 +212,7 @@ const loading = ref(false)
 const result = ref<UpdateCheckResponse | null>(null)
 const error = ref<string | null>(null)
 const downloadLoading = ref(false)
+const cancelLoading = ref(false)
 const downloadTask = ref<DownloadTask | null>(null)
 
 const taskStatusClass = (status: string) => {
@@ -263,6 +284,25 @@ const startPolling = () => {
     downloadTask.value.timer = setInterval(() => {
       pollTaskOnce()
     }, 3000)
+  }
+}
+
+const cancelDownload = async () => {
+  if (!downloadTask.value) return
+  cancelLoading.value = true
+  try {
+    const res = await systemApi.updateDownloadStop(downloadTask.value.taskId)
+    if (res.success) {
+      stopTaskTimer()
+      downloadTask.value = null
+    } else {
+      error.value = res.error || res.message || t('systemUpdater.cancelFailed')
+    }
+  } catch (err: any) {
+    const msg = err.response?.data?.error || err.message || ''
+    error.value = msg || t('systemUpdater.cancelFailed')
+  } finally {
+    cancelLoading.value = false
   }
 }
 
