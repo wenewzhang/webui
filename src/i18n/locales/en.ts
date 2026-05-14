@@ -592,6 +592,8 @@ export default {
     checking: 'Checking for updates...',
     download: 'Download Update',
     downloadingUpdate: 'Downloading Update',
+    filename: 'Filename',
+    fileSize: 'Size',
     progress: 'Progress',
     waitingForProgress: 'Waiting for progress...',
     queryTaskFailed: 'Failed to query task',

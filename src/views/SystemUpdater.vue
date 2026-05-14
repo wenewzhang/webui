@@ -87,14 +87,22 @@
 
     <!-- 下载进度（独立显示，不依赖 result） -->
     <div v-if="downloadTask" class="bg-white shadow rounded-lg p-6">
-      <div class="border rounded-md p-4 bg-gray-50">
-        <div class="flex justify-between items-center mb-2">
+      <div class="border rounded-md p-4 bg-gray-50 space-y-3">
+        <div class="flex justify-between items-center">
           <span class="font-medium text-sm text-gray-900">{{ $t('systemUpdater.downloadingUpdate') }}</span>
           <span class="text-xs px-2 py-1 rounded-full" :class="taskStatusClass(downloadTask.status)">
             {{ $t(`systemUpdater.status.${downloadTask.status}`) || downloadTask.status }}
           </span>
         </div>
-        <div class="mb-2">
+
+        <!-- 文件名 -->
+        <div v-if="downloadTask.filename" class="text-sm text-gray-700">
+          <span class="text-gray-500">{{ $t('systemUpdater.filename') }}:</span>
+          <span class="font-mono ml-1 break-all">{{ downloadTask.filename }}</span>
+        </div>
+
+        <!-- 进度条 -->
+        <div>
           <div class="flex justify-between text-xs text-gray-600 mb-1">
             <span>{{ $t('systemUpdater.progress') }}</span>
             <span>{{ downloadTask.progress }}%</span>
@@ -106,8 +114,21 @@
             ></div>
           </div>
         </div>
-        <div class="text-sm text-gray-600 break-all font-mono whitespace-pre-wrap">
-          {{ downloadTask.detail || $t('systemUpdater.waitingForProgress') }}
+
+        <!-- 字节进度 -->
+        <div class="flex justify-between text-xs text-gray-600">
+          <span>
+            <span class="text-gray-500">{{ $t('systemUpdater.fileSize') }}:</span>
+            {{ formatBytes(downloadTask.downloadedBytes) }} / {{ formatBytes(downloadTask.totalBytes) }}
+          </span>
+          <span v-if="downloadTask.totalBytes && downloadTask.totalBytes > 0">
+            {{ ((downloadTask.downloadedBytes || 0) / downloadTask.totalBytes * 100).toFixed(1) }}%
+          </span>
+        </div>
+
+        <!-- 消息 -->
+        <div v-if="downloadTask.message || downloadTask.detail" class="text-sm text-gray-600 break-all font-mono whitespace-pre-wrap">
+          {{ downloadTask.message || downloadTask.detail }}
         </div>
       </div>
     </div>
@@ -160,6 +181,11 @@ interface DownloadTask {
   detail: string
   progress: number
   timer: ReturnType<typeof setInterval> | null
+  filename?: string
+  filePath?: string
+  downloadedBytes?: number
+  totalBytes?: number
+  message?: string
 }
 
 const loading = ref(false)
@@ -181,6 +207,15 @@ const taskStatusClass = (status: string) => {
   return map[status] || 'bg-gray-100 text-gray-800'
 }
 
+const formatBytes = (bytes?: number) => {
+  if (bytes === undefined || bytes === null || isNaN(bytes)) return '-'
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
 const stopTaskTimer = () => {
   if (downloadTask.value?.timer) {
     clearInterval(downloadTask.value.timer)
@@ -192,14 +227,20 @@ const pollTaskOnce = async () => {
   if (!downloadTask.value) return
   try {
     const res = await systemApi.updateDownloadProgress(downloadTask.value.taskId)
-    if (res.success) {
+    if (res.success && res.task) {
+      const t = res.task
       const task = downloadTask.value
-      task.status = res.status || 'running'
-      const progressVal = parseFloat(String(res.progress || 0))
+      task.status = t.status || 'running'
+      const progressVal = parseFloat(String(t.progress || 0))
       task.progress = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
-      task.detail = res.detail || res.message || ''
+      task.detail = t.message || res.message || ''
+      task.filename = t.filename
+      task.filePath = t.file_path
+      task.downloadedBytes = t.downloaded_bytes
+      task.totalBytes = t.total_bytes
+      task.message = t.message
       const terminalStatuses = ['completed', 'success', 'failed', 'error']
-      if (terminalStatuses.includes(task.status) || task.progress >= 100) {
+      if (terminalStatuses.includes(task.status.toLowerCase()) || task.progress >= 100) {
         stopTaskTimer()
       }
     } else {

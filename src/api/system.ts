@@ -67,6 +67,18 @@ export interface UpdateDownloadStartResponse {
 
 export interface UpdateDownloadProgressResponse {
   success: boolean
+  task?: {
+    task_id: string
+    status: string
+    progress: number
+    downloaded_bytes: number
+    total_bytes: number
+    filename: string
+    file_path: string
+    message: string
+    created_at: number
+    updated_at: number
+  }
   status?: string
   progress?: number
   message?: string

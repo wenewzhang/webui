@@ -592,6 +592,8 @@ export default {
     checking: '检查更新中...',
     download: '下载更新',
     downloadingUpdate: '正在下载更新',
+    filename: '文件名',
+    fileSize: '大小',
     progress: '进度',
     waitingForProgress: '等待进度...',
     queryTaskFailed: '查询任务失败',
