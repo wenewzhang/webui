@@ -590,6 +590,21 @@ export default {
     noUpdate: 'You are on the latest version',
     updateAvailable: 'New version available',
     checking: 'Checking for updates...',
+    download: 'Download Update',
+    downloadingUpdate: 'Downloading Update',
+    progress: 'Progress',
+    waitingForProgress: 'Waiting for progress...',
+    queryTaskFailed: 'Failed to query task',
+    downloadFailed: 'Failed to download update',
+    status: {
+      pending: 'Pending',
+      running: 'Running',
+      downloading: 'Downloading',
+      completed: 'Completed',
+      success: 'Success',
+      failed: 'Failed',
+      error: 'Error',
+    },
   },
   // SSH Settings
   sshSettings: {

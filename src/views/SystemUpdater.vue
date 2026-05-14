@@ -39,6 +39,30 @@
             <p class="text-lg font-mono font-medium text-indigo-900">{{ result.latest_version }}</p>
           </div>
         </div>
+
+        <!-- 下载按钮 -->
+        <div v-if="!downloadTask" class="flex justify-start mt-4">
+          <button
+            @click="startDownload"
+            :disabled="downloadLoading"
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg
+              v-if="downloadLoading"
+              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            <svg v-else class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            {{ $t('systemUpdater.download') }}
+          </button>
+        </div>
+
       </div>
 
       <!-- 无可用更新 -->
@@ -57,6 +81,33 @@
         <div class="bg-gray-50 rounded-lg p-4 mt-4">
           <p class="text-sm text-gray-500">{{ $t('systemUpdater.currentVersion') }}</p>
           <p class="text-lg font-mono font-medium text-gray-900">{{ result.current_version }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 下载进度（独立显示，不依赖 result） -->
+    <div v-if="downloadTask" class="bg-white shadow rounded-lg p-6">
+      <div class="border rounded-md p-4 bg-gray-50">
+        <div class="flex justify-between items-center mb-2">
+          <span class="font-medium text-sm text-gray-900">{{ $t('systemUpdater.downloadingUpdate') }}</span>
+          <span class="text-xs px-2 py-1 rounded-full" :class="taskStatusClass(downloadTask.status)">
+            {{ $t(`systemUpdater.status.${downloadTask.status}`) || downloadTask.status }}
+          </span>
+        </div>
+        <div class="mb-2">
+          <div class="flex justify-between text-xs text-gray-600 mb-1">
+            <span>{{ $t('systemUpdater.progress') }}</span>
+            <span>{{ downloadTask.progress }}%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300"
+              :style="{ width: downloadTask.progress + '%' }"
+            ></div>
+          </div>
+        </div>
+        <div class="text-sm text-gray-600 break-all font-mono whitespace-pre-wrap">
+          {{ downloadTask.detail || $t('systemUpdater.waitingForProgress') }}
         </div>
       </div>
     </div>
@@ -97,19 +148,113 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { systemApi, type UpdateCheckResponse, type UpdateStatusResponse } from '@/api/system'
 
 const { t } = useI18n()
 
+interface DownloadTask {
+  taskId: string
+  status: string
+  detail: string
+  progress: number
+  timer: ReturnType<typeof setInterval> | null
+}
+
 const loading = ref(false)
 const result = ref<UpdateCheckResponse | null>(null)
 const error = ref<string | null>(null)
+const downloadLoading = ref(false)
+const downloadTask = ref<DownloadTask | null>(null)
+
+const taskStatusClass = (status: string) => {
+  const map: Record<string, string> = {
+    pending: 'bg-yellow-100 text-yellow-800',
+    running: 'bg-blue-100 text-blue-800',
+    downloading: 'bg-blue-100 text-blue-800',
+    completed: 'bg-green-100 text-green-800',
+    success: 'bg-green-100 text-green-800',
+    failed: 'bg-red-100 text-red-800',
+    error: 'bg-red-100 text-red-800',
+  }
+  return map[status] || 'bg-gray-100 text-gray-800'
+}
+
+const stopTaskTimer = () => {
+  if (downloadTask.value?.timer) {
+    clearInterval(downloadTask.value.timer)
+    downloadTask.value.timer = null
+  }
+}
+
+const pollTaskOnce = async () => {
+  if (!downloadTask.value) return
+  try {
+    const res = await systemApi.updateDownloadProgress(downloadTask.value.taskId)
+    if (res.success) {
+      const task = downloadTask.value
+      task.status = res.status || 'running'
+      const progressVal = parseFloat(String(res.progress || 0))
+      task.progress = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
+      task.detail = res.detail || res.message || ''
+      const terminalStatuses = ['completed', 'success', 'failed', 'error']
+      if (terminalStatuses.includes(task.status) || task.progress >= 100) {
+        stopTaskTimer()
+      }
+    } else {
+      downloadTask.value.status = 'error'
+      downloadTask.value.detail = res.error || res.message || t('systemUpdater.queryTaskFailed')
+      stopTaskTimer()
+    }
+  } catch (err: any) {
+    if (downloadTask.value) {
+      downloadTask.value.status = 'error'
+      downloadTask.value.detail = err.message || t('systemUpdater.queryTaskFailed')
+      stopTaskTimer()
+    }
+  }
+}
+
+const startPolling = () => {
+  pollTaskOnce()
+  if (downloadTask.value) {
+    downloadTask.value.timer = setInterval(() => {
+      pollTaskOnce()
+    }, 3000)
+  }
+}
+
+const startDownload = async () => {
+  downloadLoading.value = true
+  error.value = null
+  try {
+    const res = await systemApi.updateDownloadStart()
+    if (res.success && res.task_id) {
+      downloadTask.value = {
+        taskId: res.task_id,
+        status: 'pending',
+        detail: '',
+        progress: 0,
+        timer: null,
+      }
+      startPolling()
+    } else {
+      error.value = res.error || res.message || t('systemUpdater.downloadFailed')
+    }
+  } catch (err: any) {
+    const msg = err.response?.data?.error || err.message || ''
+    error.value = msg || t('systemUpdater.downloadFailed')
+  } finally {
+    downloadLoading.value = false
+  }
+}
 
 const checkUpdate = async () => {
   loading.value = true
   error.value = null
+  stopTaskTimer()
+  downloadTask.value = null
   try {
     const res = await systemApi.updateCheck()
     if (res.success) {
@@ -128,11 +273,27 @@ const checkUpdate = async () => {
 onMounted(async () => {
   try {
     const statusRes: UpdateStatusResponse = await systemApi.updateStatus()
-    if (statusRes.success && statusRes.status === 'idle') {
-      checkUpdate()
+    if (statusRes.success) {
+      if (statusRes.status === 'idle') {
+        checkUpdate()
+      } else if (statusRes.status === 'downloading' && statusRes.task_id) {
+        // 恢复正在进行的下载任务进度
+        downloadTask.value = {
+          taskId: statusRes.task_id,
+          status: statusRes.status,
+          detail: '',
+          progress: 0,
+          timer: null,
+        }
+        startPolling()
+      }
     }
   } catch (err: any) {
     // 静默失败，不自动触发检查
   }
+})
+
+onUnmounted(() => {
+  stopTaskTimer()
 })
 </script>

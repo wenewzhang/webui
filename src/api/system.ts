@@ -46,6 +46,7 @@ export interface SshSettingResponse {
 export interface UpdateStatusResponse {
   success: boolean
   status: string
+  task_id?: string
   error?: null | string
 }
 
@@ -55,6 +56,22 @@ export interface UpdateCheckResponse {
   current_version: string
   latest_version: string
   error: null | string
+}
+
+export interface UpdateDownloadStartResponse {
+  success: boolean
+  task_id?: string
+  message?: string
+  error?: string
+}
+
+export interface UpdateDownloadProgressResponse {
+  success: boolean
+  status?: string
+  progress?: number
+  message?: string
+  detail?: string
+  error?: string
 }
 
 export const systemApi = {
@@ -99,5 +116,11 @@ export const systemApi = {
   },
   updateCheck(): Promise<UpdateCheckResponse> {
     return apiClient.get('/system/update_check').then((res) => res.data)
+  },
+  updateDownloadStart(): Promise<UpdateDownloadStartResponse> {
+    return apiClient.post('/system/update_download/start').then((res) => res.data)
+  },
+  updateDownloadProgress(taskId: string): Promise<UpdateDownloadProgressResponse> {
+    return apiClient.get(`/system/update_download/task/${taskId}`).then((res) => res.data)
   },
 }

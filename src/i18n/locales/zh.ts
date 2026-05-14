@@ -590,6 +590,21 @@ export default {
     noUpdate: '当前已是最新版本',
     updateAvailable: '发现新版本',
     checking: '检查更新中...',
+    download: '下载更新',
+    downloadingUpdate: '正在下载更新',
+    progress: '进度',
+    waitingForProgress: '等待进度...',
+    queryTaskFailed: '查询任务失败',
+    downloadFailed: '下载更新失败',
+    status: {
+      pending: '等待中',
+      running: '进行中',
+      downloading: '下载中',
+      completed: '已完成',
+      success: '成功',
+      failed: '失败',
+      error: '错误',
+    },
   },
   // SSH 设置
   sshSettings: {
