@@ -599,6 +599,7 @@ export default {
     queryTaskFailed: '查询任务失败',
     cancelFailed: '取消下载失败',
     downloadFailed: '下载更新失败',
+    upgrade: '升级系统',
     status: {
       pending: '等待中',
       running: '进行中',

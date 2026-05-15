@@ -131,9 +131,30 @@
           {{ downloadTask.message || downloadTask.detail }}
         </div>
 
-        <!-- 取消按钮 -->
+        <!-- 操作按钮 -->
         <div class="flex justify-end pt-2">
           <button
+            v-if="downloadTask.status.toLowerCase() === 'completed' && downloadTask.progress === 100"
+            @click="startUpgrade"
+            :disabled="upgradeLoading"
+            class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <svg
+              v-if="upgradeLoading"
+              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            <svg v-else class="-ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            {{ $t('systemUpdater.upgrade') }}
+          </button>
+          <button
+            v-else
             @click="cancelDownload"
             :disabled="cancelLoading"
             class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -213,6 +234,7 @@ const result = ref<UpdateCheckResponse | null>(null)
 const error = ref<string | null>(null)
 const downloadLoading = ref(false)
 const cancelLoading = ref(false)
+const upgradeLoading = ref(false)
 const downloadTask = ref<DownloadTask | null>(null)
 
 const taskStatusClass = (status: string) => {
@@ -303,6 +325,16 @@ const cancelDownload = async () => {
     error.value = msg || t('systemUpdater.cancelFailed')
   } finally {
     cancelLoading.value = false
+  }
+}
+
+const startUpgrade = async () => {
+  upgradeLoading.value = true
+  try {
+    // TODO: 调用系统升级API
+    alert('升级功能即将推出')
+  } finally {
+    upgradeLoading.value = false
   }
 }
 
