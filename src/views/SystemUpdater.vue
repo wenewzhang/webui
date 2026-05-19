@@ -283,7 +283,7 @@ const pollTaskOnce = async () => {
       task.totalBytes = t.total_bytes
       task.message = t.message
       const terminalStatuses = ['completed', 'success', 'failed', 'error']
-      if (terminalStatuses.includes(task.status.toLowerCase()) || task.progress >= 100) {
+      if (terminalStatuses.includes(task.status.toLowerCase()) && task.progress >= 100) {
         stopTaskTimer()
       }
     } else {
@@ -331,8 +331,15 @@ const cancelDownload = async () => {
 const startUpgrade = async () => {
   upgradeLoading.value = true
   try {
-    // TODO: 调用系统升级API
-    alert('升级功能即将推出')
+    const res = await systemApi.updateDownloadUpgrade(downloadTask.value?.filePath || '')
+    if (res.success) {
+      alert(res.message || t('systemUpdater.upgradeStarted'))
+    } else {
+      error.value = res.message || t('systemUpdater.upgradeFailed')
+    }
+  } catch (err: any) {
+    const msg = err.response?.data?.error || err.message || ''
+    error.value = msg || t('systemUpdater.upgradeFailed')
   } finally {
     upgradeLoading.value = false
   }

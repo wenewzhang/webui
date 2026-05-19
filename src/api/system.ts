@@ -144,4 +144,7 @@ export const systemApi = {
   updateDownloadStop(taskId: string): Promise<UpdateDownloadStopResponse> {
     return apiClient.post('/system/update_download/stop', { task_id: taskId }).then((res) => res.data)
   },
+  updateDownloadUpgrade(filePath: string): Promise<SystemActionResponse> {
+    return apiClient.post('/system/update_download/upgrade', { file_path: filePath }).then((res) => res.data)
+  },
 }
