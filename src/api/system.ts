@@ -92,6 +92,16 @@ export interface UpdateDownloadStopResponse {
   error?: string
 }
 
+export interface UpgradeProgressResponse {
+  success: boolean
+  data?: {
+    progress: number
+    state: string
+  }
+  message?: string
+  error?: string
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -146,5 +156,8 @@ export const systemApi = {
   },
   updateDownloadUpgrade(filePath: string): Promise<SystemActionResponse> {
     return apiClient.post('/system/update_download/upgrade', { file_path: filePath }).then((res) => res.data)
+  },
+  upgradeProgress(): Promise<UpgradeProgressResponse> {
+    return apiClient.get('/system/upgrade/progress').then((res) => res.data)
   },
 }

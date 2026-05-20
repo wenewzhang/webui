@@ -174,8 +174,39 @@
       </div>
     </div>
 
+    <!-- 升级进度 -->
+    <div v-if="upgradeProgress > 0 || upgradeTimer" class="bg-white shadow rounded-lg p-6">
+      <div class="border rounded-md p-4 bg-gray-50 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="font-medium text-sm text-gray-900">{{ $t('systemUpdater.upgrading') }}</span>
+          <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+            {{ upgradeProgress >= 100 ? $t('systemUpdater.status.completed') : $t('systemUpdater.status.running') }}
+          </span>
+        </div>
+
+        <!-- 进度条 -->
+        <div>
+          <div class="flex justify-between text-xs text-gray-600 mb-1">
+            <span>{{ $t('systemUpdater.progress') }}</span>
+            <span>{{ upgradeProgress }}%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div
+              class="bg-green-600 h-2.5 rounded-full transition-all duration-300"
+              :style="{ width: upgradeProgress + '%' }"
+            ></div>
+          </div>
+        </div>
+
+        <!-- 消息 -->
+        <div v-if="upgradeMessage" class="text-sm text-gray-600 break-all font-mono whitespace-pre-wrap">
+          {{ upgradeMessage }}
+        </div>
+      </div>
+    </div>
+
     <!-- 错误状态 -->
-    <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-6">
+    <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-6">
       <div class="flex items-center space-x-3">
         <div class="h-10 w-10 bg-red-100 rounded-full flex items-center justify-center">
           <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -213,6 +244,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { systemApi, type UpdateCheckResponse, type UpdateStatusResponse } from '@/api/system'
+import type { UpgradeProgressResponse } from '@/api/system'
 
 const { t } = useI18n()
 
@@ -236,6 +268,10 @@ const downloadLoading = ref(false)
 const cancelLoading = ref(false)
 const upgradeLoading = ref(false)
 const downloadTask = ref<DownloadTask | null>(null)
+
+const upgradeProgress = ref<number>(0)
+const upgradeMessage = ref<string>('')
+const upgradeTimer = ref<ReturnType<typeof setInterval> | null>(null)
 
 const taskStatusClass = (status: string) => {
   const map: Record<string, string> = {
@@ -263,6 +299,13 @@ const stopTaskTimer = () => {
   if (downloadTask.value?.timer) {
     clearInterval(downloadTask.value.timer)
     downloadTask.value.timer = null
+  }
+}
+
+const stopUpgradeTimer = () => {
+  if (upgradeTimer.value) {
+    clearInterval(upgradeTimer.value)
+    upgradeTimer.value = null
   }
 }
 
@@ -328,12 +371,38 @@ const cancelDownload = async () => {
   }
 }
 
+const pollUpgradeProgress = async () => {
+  try {
+    const res: UpgradeProgressResponse = await systemApi.upgradeProgress()
+    if (res.success && res.data) {
+      const progressVal = parseFloat(String(res.data.progress || 0))
+      upgradeProgress.value = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
+      upgradeMessage.value = res.data.state || res.message || ''
+      if (upgradeProgress.value >= 100) {
+        stopUpgradeTimer()
+      }
+    } else {
+      upgradeMessage.value = res.error || res.message || ''
+      stopUpgradeTimer()
+    }
+  } catch (err: any) {
+    upgradeMessage.value = err.message || ''
+    stopUpgradeTimer()
+  }
+}
+
 const startUpgrade = async () => {
   upgradeLoading.value = true
+  upgradeProgress.value = 0
+  upgradeMessage.value = ''
   try {
     const res = await systemApi.updateDownloadUpgrade(downloadTask.value?.filePath || '')
     if (res.success) {
-      alert(res.message || t('systemUpdater.upgradeStarted'))
+      upgradeMessage.value = res.message || t('systemUpdater.upgradeStarted')
+      stopUpgradeTimer()
+      upgradeTimer.value = setInterval(() => {
+        pollUpgradeProgress()
+      }, 3000)
     } else {
       error.value = res.message || t('systemUpdater.upgradeFailed')
     }
@@ -415,5 +484,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   stopTaskTimer()
+  stopUpgradeTimer()
 })
 </script>
