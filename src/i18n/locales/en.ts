@@ -605,7 +605,7 @@ export default {
     upgradeConfirmTitle: 'Confirm Upgrade',
     upgradeConfirmMessage: 'The system upgrade is about to begin. Do you want to continue?',
     freshInstall: 'Fresh install (do not import existing system data)',
-    freshInstallHint: 'If selected, current system configuration and data will not be preserved during upgrade',
+    freshInstallHint: 'If selected, current system configuration and data will not be imported during upgrade',
     status: {
       pending: 'Pending',
       running: 'Running',
