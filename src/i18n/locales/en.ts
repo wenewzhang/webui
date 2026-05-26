@@ -599,6 +599,13 @@ export default {
     queryTaskFailed: 'Failed to query task',
     cancelFailed: 'Failed to cancel download',
     downloadFailed: 'Failed to download update',
+    upgrading: 'Upgrading System',
+    upgradeStarted: 'Upgrade started',
+    upgradeFailed: 'Upgrade failed',
+    upgradeConfirmTitle: 'Confirm Upgrade',
+    upgradeConfirmMessage: 'The system upgrade is about to begin. Do you want to continue?',
+    freshInstall: 'Fresh install (do not import existing system data)',
+    freshInstallHint: 'If selected, current system configuration and data will not be preserved during upgrade',
     status: {
       pending: 'Pending',
       running: 'Running',

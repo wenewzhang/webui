@@ -135,7 +135,7 @@
         <div class="flex justify-end pt-2">
           <button
             v-if="downloadTask.status.toLowerCase() === 'completed' && downloadTask.progress === 100"
-            @click="startUpgrade"
+            @click="showUpgradeConfirm = true"
             :disabled="upgradeLoading"
             class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -222,7 +222,32 @@
 
     <!-- 刷新按钮 -->
     <div class="flex justify-end">
-      <button
+      <ConfirmModal
+      :show="showUpgradeConfirm"
+      :title="t('systemUpdater.upgradeConfirmTitle')"
+      :message="t('systemUpdater.upgradeConfirmMessage')"
+      :confirm-text="t('systemUpdater.upgrade')"
+      :cancel-text="t('common.cancel')"
+      @confirm="startUpgrade(freshInstall); showUpgradeConfirm = false; freshInstall = false"
+      @cancel="showUpgradeConfirm = false; freshInstall = false"
+    >
+      <div class="mt-3 flex items-start">
+        <div class="flex h-5 items-center">
+          <input
+            id="fresh-install"
+            v-model="freshInstall"
+            type="checkbox"
+            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+          />
+        </div>
+        <div class="ml-3 text-sm">
+          <label for="fresh-install" class="font-medium text-gray-700">{{ t('systemUpdater.freshInstall') }}</label>
+          <p class="text-gray-500">{{ t('systemUpdater.freshInstallHint') }}</p>
+        </div>
+      </div>
+    </ConfirmModal>
+
+    <button
         @click="checkUpdate"
         :disabled="loading"
         class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -245,6 +270,7 @@ import { onMounted, onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { systemApi, type UpdateCheckResponse, type UpdateStatusResponse } from '@/api/system'
 import type { UpgradeProgressResponse } from '@/api/system'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const { t } = useI18n()
 
@@ -272,6 +298,8 @@ const downloadTask = ref<DownloadTask | null>(null)
 const upgradeProgress = ref<number>(0)
 const upgradeMessage = ref<string>('')
 const upgradeTimer = ref<ReturnType<typeof setInterval> | null>(null)
+const showUpgradeConfirm = ref(false)
+const freshInstall = ref(false)
 
 const taskStatusClass = (status: string) => {
   const map: Record<string, string> = {
@@ -391,12 +419,12 @@ const pollUpgradeProgress = async () => {
   }
 }
 
-const startUpgrade = async () => {
+const startUpgrade = async (useFreshInstall: boolean = false) => {
   upgradeLoading.value = true
   upgradeProgress.value = 0
   upgradeMessage.value = ''
   try {
-    const res = await systemApi.updateDownloadUpgrade(downloadTask.value?.filePath || '')
+    const res = await systemApi.updateDownloadUpgrade(downloadTask.value?.filePath || '', useFreshInstall)
     if (res.success) {
       upgradeMessage.value = res.message || t('systemUpdater.upgradeStarted')
       stopUpgradeTimer()

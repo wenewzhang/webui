@@ -30,6 +30,7 @@
                     <p class="text-sm text-gray-500">
                       {{ message }}
                     </p>
+                    <slot></slot>
                   </div>
                 </div>
               </div>

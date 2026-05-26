@@ -154,8 +154,8 @@ export const systemApi = {
   updateDownloadStop(taskId: string): Promise<UpdateDownloadStopResponse> {
     return apiClient.post('/system/update_download/stop', { task_id: taskId }).then((res) => res.data)
   },
-  updateDownloadUpgrade(filePath: string): Promise<SystemActionResponse> {
-    return apiClient.post('/system/update_download/upgrade', { file_path: filePath }).then((res) => res.data)
+  updateDownloadUpgrade(filePath: string, freshInstall: boolean = false): Promise<SystemActionResponse> {
+    return apiClient.post('/system/update_download/upgrade', { file_path: filePath, fresh_install: freshInstall }).then((res) => res.data)
   },
   upgradeProgress(): Promise<UpgradeProgressResponse> {
     return apiClient.get('/system/upgrade/progress').then((res) => res.data)
