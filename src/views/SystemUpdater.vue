@@ -310,6 +310,7 @@ const taskStatusClass = (status: string) => {
     success: 'bg-green-100 text-green-800',
     failed: 'bg-red-100 text-red-800',
     error: 'bg-red-100 text-red-800',
+    upgrading: 'bg-blue-100 text-blue-800',
   }
   return map[status] || 'bg-gray-100 text-gray-800'
 }
@@ -342,17 +343,24 @@ const pollTaskOnce = async () => {
   try {
     const res = await systemApi.updateDownloadProgress(downloadTask.value.taskId)
     if (res.success && res.task) {
-      const t = res.task
+      const taskData = res.task
       const task = downloadTask.value
-      task.status = t.status || 'running'
-      const progressVal = parseFloat(String(t.progress || 0))
+      task.status = (taskData.status || 'running').toLowerCase()
+      const progressVal = parseFloat(String(taskData.progress || 0))
       task.progress = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
-      task.detail = t.message || res.message || ''
-      task.filename = t.filename
-      task.filePath = t.file_path
-      task.downloadedBytes = t.downloaded_bytes
-      task.totalBytes = t.total_bytes
-      task.message = t.message
+      if (taskData.message && taskData.message.startsWith('Download completed and verified:')) {
+        const filename = taskData.message.slice('Download completed and verified:'.length).trim()
+        task.detail = t('systemUpdater.downloadCompletedAndVerified', { filename })
+      } else if (taskData.message && taskData.message.includes('Downloading')) {
+        task.detail = t('systemUpdater.downloading')
+      } else {
+        task.detail = taskData.message || res.message || ''
+      }
+      task.filename = taskData.filename
+      task.filePath = taskData.file_path
+      task.downloadedBytes = taskData.downloaded_bytes
+      task.totalBytes = taskData.total_bytes
+      task.message = task.detail
       const terminalStatuses = ['completed', 'success', 'failed', 'error']
       if (terminalStatuses.includes(task.status.toLowerCase()) && task.progress >= 100) {
         stopTaskTimer()
@@ -426,7 +434,9 @@ const startUpgrade = async (useFreshInstall: boolean = false) => {
   try {
     const res = await systemApi.updateDownloadUpgrade(downloadTask.value?.filePath || '', useFreshInstall)
     if (res.success) {
-      upgradeMessage.value = res.message || t('systemUpdater.upgradeStarted')
+      upgradeMessage.value = res.message === 'Upgrade command sent successfully'
+        ? t('systemUpdater.upgradeCommandSent')
+        : (res.message || t('systemUpdater.upgradeStarted'))
       stopUpgradeTimer()
       upgradeTimer.value = setInterval(() => {
         pollUpgradeProgress()
@@ -481,7 +491,12 @@ const checkUpdate = async () => {
     }
   } catch (err: any) {
     const msg = err.response?.data?.error || err.message || ''
-    error.value = msg || t('error.unknown')
+    if (msg && msg.startsWith('Update check unavailable, current status:')) {
+      const status = msg.slice('Update check unavailable, current status:'.length).trim().toLowerCase()
+      error.value = t('systemUpdater.updateCheckUnavailable', { status: t(`systemUpdater.status.${status}`) || status })
+    } else {
+      error.value = msg || t('error.unknown')
+    }
   } finally {
     loading.value = false
   }
