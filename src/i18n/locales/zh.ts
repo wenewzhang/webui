@@ -59,6 +59,7 @@ export default {
     previous: '上一页',
     next: '下一页',
     settings: '设置',
+    view: '查看',
     yes: '是',
     no: '否',
     permissionDenied: '只有管理员才能执行此操作',
@@ -114,6 +115,7 @@ export default {
     dockerSearch: 'Docker 搜索',
     dockerImages: 'Docker 镜像',
     dockerContainers: 'Docker 容器',
+    createDockerContainer: '创建 Docker 容器',
     dockerContainerLog: '容器日志',
     dockerContainerNote: '容器笔记',
     dockerSettings: 'Docker 设置',
@@ -499,6 +501,9 @@ export default {
     pageInfo: '第 {page} / {totalPages} 页',
     viewTail: '查看最后',
     lines: '行',
+    deleteNoteConfirmTitle: '确认删除笔记',
+    deleteNoteConfirm: "确定要删除笔记 '{id}' 吗？此操作不可撤销。",
+    viewNote: '查看笔记',
   },
   // Docker 设置页面
   dockerSettings: {

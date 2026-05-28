@@ -59,6 +59,7 @@ export default {
     previous: 'Previous',
     next: 'Next',
     settings: 'Settings',
+    view: 'View',
     yes: 'Yes',
     no: 'No',
     permissionDenied: 'Only admin users can perform this operation',
@@ -114,6 +115,7 @@ export default {
     dockerSearch: 'Docker Search',
     dockerImages: 'Docker Images',
     dockerContainers: 'Docker Containers',
+    createDockerContainer: 'Create Docker Container',
     dockerContainerLog: 'Container Logs',
     dockerContainerNote: 'Container Notes',
     dockerSettings: 'Docker Settings',
@@ -499,6 +501,9 @@ export default {
     pageInfo: 'Page {page} / {totalPages}',
     viewTail: 'View last',
     lines: 'lines',
+    deleteNoteConfirmTitle: 'Confirm Delete Note',
+    deleteNoteConfirm: "Are you sure you want to delete note '{id}'? This action cannot be undone.",
+    viewNote: 'View Note',
   },
   // Docker Settings Page
   dockerSettings: {
