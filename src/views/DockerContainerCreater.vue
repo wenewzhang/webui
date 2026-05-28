@@ -381,8 +381,54 @@ const goBack = () => {
   router.push('/apps/docker-containers')
 }
 
-onMounted(() => {
-  fetchImages()
-  fetchDatasets()
+const applyImportData = () => {
+  const raw = localStorage.getItem('importContainerNote')
+  if (!raw) return
+  try {
+    const data = JSON.parse(raw)
+    const note = data.note
+    if (!note || !note.content) return
+    console.log(note.content)
+    console.log(images.value)
+    if (note.content.image && images.value.includes(note.content.image)) {
+      selectedImage.value = note.content.image
+    }
+    if (note.content.name) {
+      containerName.value = note.content.name
+    }
+    if (note.content.env && typeof note.content.env === 'object') {
+      envVars.value = Object.entries(note.content.env).map(([key, value]) => ({ key, value: String(value) }))
+    }
+    if (note.content.ports && Array.isArray(note.content.ports)) {
+      ports.value = note.content.ports.map((p: any) => ({
+        host_port: String(p.host_port || ''),
+        container_port: String(p.container_port || '')
+      }))
+    }
+    if (note.content.volumes && Array.isArray(note.content.volumes)) {
+      volumes.value = note.content.volumes.map((v: any) => ({
+        mountpoint: '',
+        dir_name: '',
+        container_path: v.container_path || '',
+        read_only: !!v.read_only
+      }))
+    }
+    if (note.content.restart_policy) {
+      restartPolicy.value = note.content.restart_policy
+    }
+    if (typeof note.content.auto_start === 'boolean') {
+      autoStart.value = note.content.auto_start
+    }
+
+    localStorage.removeItem('importContainerNote')
+  } catch (e) {
+    console.error('Failed to apply import data:', e)
+  }
+}
+
+onMounted(async () => {
+  await fetchImages()
+  await fetchDatasets()
+  applyImportData()
 })
 </script>

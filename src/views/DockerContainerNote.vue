@@ -228,9 +228,19 @@ const closeViewModal = () => {
   viewNoteContent.value = null
 }
 
-const handleImport = (noteId: string) => {
-  // TODO: Implement import functionality
-  showToast(`Import ${noteId} - not implemented yet`, 'success')
+const handleImport = async (noteId: string) => {
+  try {
+    const res = await dockerApi.getNote(noteId)
+    if (res.success) {
+      localStorage.setItem('importContainerNote', JSON.stringify(res))
+      router.push('/apps/docker-containers/create')
+    } else {
+      showToast(res.message || t('dockerContainers.fetchNoteFailed'))
+    }
+  } catch (err: any) {
+    const msg = permissionDeniedMessage(t, err.response?.data)
+    showToast(msg || err.message || t('dockerContainers.fetchNoteFailed'))
+  }
 }
 
 const handleDelete = (noteId: string) => {
