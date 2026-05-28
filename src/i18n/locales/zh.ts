@@ -642,6 +642,7 @@ export default {
       failed: '失败',
       error: '错误',
       upgrading: '升级中',
+      upgrade: '升级中',
     },
   },
   // SSH 设置

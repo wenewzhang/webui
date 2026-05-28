@@ -413,7 +413,12 @@ const pollUpgradeProgress = async () => {
     if (res.success && res.data) {
       const progressVal = parseFloat(String(res.data.progress || 0))
       upgradeProgress.value = isNaN(progressVal) ? 0 : Math.min(100, Math.max(0, progressVal))
-      upgradeMessage.value = res.data.state || res.message || ''
+      const msg = res.data.state || res.message || ''
+      if (msg.toLowerCase() === 'upgrade') {
+        upgradeMessage.value = t('systemUpdater.status.upgrade')
+      } else {
+        upgradeMessage.value = msg
+      }
       if (upgradeProgress.value >= 100) {
         stopUpgradeTimer()
       }

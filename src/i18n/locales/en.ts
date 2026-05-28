@@ -641,6 +641,7 @@ export default {
       failed: 'Failed',
       error: 'Error',
       upgrading: 'Upgrading',
+      upgrade: 'Upgrading',
     },
   },
   // SSH Settings
