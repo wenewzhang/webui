@@ -146,6 +146,12 @@ const router = createRouter({
               meta: { title: 'route.createDockerContainer' },
             },
             {
+              path: 'docker-containers/:id/log',
+              name: 'DockerContainerLog',
+              component: () => import('@/views/DockerContainerLog.vue'),
+              meta: { title: 'route.dockerContainerLog' },
+            },
+            {
               path: 'docker-settings',
               name: 'DockerSettings',
               component: () => import('@/views/DockerSettings.vue'),

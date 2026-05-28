@@ -117,6 +117,17 @@ export interface DockerCreateMirrorResponse {
   message?: string
 }
 
+export interface DockerContainerLogsResponse {
+  success: boolean
+  message?: string
+  container_id: string
+  logs: string[]
+  total_lines: number
+  page: number
+  page_size: number
+  total_pages: number
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -211,6 +222,11 @@ export const dockerApi = {
   deleteSettingMirror(location: string): Promise<DockerCreateMirrorResponse> {
     return apiClient
       .delete('/docker/setting/mirror', { data: { location } })
+      .then((res) => res.data)
+  },
+  getContainerLogs(containerId: string, params?: { page?: number; page_size?: number; tail?: number }): Promise<DockerContainerLogsResponse> {
+    return apiClient
+      .get(`/docker/log/${containerId}`, { params })
       .then((res) => res.data)
   },
 }
