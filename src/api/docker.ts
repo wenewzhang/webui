@@ -128,6 +128,12 @@ export interface DockerContainerLogsResponse {
   total_pages: number
 }
 
+export interface DockerContainerNoteResponse {
+  success: boolean
+  message?: string
+  [key: string]: any
+}
+
 export const dockerApi = {
   search(imageName: string): Promise<DockerSearchResponse> {
     return apiClient
@@ -227,6 +233,21 @@ export const dockerApi = {
   getContainerLogs(containerId: string, params?: { page?: number; page_size?: number; tail?: number }): Promise<DockerContainerLogsResponse> {
     return apiClient
       .get(`/docker/log/${containerId}`, { params })
+      .then((res) => res.data)
+  },
+  getNotes(): Promise<DockerContainerNoteResponse> {
+    return apiClient
+      .get('/docker/note')
+      .then((res) => res.data)
+  },
+  getNote(id: string): Promise<DockerContainerNoteResponse> {
+    return apiClient
+      .get(`/docker/note/${id}`)
+      .then((res) => res.data)
+  },
+  deleteNote(id: string): Promise<DockerContainerNoteResponse> {
+    return apiClient
+      .delete(`/docker/note/${id}`)
       .then((res) => res.data)
   },
 }

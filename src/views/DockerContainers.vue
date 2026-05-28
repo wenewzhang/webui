@@ -29,7 +29,20 @@
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
         {{ $t('common.create') }}
-    </button>
+      </button>
+      <button
+        @click="router.push('/apps/docker-containers/note')"
+        class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded text-emerald-700 bg-emerald-100 hover:bg-emerald-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        {{ $t('dockerContainers.createNote') }}
+      </button>
     </div>
       <button
         @click="fetchContainers"
