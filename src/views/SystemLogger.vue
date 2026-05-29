@@ -203,6 +203,21 @@ const showToast = (message: string, type: 'success' | 'error' = 'error') => {
   toast.show = true
 }
 
+const resolveLogErrorMessage = (message?: string): string => {
+  if (!message) return t('systemLogger.fetchFailed')
+  const lower = message.toLowerCase()
+  if (lower.includes('no such file or directory')) {
+    return t('systemLogger.logFileNotFound')
+  }
+  if (lower.includes('permission denied')) {
+    return t('systemLogger.logPermissionDenied')
+  }
+  if (lower.includes('failed to read log file')) {
+    return t('systemLogger.readLogFailed')
+  }
+  return message
+}
+
 const fetchLog = async (type: string) => {
   loading.value = true
   try {
@@ -229,7 +244,7 @@ const fetchLog = async (type: string) => {
       totalPages.value = res.total_pages || 1
       jumpPage.value = page.value
     } else {
-      showToast(res.message || t('systemLogger.fetchFailed'))
+      showToast(resolveLogErrorMessage(res.message))
       logs.value = []
       totalLines.value = 0
       totalPages.value = 0
