@@ -638,6 +638,7 @@ export default {
     upgradeConfirmMessage: '即将开始系统升级，是否继续？',
     freshInstall: '全新安装（不导入现系统的数据）',
     freshInstallHint: '选中后，升级时将不会导入当前系统的配置和数据',
+    manifestFetchFailed: '获取更新清单失败，无法连接更新服务器',
     status: {
       pending: '等待中',
       running: '进行中',

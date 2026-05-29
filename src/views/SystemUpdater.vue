@@ -315,6 +315,21 @@ const taskStatusClass = (status: string) => {
   return map[status] || 'bg-gray-100 text-gray-800'
 }
 
+const resolveUpdateCheckError = (errorMsg?: string): string => {
+  if (!errorMsg) return t('systemUpdater.checkFailed')
+  const lower = errorMsg.toLowerCase()
+  if (lower.includes('failed to fetch manifest')) {
+    return t('systemUpdater.manifestFetchFailed')
+  }
+  if (lower.includes('network error')) {
+    return t('error.networkError')
+  }
+  if (lower.includes('timeout')) {
+    return t('error.timeout', { timeout: 20 })
+  }
+  return errorMsg
+}
+
 const formatBytes = (bytes?: number) => {
   if (bytes === undefined || bytes === null || isNaN(bytes)) return '-'
   if (bytes === 0) return '0 B'
@@ -492,7 +507,7 @@ const checkUpdate = async () => {
     if (res.success) {
       result.value = res
     } else {
-      error.value = res.error || t('error.unknown')
+      error.value = resolveUpdateCheckError(res.error)
     }
   } catch (err: any) {
     const msg = err.response?.data?.error || err.message || ''
@@ -500,7 +515,7 @@ const checkUpdate = async () => {
       const status = msg.slice('Update check unavailable, current status:'.length).trim().toLowerCase()
       error.value = t('systemUpdater.updateCheckUnavailable', { status: t(`systemUpdater.status.${status}`) || status })
     } else {
-      error.value = msg || t('error.unknown')
+      error.value = resolveUpdateCheckError(msg) || t('error.unknown')
     }
   } finally {
     loading.value = false

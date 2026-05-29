@@ -637,6 +637,7 @@ export default {
     upgradeConfirmMessage: 'The system upgrade is about to begin. Do you want to continue?',
     freshInstall: 'Fresh install (do not import existing system data)',
     freshInstallHint: 'If selected, current system configuration and data will not be imported during upgrade',
+    manifestFetchFailed: 'Failed to fetch manifest, unable to connect to update server',
     status: {
       pending: 'Pending',
       running: 'Running',
