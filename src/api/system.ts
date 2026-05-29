@@ -102,6 +102,17 @@ export interface UpgradeProgressResponse {
   error?: string
 }
 
+export interface LogResponse {
+  success: boolean
+  logs?: string[]
+  total_lines?: number
+  page?: number
+  page_size?: number
+  total_pages?: number
+  message?: string
+  error?: string
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -159,5 +170,14 @@ export const systemApi = {
   },
   upgradeProgress(): Promise<UpgradeProgressResponse> {
     return apiClient.get('/system/upgrade/progress').then((res) => res.data)
+  },
+  getZutiLog(params?: { page?: number; page_size?: number }): Promise<LogResponse> {
+    return apiClient.get('/log/zuti', { params }).then((res) => res.data)
+  },
+  getZutiHelperLog(params?: { page?: number; page_size?: number }): Promise<LogResponse> {
+    return apiClient.get('/log/zuti-helper', { params }).then((res) => res.data)
+  },
+  getZutiUpdaterLog(params?: { page?: number; page_size?: number }): Promise<LogResponse> {
+    return apiClient.get('/log/zuti-updater', { params }).then((res) => res.data)
   },
 }

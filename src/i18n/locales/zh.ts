@@ -32,6 +32,9 @@ export default {
     more: '更多',
     fold: '收起',
     expand: '展开',
+    first: '首页',
+    go: '前往',
+    last: '末页',
     selectAll: '全选',
     pleaseSelect: '请选择',
     pleaseInput: '请输入',
@@ -126,6 +129,7 @@ export default {
     systemRestart: '系统重启',
     systemShutdown: '系统关机',
     systemForceRestart: '系统强制重启',
+    systemLogger: '系统日志',
   },
   // 导航菜单
   nav: {
@@ -147,6 +151,7 @@ export default {
     restart: '重启',
     restartForce: '强制重启',
     shutdown: '关机',
+    logger: '日志',
   },
   // 数据集页面
   dataset: {
@@ -644,6 +649,17 @@ export default {
       upgrading: '升级中',
       upgrade: '升级中',
     },
+  },
+  // 系统日志页面
+  systemLogger: {
+    zuti: 'zuti',
+    zutiHelper: 'zuti-helper',
+    zutiUpdater: 'zuti-updater',
+    noLogs: '暂无日志',
+    fetchFailed: '获取日志失败',
+    pageSize: '每页行数',
+    totalLines: '总行数',
+    pageInfo: '第 {page} / {totalPages} 页',
   },
   // SSH 设置
   sshSettings: {

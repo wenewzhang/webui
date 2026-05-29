@@ -202,6 +202,12 @@ const router = createRouter({
           meta: { title: 'route.systemUpdater' },
         },
         {
+          path: 'system/logger',
+          name: 'SystemLogger',
+          component: () => import('@/views/SystemLogger.vue'),
+          meta: { title: 'route.systemLogger' },
+        },
+        {
           path: 'terminal',
           name: 'Terminal',
           component: () => import('@/views/TerminalView.vue'),

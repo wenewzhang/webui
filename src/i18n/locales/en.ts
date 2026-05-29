@@ -32,6 +32,9 @@ export default {
     more: 'More',
     fold: 'Fold',
     expand: 'Expand',
+    first: 'First',
+    go: 'Go',
+    last: 'Last',
     selectAll: 'Select All',
     pleaseSelect: 'Please select',
     pleaseInput: 'Please input',
@@ -126,6 +129,7 @@ export default {
     systemRestart: 'System Restart',
     systemShutdown: 'System Shutdown',
     systemForceRestart: 'System Force Restart',
+    systemLogger: 'System Logs',
   },
   // Navigation
   nav: {
@@ -147,6 +151,7 @@ export default {
     restart: 'Restart',
     restartForce: 'Force Restart',
     shutdown: 'Shutdown',
+    logger: 'Logs',
   },
   // Dataset Page
   dataset: {
@@ -643,6 +648,17 @@ export default {
       upgrading: 'Upgrading',
       upgrade: 'Upgrading',
     },
+  },
+  // System Logger Page
+  systemLogger: {
+    zuti: 'zuti',
+    zutiHelper: 'zuti-helper',
+    zutiUpdater: 'zuti-updater',
+    noLogs: 'No logs available',
+    fetchFailed: 'Failed to fetch logs',
+    pageSize: 'Lines per page',
+    totalLines: 'Total lines',
+    pageInfo: 'Page {page} / {totalPages}',
   },
   // SSH Settings
   sshSettings: {
