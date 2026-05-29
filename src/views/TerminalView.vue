@@ -1,4 +1,10 @@
 <template>
+  <Toast
+    :show="toast.show"
+    :message="toast.message"
+    :type="toast.type"
+    @update:show="toast.show = $event"
+  />
   <div class="terminal-wrapper">
     <div class="terminal-toolbar">
       <span
@@ -15,9 +21,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, reactive } from 'vue'
 import { Terminal } from '@xterm/xterm'
 import '@xterm/xterm/css/xterm.css'
+import Toast from '@/components/Toast.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'error' as 'success' | 'error'
+})
+
+function showToast(message: string, type: 'success' | 'error' = 'error') {
+  toast.message = message
+  toast.type = type
+  toast.show = true
+}
+
+let hasShownConnectionErrorToast = false
 
 const terminalContainer = ref<HTMLDivElement>()
 let term: Terminal | null = null
@@ -72,6 +96,7 @@ function connect() {
   ws.onopen = () => {
     isConnected.value = true
     statusText.value = 'Connected'
+    hasShownConnectionErrorToast = false
     console.log('[ttyd] WebSocket connected')
 
     // Send initial terminal size (ttyd protocol: plain JSON on open)
@@ -113,8 +138,13 @@ function connect() {
 
   ws.onclose = () => {
     console.log('[ttyd] WebSocket closed')
+    const wasConnected = isConnected.value
     isConnected.value = false
     statusText.value = 'Disconnected'
+    if (!wasConnected && !hasShownConnectionErrorToast) {
+      hasShownConnectionErrorToast = true
+      showToast(t('error.ttydConnectionFailed'))
+    }
     scheduleReconnect()
   }
 }

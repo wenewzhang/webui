@@ -660,5 +660,6 @@ export default {
     timeout: 'Request timeout ({timeout}s), please try again later',
     unknown: 'An unknown error occurred',
     requestFailed: 'Request failed with status code {status}',
+    ttydConnectionFailed: 'ttyd connection failed, please start ttyd.service in System Services',
   },
 }

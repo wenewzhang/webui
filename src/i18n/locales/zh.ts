@@ -661,5 +661,6 @@ export default {
     timeout: '请求超时（{timeout}秒），请稍后重试',
     unknown: '发生未知错误',
     requestFailed: '请求失败，状态码：{status}',
+    ttydConnectionFailed: 'ttyd 连接失败，请在系统服务中启动 ttyd.service',
   },
 }
