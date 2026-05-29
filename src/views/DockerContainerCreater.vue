@@ -388,8 +388,7 @@ const applyImportData = () => {
     const data = JSON.parse(raw)
     const note = data.note
     if (!note || !note.content) return
-    console.log(note.content)
-    console.log(images.value)
+
     if (note.content.image && images.value.includes(note.content.image)) {
       selectedImage.value = note.content.image
     }

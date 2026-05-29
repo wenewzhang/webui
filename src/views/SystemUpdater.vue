@@ -315,7 +315,7 @@ const taskStatusClass = (status: string) => {
   return map[status] || 'bg-gray-100 text-gray-800'
 }
 
-const resolveUpdateCheckError = (errorMsg?: string): string => {
+const resolveUpdateCheckError = (errorMsg?: string | null): string => {
   if (!errorMsg) return t('systemUpdater.checkFailed')
   const lower = errorMsg.toLowerCase()
   if (lower.includes('failed to fetch manifest')) {
