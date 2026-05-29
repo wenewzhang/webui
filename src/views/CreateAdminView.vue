@@ -138,14 +138,14 @@
       </div>
 
       <p class="text-center text-xs text-gray-500">
-        {{ t('footer.copyright') }}
+        {{ t('footer.copyright', { version: appVersion }) }}
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
@@ -159,6 +159,11 @@ const { t } = useI18n()
 const showPassword = ref(false)
 const loading = ref(false)
 const error = ref<string | null>(null)
+
+const appVersion = computed(() => {
+  const v = localStorage.getItem('app_version')
+  return v ? v : ''
+})
 
 const form = reactive({
   username: '',

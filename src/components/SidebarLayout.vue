@@ -113,7 +113,7 @@
       <!-- 底部信息 -->
       <div v-show="!isCollapsed" class="px-4 py-4 border-t border-gray-200">
         <p class="text-xs text-gray-500 text-center">
-          {{ $t('footer.copyright') }}
+          {{ $t('footer.copyright', { version: appVersion }) }}
         </p>
       </div>
     </aside>
@@ -157,6 +157,11 @@ import LanguageSwitcher from './LanguageSwitcher.vue'
 const route = useRoute()
 const router = useRouter()
 const userStore = useUserStore()
+
+const appVersion = computed(() => {
+  const v = localStorage.getItem('app_version')
+  return v ? v : ''
+})
 
 // 侧边栏展开/收缩状态
 const isCollapsed = ref(false)

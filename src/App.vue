@@ -18,6 +18,9 @@ onMounted(async () => {
 
   try {
     const response = await userApi.hasAdmin()
+    if (response.version) {
+      localStorage.setItem('app_version', response.version)
+    }
     if (response.has_admin) {
       router.push('/login')
     } else {

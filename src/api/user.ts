@@ -13,7 +13,7 @@ export const userApi = {
   },
 
   // 检查是否有管理员
-  hasAdmin(): Promise<{ has_admin: boolean }> {
+  hasAdmin(): Promise<{ has_admin: boolean; version?: string }> {
     return apiClient.get('/has_admin').then((res) => res.data)
   },
 

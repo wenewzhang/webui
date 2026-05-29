@@ -272,7 +272,7 @@ export default {
   },
   // Footer
   footer: {
-    copyright: '© 2025 Zuti Storage System. All rights reserved.',
+    copyright: '© 2025 Zuti Storage System[{version}]. All rights reserved.',
   },
   // Pool
   pool: {

@@ -272,7 +272,7 @@ export default {
   },
   // 底部信息
   footer: {
-    copyright: '© 2025 Zuti Storage System. 保留所有权利。',
+    copyright: '© 2025 Zuti Storage System[{version}]. 保留所有权利。',
   },
   // 存储池
   pool: {

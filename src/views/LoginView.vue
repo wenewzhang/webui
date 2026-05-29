@@ -139,14 +139,14 @@
 
       <!-- 底部信息 -->
       <p class="text-center text-xs text-gray-500">
-        {{ t('footer.copyright') }}
+        {{ t('footer.copyright', { version: appVersion }) }}
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
@@ -159,6 +159,11 @@ const { t } = useI18n()
 
 const showPassword = ref(false)
 const successMessage = ref<string | null>(null)
+
+const appVersion = computed(() => {
+  const v = localStorage.getItem('app_version')
+  return v ? v : ''
+})
 
 const form = reactive({
   username: '',
