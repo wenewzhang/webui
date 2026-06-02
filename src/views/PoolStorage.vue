@@ -661,12 +661,16 @@ const confirmAdvancedImport = async () => {
       const errMsg = response.error || ''
       const unavailableMatch = errMsg.match(/cannot import '([^']+)': one or more devices is currently unavailable/)
       const noSuchPoolMatch = errMsg.match(/cannot import '([^']+)': no such pool or dataset/)
+      const valueTooLargeMatch = errMsg.match(/cannot import '([^']+)': Value too large for defined data type/)
       if (unavailableMatch) {
         const poolName = unavailableMatch[1]
         advancedImportError.value = t('pool.importFailedDeviceUnavailable', { poolName })
       } else if (noSuchPoolMatch) {
         const poolName = noSuchPoolMatch[1]
         advancedImportError.value = t('pool.importFailedNoSuchPool', { poolName })
+      } else if (valueTooLargeMatch) {
+        const poolName = valueTooLargeMatch[1]
+        advancedImportError.value = t('pool.importFailedValueTooLarge', { poolName })
       } else {
         advancedImportError.value = response.error || t('pool.importFailed')
       }
@@ -721,12 +725,16 @@ const confirmImport = async () => {
       const errMsg = response.error || ''
       const unavailableMatch = errMsg.match(/cannot import '([^']+)': one or more devices is currently unavailable/)
       const noSuchPoolMatch = errMsg.match(/cannot import '([^']+)': no such pool or dataset/)
+      const valueTooLargeMatch = errMsg.match(/cannot import '([^']+)': Value too large for defined data type/)
       if (unavailableMatch) {
         const poolName = unavailableMatch[1]
         importError.value = t('pool.importFailedDeviceUnavailable', { poolName })
       } else if (noSuchPoolMatch) {
         const poolName = noSuchPoolMatch[1]
         importError.value = t('pool.importFailedNoSuchPool', { poolName })
+      } else if (valueTooLargeMatch) {
+        const poolName = valueTooLargeMatch[1]
+        importError.value = t('pool.importFailedValueTooLarge', { poolName })
       } else {
         importError.value = response.error || t('pool.importFailed')
       }

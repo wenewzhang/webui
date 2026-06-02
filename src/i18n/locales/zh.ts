@@ -384,6 +384,7 @@ export default {
     devicesTooSmall: "一个或多个设备小于最小容量（64M）",
     importFailedDeviceUnavailable: "无法导入 '{poolName}'：一个或多个设备当前不可用",
     importFailedNoSuchPool: "无法导入 '{poolName}'：不存在该存储池或数据集",
+    importFailedValueTooLarge: "无法导入 '{poolName}'：数值超出定义的数据类型范围",
     replace: '替换',
     replaceSuccess: '置换硬盘成功',
     replaceFailed: "替换存储池 '{poolName}' 中的设备失败",
