@@ -383,6 +383,7 @@ export default {
     devicesUnavailable: "One or more devices is currently unavailable",
     devicesTooSmall: "One or more devices is less than the minimum size (64M)",
     importFailedDeviceUnavailable: "Cannot import '{poolName}': one or more devices is currently unavailable",
+    importFailedNoSuchPool: "Cannot import '{poolName}': no such pool or dataset",
     replace: 'Replace',
     replaceSuccess: 'Replace successful',
     replaceFailed: "Failed to replace device in pool '{poolName}'",
