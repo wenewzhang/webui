@@ -27,6 +27,15 @@
           </svg>
           {{ $t('common.import') }}
         </button>
+        <button @click="importPoolsAdvanced" class="action-btn advanced-import-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" x2="12" y1="3" y2="15"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+          </svg>
+          {{ $t('common.advancedImport') }}
+        </button>
       </div>
     </div>
 
@@ -346,6 +355,98 @@
       </div>
     </div>
 
+    <!-- 高级导入对话框 -->
+    <div v-if="showAdvancedImportDialog" class="confirm-dialog-overlay" @click="cancelAdvancedImport">
+      <div class="import-dialog" @click.stop>
+        <div class="confirm-dialog-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="import-icon">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" x2="12" y1="3" y2="15"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+          </svg>
+          <h3>{{ $t('pool.advancedImportTitle') }}</h3>
+        </div>
+        <div class="confirm-dialog-body">
+          <!-- 加载状态 -->
+          <div v-if="loadingOfflinePools" class="import-loading">
+            <div class="spinner-small"></div>
+            <span>{{ $t('pool.importLoading') }}</span>
+          </div>
+          
+          <!-- 没有数据 -->
+          <div v-else-if="offlinePools.length === 0" class="import-empty">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <p>{{ $t('pool.noOfflinePools') }}</p>
+          </div>
+          
+          <!-- 高级导入表单 -->
+          <div v-else class="import-form">
+            <div class="form-group">
+              <label>{{ $t('pool.poolName') }}</label>
+              <select v-model="selectedPool" class="form-select">
+                <option v-for="pool in offlinePools" :key="pool" :value="pool">
+                  {{ pool }}
+                </option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>{{ $t('pool.readonly') }}</label>
+              <select v-model="advancedReadonly" class="form-select">
+                <option :value="false">false</option>
+                <option :value="true">true</option>
+              </select>
+            </div>
+            
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input v-model="advancedForce" type="checkbox" />
+                <span>{{ $t('pool.forceImport') }}</span>
+              </label>
+            </div>
+            
+            <div v-if="advancedForce" class="force-import-warning">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                <path d="M12 9v4"/>
+                <path d="M12 17h.01"/>
+              </svg>
+              <span>{{ $t('pool.forceImportWarning') }}</span>
+            </div>
+            
+            <!-- 错误提示 -->
+            <div v-if="advancedImportError" class="import-error">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span>{{ advancedImportError }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="confirm-dialog-footer">
+          <button @click="cancelAdvancedImport" class="btn-cancel">
+            {{ $t('common.cancel') }}
+          </button>
+          <button 
+            v-if="offlinePools.length > 0"
+            @click="confirmAdvancedImport" 
+            class="btn-confirm import-btn-primary" 
+            :disabled="advancedImporting"
+          >
+            <span v-if="advancedImporting" class="spinner-small"></span>
+            {{ advancedImporting ? $t('pool.importing') : $t('pool.confirmImport') }}
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 导入成功提示 -->
     <div v-if="importSuccess" class="export-success-toast">
       <div class="success-icon">
@@ -399,6 +500,14 @@ const loadingOfflinePools = ref(false)
 const importError = ref('')
 const importSuccess = ref('')
 const importing = ref(false)
+
+// 高级导入对话框相关
+const showAdvancedImportDialog = ref(false)
+const advancedReadonly = ref(false)
+const advancedForce = ref(false)
+const advancedImportError = ref('')
+const advancedImportSuccess = ref('')
+const advancedImporting = ref(false)
 
 // 获取健康状态样式
 const getHealthClass = (health: string) => {
@@ -485,6 +594,82 @@ const importPools = async () => {
     importError.value = err.message || t('error.networkError')
   } finally {
     loadingOfflinePools.value = false
+  }
+}
+
+// 高级导入存储池 - 显示高级导入对话框
+const importPoolsAdvanced = async () => {
+  showAdvancedImportDialog.value = true
+  loadingOfflinePools.value = true
+  advancedImportError.value = ''
+  offlinePools.value = []
+  selectedPool.value = ''
+  advancedReadonly.value = false
+  advancedForce.value = false
+  
+  try {
+    const response = await storageApi.getOfflinePools()
+    if (response.success) {
+      offlinePools.value = response.data
+      if (response.data.length > 0) {
+        selectedPool.value = response.data[0]
+      }
+    } else {
+      advancedImportError.value = response.error || t('pool.fetchOfflinePoolsFailed')
+    }
+  } catch (err: any) {
+    advancedImportError.value = err.message || t('error.networkError')
+  } finally {
+    loadingOfflinePools.value = false
+  }
+}
+
+// 取消高级导入
+const cancelAdvancedImport = () => {
+  showAdvancedImportDialog.value = false
+  selectedPool.value = ''
+  advancedReadonly.value = false
+  advancedForce.value = false
+  advancedImportError.value = ''
+}
+
+// 确认高级导入
+const confirmAdvancedImport = async () => {
+  if (!selectedPool.value) {
+    advancedImportError.value = t('pool.selectPoolRequired')
+    return
+  }
+  
+  advancedImporting.value = true
+  advancedImportError.value = ''
+  
+  try {
+    const response = await storageApi.importPoolPlus(
+      selectedPool.value,
+      advancedReadonly.value,
+      advancedForce.value
+    )
+    if (response.success) {
+      importSuccess.value = t('pool.importSuccess', { poolName: selectedPool.value })
+      cancelAdvancedImport()
+      await fetchPools()
+      // 3秒后自动关闭成功提示
+      setTimeout(() => {
+        importSuccess.value = ''
+      }, 3000)
+    } else {
+      advancedImportError.value = response.error || t('pool.importFailed')
+    }
+  } catch (err: any) {
+    const errData = err.response?.data
+    const errMsg = errData?.error || err.message || ''
+    if (errMsg.includes('Only admin users can perform this operation')) {
+      advancedImportError.value = t('pool.permissionDenied')
+    } else {
+      advancedImportError.value = errMsg || t('pool.importFailed')
+    }
+  } finally {
+    advancedImporting.value = false
   }
 }
 

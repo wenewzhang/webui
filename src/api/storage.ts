@@ -94,6 +94,12 @@ export interface ImportPoolResponse {
   error: string | null
 }
 
+export interface ImportPoolPlusResponse {
+  success: boolean
+  message?: string
+  error: string | null
+}
+
 export interface CreatePoolResponse {
   success: boolean
   message?: string
@@ -322,6 +328,13 @@ export const storageApi = {
       poolname: poolName,
       mount_point: mountPoint,
       boot_enabled: bootEnabled
+    }).then(res => res.data)
+  },
+  importPoolPlus(poolName: string, readOnly: boolean, force: boolean): Promise<ImportPoolPlusResponse> {
+    return apiClient.post('/zfs/import_pool_plus', {
+      poolname: poolName,
+      readonly: readOnly,
+      force: force
     }).then(res => res.data)
   },
   createPool(poolName: string, poolType: string, devices: string[]): Promise<CreatePoolResponse> {
