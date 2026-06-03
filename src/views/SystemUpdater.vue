@@ -1,8 +1,18 @@
 <template>
   <div class="space-y-6">
     <!-- 页面标题 -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-start gap-3">
       <h2 class="text-xl font-bold text-gray-900">{{ $t('systemUpdater.title') }}</h2>
+      <button
+        @click="$router.push('/system/updater/mirror')"
+        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        {{ $t('systemUpdater.upgradeChannel') }}
+      </button>
     </div>
 
     <!-- 加载状态 -->

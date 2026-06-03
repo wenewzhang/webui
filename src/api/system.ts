@@ -113,6 +113,14 @@ export interface LogResponse {
   error?: string
 }
 
+export interface SystemUpgradeMirrorResponse {
+  success: boolean
+  UPDATE_URL?: string
+  CHANNEL?: string
+  message?: string
+  error?: string
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -179,5 +187,8 @@ export const systemApi = {
   },
   getZutiUpdaterLog(params?: { page?: number; page_size?: number }): Promise<LogResponse> {
     return apiClient.get('/log/zuti-updater', { params }).then((res) => res.data)
+  },
+  getSystemUpgradeMirror(): Promise<SystemUpgradeMirrorResponse> {
+    return apiClient.get('/system/upgrade/mirror').then((res) => res.data)
   },
 }

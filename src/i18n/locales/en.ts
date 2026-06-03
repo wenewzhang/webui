@@ -127,6 +127,7 @@ export default {
     terminal: 'Terminal',
     systemServices: 'System Services',
     systemUpdater: 'System Update',
+    systemUpdaterMirror: 'Update Channel',
     systemRestart: 'System Restart',
     systemShutdown: 'System Shutdown',
     systemForceRestart: 'System Force Restart',
@@ -642,6 +643,7 @@ export default {
     upgradeFailed: 'Upgrade failed',
     upgradeConfirmTitle: 'Confirm Upgrade',
     upgradeConfirmMessage: 'The system upgrade is about to begin. Do you want to continue?',
+    upgradeChannel: 'Update Channel',
     freshInstall: 'Fresh install (do not import existing system data)',
     freshInstallHint: 'If selected, current system configuration and data will not be imported during upgrade',
     manifestFetchFailed: 'Failed to fetch manifest, unable to connect to update server',
@@ -656,6 +658,13 @@ export default {
       upgrading: 'Upgrading',
       upgrade: 'Upgrading',
     },
+  },
+  systemUpdaterMirror: {
+    title: 'Update Channel',
+    loading: 'Loading...',
+    loadFailed: 'Failed to load',
+    updateUrl: 'Update URL',
+    channel: 'Channel',
   },
   // System Logger Page
   systemLogger: {

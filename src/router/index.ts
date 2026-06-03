@@ -202,6 +202,12 @@ const router = createRouter({
           meta: { title: 'route.systemUpdater' },
         },
         {
+          path: 'system/updater/mirror',
+          name: 'SystemUpdaterMirror',
+          component: () => import('@/views/SystemUpdaterMirror.vue'),
+          meta: { title: 'route.systemUpdaterMirror' },
+        },
+        {
           path: 'system/logger',
           name: 'SystemLogger',
           component: () => import('@/views/SystemLogger.vue'),

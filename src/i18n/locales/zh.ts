@@ -127,6 +127,7 @@ export default {
     terminal: '终端',
     systemServices: '系统服务',
     systemUpdater: '系统升级',
+    systemUpdaterMirror: '升级通道',
     systemRestart: '系统重启',
     systemShutdown: '系统关机',
     systemForceRestart: '系统强制重启',
@@ -643,6 +644,7 @@ export default {
     upgradeFailed: '升级失败',
     upgradeConfirmTitle: '确认升级',
     upgradeConfirmMessage: '即将开始系统升级，是否继续？',
+    upgradeChannel: '升级通道',
     freshInstall: '全新安装（不导入现系统的数据）',
     freshInstallHint: '选中后，升级时将不会导入当前系统的配置和数据',
     manifestFetchFailed: '获取更新清单失败，无法连接更新服务器',
@@ -657,6 +659,13 @@ export default {
       upgrading: '升级中',
       upgrade: '升级中',
     },
+  },
+  systemUpdaterMirror: {
+    title: '升级通道',
+    loading: '加载中...',
+    loadFailed: '加载失败',
+    updateUrl: '更新地址',
+    channel: '通道',
   },
   // 系统日志页面
   systemLogger: {
