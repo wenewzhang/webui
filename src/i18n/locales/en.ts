@@ -366,7 +366,7 @@ export default {
     mountPointPlaceholder: 'e.g., /mnt/pool1',
     canmount: 'Mount at Boot',
     bootEnabled: 'Auto-mount at boot',
-    readonly: 'Read Only',
+    importReadonly: 'Read Only',
     forceImport: 'Force Import',
     forceImportWarning: 'Warning: Please confirm that the disk is not being used by another system at the same time, Meanwhile, forcing the import will discard incomplete logs!',
     importing: 'Importing...',

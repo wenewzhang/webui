@@ -366,7 +366,7 @@ export default {
     mountPointPlaceholder: '例如: /mnt/pool1',
     canmount: '随系统启动',
     bootEnabled: '随系统启动自动挂载',
-    readonly: '只读',
+    importReadonly: '只读',
     forceImport: '强制导入',
     forceImportWarning: '警告：请确认磁盘未被其它系统同时使用,同时,强制导入将会放弃不完整的日志！',
     importing: '导入中...',

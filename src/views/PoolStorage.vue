@@ -396,7 +396,7 @@
             </div>
             
             <div class="form-group">
-              <label>{{ $t('pool.readonly') }}</label>
+              <label>{{ $t('pool.importReadonly') }}</label>
               <select v-model="advancedReadonly" class="form-select">
                 <option :value="false">false</option>
                 <option :value="true">true</option>
@@ -506,7 +506,6 @@ const showAdvancedImportDialog = ref(false)
 const advancedReadonly = ref(false)
 const advancedForce = ref(false)
 const advancedImportError = ref('')
-const advancedImportSuccess = ref('')
 const advancedImporting = ref(false)
 
 // 获取健康状态样式
