@@ -115,10 +115,10 @@ export interface LogResponse {
 
 export interface SystemUpgradeMirrorResponse {
   success: boolean
-  UPDATE_URL?: string
-  CHANNEL?: string
+  update_url?: string
+  channel?: string
   message?: string
-  error?: string
+  error?: string | null
 }
 
 export const systemApi = {

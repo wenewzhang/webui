@@ -44,11 +44,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-gray-50 rounded-lg p-4">
           <p class="text-sm text-gray-500">{{ $t('systemUpdaterMirror.updateUrl') }}</p>
-          <p class="text-lg font-mono font-medium text-gray-900 break-all">{{ mirrorInfo?.UPDATE_URL || '-' }}</p>
+          <p class="text-lg font-mono font-medium text-gray-900 break-all">{{ mirrorInfo?.update_url || '-' }}</p>
         </div>
         <div class="bg-indigo-50 rounded-lg p-4">
           <p class="text-sm text-indigo-600">{{ $t('systemUpdaterMirror.channel') }}</p>
-          <p class="text-lg font-mono font-medium text-indigo-900">{{ mirrorInfo?.CHANNEL || '-' }}</p>
+          <p class="text-lg font-mono font-medium text-indigo-900">{{ mirrorInfo?.channel || '-' }}</p>
         </div>
       </div>
     </div>
