@@ -282,10 +282,10 @@ const fetchShareInfo = async () => {
       } else {
         editValidUsers.value = Array.isArray(info.valid_users)
           ? info.valid_users
-          : (info.valid_users ? String(info.valid_users).split(',').map(s => s.trim()).filter(Boolean) : [])
+          : (info.valid_users ? String(info.valid_users).split(/[,\s]+/).map(s => s.trim()).filter(Boolean) : [])
         editWriteList.value = Array.isArray(info.write_list)
           ? info.write_list
-          : (info.write_list ? String(info.write_list).split(',').map(s => s.trim()).filter(Boolean) : [])
+          : (info.write_list ? String(info.write_list).split(/[,\s]+/).map(s => s.trim()).filter(Boolean) : [])
       }
     } else {
       showToast(res.error || t('samba.loadShareInfoFailed'))
