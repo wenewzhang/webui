@@ -665,6 +665,10 @@ export default {
     loadFailed: 'Failed to load',
     updateUrl: 'Update URL',
     channel: 'Channel',
+    saving: 'Saving...',
+    saveFailed: 'Save failed',
+    urlRequired: 'Please enter the update URL',
+    urlInvalid: 'Update URL must start with http:// or https://',
   },
   // System Logger Page
   systemLogger: {

@@ -666,6 +666,10 @@ export default {
     loadFailed: '加载失败',
     updateUrl: '更新地址',
     channel: '通道',
+    saving: '保存中...',
+    saveFailed: '保存失败',
+    urlRequired: '请输入更新地址',
+    urlInvalid: '更新地址必须以 http:// 或 https:// 开头',
   },
   // 系统日志页面
   systemLogger: {

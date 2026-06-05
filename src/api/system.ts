@@ -121,6 +121,17 @@ export interface SystemUpgradeMirrorResponse {
   error?: string | null
 }
 
+export interface SystemUpgradeMirrorUpdateRequest {
+  update_url: string
+  channel: string
+}
+
+export interface SystemUpgradeMirrorUpdateResponse {
+  success: boolean
+  message?: string
+  error?: string | null
+}
+
 export const systemApi = {
   reboot(): Promise<SystemActionResponse> {
     return apiClient.post('/system/reboot').then((res) => res.data)
@@ -190,5 +201,8 @@ export const systemApi = {
   },
   getSystemUpgradeMirror(): Promise<SystemUpgradeMirrorResponse> {
     return apiClient.get('/system/upgrade/mirror').then((res) => res.data)
+  },
+  updateSystemUpgradeMirror(data: SystemUpgradeMirrorUpdateRequest): Promise<SystemUpgradeMirrorUpdateResponse> {
+    return apiClient.post('/system/upgrade/mirror', data).then((res) => res.data)
   },
 }
