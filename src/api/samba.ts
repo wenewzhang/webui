@@ -124,8 +124,8 @@ export const sambaApi = {
   listSambaDatasets(): Promise<SambaDatasetsResponse> {
     return apiClient.get('/zfs/samba_datasets').then(res => res.data)
   },
-  createZfsShare(shareName: string, datasetName: string, quota: string, sambaUser: string): Promise<UpdateZfsShareResponse> {
-    return apiClient.post('/smb/create_zfs_share', { share_name: shareName, dataset_name: datasetName, quota, samba_user: sambaUser }).then(res => res.data)
+  createZfsShare(datasetName: string, quota: string, sambaUser: string): Promise<UpdateZfsShareResponse> {
+    return apiClient.post('/smb/create_zfs_share', { dataset_name: datasetName, quota, samba_user: sambaUser }).then(res => res.data)
   },
   createPublicShare(directory: string, browseable: string, readOnly: string, guestOk: string): Promise<UpdateZfsShareResponse> {
     return apiClient.post('/smb/create_public_share', { directory, browseable, read_only: readOnly, guest_ok: guestOk }).then(res => res.data)

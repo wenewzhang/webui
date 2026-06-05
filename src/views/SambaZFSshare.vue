@@ -238,10 +238,12 @@ const onConfirm = async () => {
       shareInfo.value.permission || '',
       shareInfo.value.guest_permission || ''
     )
+
     if (res.success) {
       emit('saved', true, t('samba.updateZfsShareSuccess'))
     } else {
-      const errMsg = res.error || t('samba.updateZfsShareFailed')
+      const errMsg = permissionDeniedMessage(t, res.error)
+      showToast(errMsg)
       emit('saved', false, errMsg)
     }
   } catch (err: any) {

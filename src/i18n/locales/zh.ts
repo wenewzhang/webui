@@ -67,6 +67,8 @@ export default {
     yes: '是',
     no: '否',
     permissionDenied: '只有管理员才能执行此操作',
+    operationNotPermitted: '操作不允许',
+    chmodFailedForDirectory: "修改目录 '{path}' 权限失败, 如果是从TrueNAS导入的磁盘原来启用了ACL,可能需要手动清除!",
   },
   // 登录页面
   login: {

@@ -67,6 +67,8 @@ export default {
     yes: 'Yes',
     no: 'No',
     permissionDenied: 'Only admin users can perform this operation',
+    operationNotPermitted: 'Operation not permitted',
+    chmodFailedForDirectory: "Failed to chmod for directory '{path}', If the disk imported from TrueNAS originally had ACLs enabled, you may need to manually clear them!",
   },
   // Login Page
   login: {

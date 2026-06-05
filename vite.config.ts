@@ -13,13 +13,13 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://192.168.3.100:8443',
+        target: 'https://192.168.3.2:8443',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/ttyd': {
-        target: 'ws://192.168.3.100:7681',
+        target: 'ws://192.168.3.2:7681',
         changeOrigin: true,
         ws: true,
         rewrite: (path) => path.replace(/^\/ttyd/, ''),
