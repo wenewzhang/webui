@@ -68,7 +68,7 @@ export default {
     no: 'No',
     permissionDenied: 'Only admin users can perform this operation',
     operationNotPermitted: 'Operation not permitted',
-    chmodFailedForDirectory: "Failed to chmod for directory '{path}', If the disk imported from TrueNAS originally had ACLs enabled, you may need to manually clear them!",
+    chmodFailedForDirectory: "Failed to chmod for directory '{path}', If the disk imported from TrueNAS originally had ACLs enabled, you may need to manually clear them! For example:\nsetfacl -bR store/tools\nzfs set aclmode=discard store/tools\n",
   },
   // Login Page
   login: {
