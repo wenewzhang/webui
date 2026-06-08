@@ -432,7 +432,7 @@ export default {
     createZfsShare: 'Create ZFS Share',
     selectDataset: 'Select Dataset',
     selectDatasetPlaceholder: 'Please select a dataset',
-    shareName: 'Share Name',
+    shareName: 'Share Name(optional)',
     shareNamePlaceholder: 'Please enter share name',
     selectOwner: 'Select Owner',
     browseable: 'Browseable',

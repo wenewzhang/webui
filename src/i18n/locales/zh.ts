@@ -432,7 +432,7 @@ export default {
     createZfsShare: '创建 ZFS 共享',
     selectDataset: '选择数据集',
     selectDatasetPlaceholder: '请选择数据集',
-    shareName: '共享名称',
+    shareName: '共享名称(可选)',
     shareNamePlaceholder: '请输入共享名称',
     selectOwner: '选择所有者',
     browseable: '可浏览',
