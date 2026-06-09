@@ -95,3 +95,21 @@ export interface DeleteSambaUserResponse {
   success: boolean
   message: string
 }
+
+export interface LoginSettingResponse {
+  success: boolean
+  message?: string
+  home_dir?: string
+  shell?: string
+  error?: string | null
+}
+
+export interface UpdateLoginSettingRequest {
+  username: string
+  shell: string
+}
+
+export interface UpdateLoginSettingResponse {
+  success: boolean
+  message?: string
+}

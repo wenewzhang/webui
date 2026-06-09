@@ -1,5 +1,5 @@
 import apiClient from './axios'
-import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse, ChangePasswdRequest, ChangePasswdResponse, AddUserRequest, AddUserResponse, AddSambaUserRequest, AddSambaUserResponse, DeleteUserRequest, DeleteUserResponse, DeleteSambaUserRequest, DeleteSambaUserResponse } from '@/types/user'
+import type { LoginRequest, LoginResponse, ListUsersResponse, ChangeAdminPasswordRequest, ChangeAdminPasswordResponse, ChangeSambaPasswordRequest, ChangeSambaPasswordResponse, ChangePasswdRequest, ChangePasswdResponse, AddUserRequest, AddUserResponse, AddSambaUserRequest, AddSambaUserResponse, DeleteUserRequest, DeleteUserResponse, DeleteSambaUserRequest, DeleteSambaUserResponse, LoginSettingResponse, UpdateLoginSettingRequest, UpdateLoginSettingResponse } from '@/types/user'
 
 export const userApi = {
   // 登录
@@ -60,5 +60,15 @@ export const userApi = {
   // 删除Samba用户
   deleteSambaUser(data: DeleteSambaUserRequest): Promise<DeleteSambaUserResponse> {
     return apiClient.post('/smb/delete_user', data).then((res) => res.data)
+  },
+
+  // 获取用户登录设置
+  loginSetting(username: string): Promise<LoginSettingResponse> {
+    return apiClient.get('/user/login_setting', { params: { username } }).then((res) => res.data)
+  },
+
+  // 修改用户登录设置
+  updateLoginSetting(data: UpdateLoginSettingRequest): Promise<UpdateLoginSettingResponse> {
+    return apiClient.post('/user/login_setting', data).then((res) => res.data)
   },
 }

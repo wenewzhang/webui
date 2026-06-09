@@ -98,6 +98,13 @@
               >
                 {{ $t('users.changePassword') }}
               </button>
+              <button
+                v-if="user.type_ === 'share' || user.type_ === 'read'"
+                @click="handleUserSetting(user)"
+                class="ml-2 inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                {{ $t('users.settings') }}
+              </button>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <button
@@ -273,6 +280,129 @@
     </div>
   </div>
 
+  <!-- User Setting Modal -->
+  <div v-if="showSettingModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="user-setting-modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!-- Background overlay -->
+      <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" @click="closeSettingModal"></div>
+
+      <!-- Modal panel -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+      <div class="relative inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+        <div class="sm:flex sm:items-start">
+          <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+            <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="user-setting-modal-title">
+              {{ $t('users.settings') }} - {{ settingUser?.name }}
+            </h3>
+            <div class="mt-4 space-y-4">
+              <!-- Loading -->
+              <div v-if="settingLoading" class="flex items-center justify-center py-4">
+                <svg class="animate-spin h-5 w-5 text-indigo-600 mr-2" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-sm text-gray-600">{{ $t('common.loading') }}</span>
+              </div>
+
+              <!-- Error -->
+              <div v-else-if="settingError" class="text-sm text-red-600 bg-red-50 rounded-md p-3">
+                {{ settingError }}
+              </div>
+
+              <!-- Data -->
+              <div v-else-if="!settingLoading && !settingError">
+                <div class="bg-gray-50 rounded-md p-4 space-y-2">
+                  <p class="text-sm text-gray-500">
+                    {{ $t('users.userType') }}: <span class="font-medium text-gray-900">{{ settingUser?.type_ }}</span>
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    {{ $t('users.homeDir') }}: <span class="font-medium text-gray-900">{{ settingData.home_dir || '-' }}</span>
+                  </p>
+                  <div class="text-sm text-gray-500 flex items-center gap-2">
+                    <span>{{ $t('users.canLogin') }}:</span>
+                    <template v-if="!settingEditing">
+                      <span
+                        :class="[
+                          'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
+                          settingData.shell !== 'nologin' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        ]"
+                      >
+                        {{ settingData.shell !== 'nologin' ? $t('common.yes') + ' (' + settingData.shell + ')' : $t('common.no') + ' (' + settingData.shell + ')' }}
+                      </span>
+                    </template>
+                    <template v-else>
+                      <select
+                        v-model="settingEditShell"
+                        class="block w-40 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      >
+                        <option value="nologin">nologin</option>
+                        <option value="/bin/bash">bash</option>
+                      </select>
+                    </template>
+                  </div>
+                </div>
+                <!-- Edit actions -->
+                <div v-if="settingEditing" class="mt-3 space-y-2">
+                  <div v-if="settingUpdateError" class="text-sm text-red-600 bg-red-50 rounded-md p-2">
+                    {{ settingUpdateError }}
+                  </div>
+                  <div v-if="settingUpdateSuccess" class="text-sm text-green-600 bg-green-50 rounded-md p-2">
+                    {{ settingUpdateSuccess }}
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      @click="submitUpdateSetting"
+                      :disabled="settingUpdating"
+                      class="inline-flex items-center px-3 py-1.5 border border-transparent shadow-sm text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                    >
+                      <svg v-if="settingUpdating" class="animate-spin -ml-1 mr-1 h-3 w-3 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {{ $t('users.confirmUpdate') }}
+                    </button>
+                    <button
+                      type="button"
+                      @click="cancelEditSetting"
+                      :disabled="settingUpdating"
+                      class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                    >
+                      {{ $t('common.cancel') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+          <button
+            type="button"
+            @click="closeSettingModal"
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            {{ $t('common.confirm') }}
+          </button>
+          <button
+            v-if="!settingEditing && !settingLoading && !settingError"
+            type="button"
+            @click="startEditSetting"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+          >
+            {{ $t('common.edit') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Add User Modal -->
   <div v-if="showAddUserModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="add-user-modal-title" role="dialog" aria-modal="true">
     <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -421,6 +551,18 @@ const deletingUser = ref(false)
 const deleteUserError = ref('')
 const deleteUserSuccess = ref('')
 const userToDelete = ref<UserInfo | null>(null)
+
+// Setting modal state
+const showSettingModal = ref(false)
+const settingUser = ref<UserInfo | null>(null)
+const settingLoading = ref(false)
+const settingError = ref('')
+const settingData = ref<{ home_dir?: string; shell?: string; error?: string | null }>({})
+const settingEditing = ref(false)
+const settingEditShell = ref('')
+const settingUpdating = ref(false)
+const settingUpdateError = ref('')
+const settingUpdateSuccess = ref('')
 
 // Add user form
 const addUserForm = reactive({
@@ -606,6 +748,85 @@ const handleChangePassword = (user: UserInfo) => {
   passwordForm.confirmPassword = ''
   passwordError.value = ''
   passwordSuccess.value = ''
+}
+
+const handleUserSetting = async (user: UserInfo) => {
+  settingUser.value = user
+  showSettingModal.value = true
+  settingLoading.value = true
+  settingError.value = ''
+  settingData.value = {}
+
+  try {
+    const response = await userApi.loginSetting(user.name)
+    if (response.success) {
+      settingData.value = {
+        home_dir: response.home_dir,
+        shell: response.shell,
+        error: response.error,
+      }
+    } else {
+      settingError.value = response.message || t('users.loadSettingFailed')
+    }
+  } catch (err: any) {
+    settingError.value = err.response?.data?.message || t('users.loadSettingFailed')
+  } finally {
+    settingLoading.value = false
+  }
+}
+
+const startEditSetting = () => {
+  settingEditing.value = true
+  settingEditShell.value = settingData.value.shell || 'nologin'
+  settingUpdateError.value = ''
+  settingUpdateSuccess.value = ''
+}
+
+const cancelEditSetting = () => {
+  settingEditing.value = false
+  settingEditShell.value = ''
+  settingUpdateError.value = ''
+  settingUpdateSuccess.value = ''
+}
+
+const submitUpdateSetting = async () => {
+  if (!settingUser.value) return
+
+  settingUpdating.value = true
+  settingUpdateError.value = ''
+  settingUpdateSuccess.value = ''
+
+  try {
+    const response = await userApi.updateLoginSetting({
+      username: settingUser.value.name,
+      shell: settingEditShell.value,
+    })
+    if (response.success) {
+      settingUpdateSuccess.value = response.message || t('users.updateSettingSuccess')
+      // 刷新数据
+      settingData.value.shell = settingEditShell.value
+      setTimeout(() => {
+        cancelEditSetting()
+      }, 1500)
+    } else {
+      settingUpdateError.value = response.message || t('users.updateSettingFailed')
+    }
+  } catch (err: any) {
+    settingUpdateError.value = err.response?.data?.message || t('users.updateSettingFailed')
+  } finally {
+    settingUpdating.value = false
+  }
+}
+
+const closeSettingModal = () => {
+  showSettingModal.value = false
+  settingUser.value = null
+  settingError.value = ''
+  settingData.value = {}
+  settingEditing.value = false
+  settingEditShell.value = ''
+  settingUpdateError.value = ''
+  settingUpdateSuccess.value = ''
 }
 
 const closeModal = () => {

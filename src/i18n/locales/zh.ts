@@ -242,6 +242,7 @@ export default {
     password: '密码',
     changePassword: '修改密码',
     deleteAccount: '删除账号',
+    settings: '设置',
     // 修改密码弹窗
     changePasswordTitle: '修改管理员密码',
     changeSambaPasswordTitle: '修改 Samba 密码',
@@ -278,6 +279,13 @@ export default {
     userAlreadyExists: '用户已存在',
     usernameNotAllowed: '用户名不被允许',
     userDoesNotExist: '用户不存在',
+    homeDir: '工作目录',
+    loginType: '登录类型',
+    canLogin: '可以登录',
+    loadSettingFailed: '加载用户设置失败',
+    confirmUpdate: '确认修改',
+    updateSettingSuccess: '用户设置修改成功',
+    updateSettingFailed: '用户设置修改失败',
   },
   // 底部信息
   footer: {

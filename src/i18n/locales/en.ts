@@ -242,6 +242,7 @@ export default {
     password: 'Password',
     changePassword: 'Change Password',
     deleteAccount: 'Delete Account',
+    settings: 'Settings',
     // Change Password Modal
     changePasswordTitle: 'Change Admin Password',
     changeSambaPasswordTitle: 'Change Samba Password',
@@ -278,6 +279,13 @@ export default {
     userAlreadyExists: 'User already exists',
     usernameNotAllowed: 'Username is not allowed',
     userDoesNotExist: 'User does not exist',
+    homeDir: 'Home Directory',
+    loginType: 'Login Type',
+    canLogin: 'Can Login',
+    loadSettingFailed: 'Failed to load user settings',
+    confirmUpdate: 'Confirm Update',
+    updateSettingSuccess: 'User settings updated successfully',
+    updateSettingFailed: 'Failed to update user settings',
   },
   // Footer
   footer: {
