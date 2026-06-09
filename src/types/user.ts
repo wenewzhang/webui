@@ -106,7 +106,7 @@ export interface LoginSettingResponse {
 
 export interface UpdateLoginSettingRequest {
   username: string
-  shell: string
+  login_type: string
 }
 
 export interface UpdateLoginSettingResponse {

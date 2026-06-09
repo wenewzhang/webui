@@ -342,7 +342,7 @@
                         class="block w-40 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
                         <option value="nologin">nologin</option>
-                        <option value="/bin/bash">bash</option>
+                        <option value="bash">bash</option>
                       </select>
                     </template>
                   </div>
@@ -799,7 +799,7 @@ const submitUpdateSetting = async () => {
   try {
     const response = await userApi.updateLoginSetting({
       username: settingUser.value.name,
-      shell: settingEditShell.value,
+      login_type: settingEditShell.value,
     })
     if (response.success) {
       settingUpdateSuccess.value = response.message || t('users.updateSettingSuccess')
